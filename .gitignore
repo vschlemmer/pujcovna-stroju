@@ -1,0 +1,28 @@
+# Directories #
+/build/
+/bin/
+target/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
+
+# Eclipse #
+.project
+.metadata
+bin/**
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# NetBeans specific #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
