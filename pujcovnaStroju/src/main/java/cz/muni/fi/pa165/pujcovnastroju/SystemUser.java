@@ -13,6 +13,11 @@ import javax.persistence.Id;
 
 @Entity
 public class SystemUser implements Serializable {
+    /**
+    * 	auto generated serial id
+    */
+    private static final long serialVersionUID = -2299546650455665467L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
