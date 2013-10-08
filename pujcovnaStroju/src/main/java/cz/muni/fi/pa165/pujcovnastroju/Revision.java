@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import javax.persistence.ManyToOne;
 /**
  *
  * @author Matej Fucek
@@ -12,6 +13,10 @@ import java.io.Serializable;
 
 @Entity
 public class Revision implements Serializable{
+    /**
+    * 	auto generated serial id
+    */
+    private static final long serialVersionUID = -1600141775151321009L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long revID; //PK to identify revsion ID
@@ -19,6 +24,9 @@ public class Revision implements Serializable{
     private String comment; // comment stating additional info about the revision
     private String revDate; // revision date
     private String machine; // machine mane
+    
+    @ManyToOne
+    private SystemUser systemUser;
 
 
 
@@ -65,6 +73,14 @@ public class Revision implements Serializable{
 
     public void setRevDate(String revDate) {
         this.revDate = revDate;
+    }
+    
+    public SystemUser getSystemUser() {
+        return systemUser;
+    }
+
+    public void setSystemUser(SystemUser systemUser) {
+        this.systemUser = systemUser;
     }
 
     @Override
