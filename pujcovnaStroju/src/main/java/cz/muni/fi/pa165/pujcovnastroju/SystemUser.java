@@ -1,10 +1,14 @@
 package cz.muni.fi.pa165.pujcovnastroju;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -24,6 +28,9 @@ public class SystemUser implements Serializable {
     private String firstName;
     private String lastName;
     private boolean emploee;
+    
+    @OneToMany(mappedBy = "systemUser", cascade = CascadeType.ALL)
+    private List<Revision> revisions = new ArrayList<Revision>();
 
     public Long getId() {
         return id;
@@ -55,6 +62,14 @@ public class SystemUser implements Serializable {
 
     public void setEmploee(boolean emploee) {
         this.emploee = emploee;
+    }
+    
+    public List<Revision> getRevisions() {
+        return revisions;
+    }
+
+    public void setRevisions(List<Revision> revisions) {
+        this.revisions = revisions;
     }
 
     @Override

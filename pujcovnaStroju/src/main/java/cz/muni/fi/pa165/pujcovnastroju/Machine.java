@@ -1,12 +1,14 @@
 package cz.muni.fi.pa165.pujcovnastroju;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 /**
  * Entity represents a machine in system
@@ -33,6 +35,9 @@ public class Machine implements Serializable, Cloneable {
 	
 	@Column(nullable=false)
 	private MachineTypeEnum type;
+        
+        @ManyToMany(mappedBy = "machines")
+        private List<Loan> loans;
 	
 	
 	//TODO what else? possible pictures, some kind of technical specification?

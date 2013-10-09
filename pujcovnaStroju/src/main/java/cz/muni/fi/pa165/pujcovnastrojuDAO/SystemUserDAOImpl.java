@@ -1,7 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
+import cz.muni.fi.pa165.pujcovnastroju.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -70,6 +70,10 @@ public class SystemUserDAOImpl implements SystemUserDAO {
         query1.setParameter("arg1", firstName);
         query1.setParameter("arg2", lastName);
         return query1.getResultList();
+    }
+    
+    public List<Revision> findRevisions(SystemUser user){
+        return user.getRevisions();
     }
     
 }
