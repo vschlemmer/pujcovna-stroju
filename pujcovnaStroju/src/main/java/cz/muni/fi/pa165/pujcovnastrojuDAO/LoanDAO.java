@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author gitti
+ * @author Ondřej Güttner
  */
 public interface LoanDAO {
     

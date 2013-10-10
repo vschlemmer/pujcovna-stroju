@@ -2,7 +2,7 @@ package cz.muni.fi.pa165.pujcovnastroju;
 
 /**
  *
- * @author gitti
+ * @author Ondřej Güttner
  */
 public enum LoanStateEnum {
     BOOKED, LOANED, RETURNED;

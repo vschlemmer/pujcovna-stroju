@@ -15,6 +15,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 
+/**
+ * 
+ * @author Ondřej Güttner
+ */
 public class LoanDAOImpl implements LoanDAO {
     
     private EntityManagerFactory emf;
@@ -86,15 +90,12 @@ public class LoanDAOImpl implements LoanDAO {
 
     public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine) {
         EntityManager em = emf.createEntityManager();
-        /*String queryString = "SELECT l FROM Loan l WHERE 1=1";
-        if (loanedFrom != null) queryString += " AND l.loanedFrom >= :arg1";
-        if (loanedTill != null) queryString += " AND l.loanedTill <= :arg2";
-        if (loanedBy != null) queryString += " AND l.customer IN (:arg3)";
-        if (includedMachine != null) queryString += " AND l.includedMachines >= :arg1";
-        TypedQuery<Loan> query = em.createQuery(queryString, Loan.class);*/
+
         CriteriaBuilder cb = emf.getCriteriaBuilder();
         CriteriaQuery<Loan> cQuery = cb.createQuery(Loan.class);
+        
         Root<Loan> loanRoot = cQuery.from(Loan.class);
+        
         cQuery.select(loanRoot);
         if (loanedFrom != null) {
             Expression<Timestamp> loanedFromExp = loanRoot.get("loanTime");

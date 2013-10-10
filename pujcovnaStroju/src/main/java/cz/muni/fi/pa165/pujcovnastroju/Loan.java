@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pa165.pujcovnastroju;
 
 import java.io.Serializable;
@@ -20,7 +16,7 @@ import javax.persistence.ManyToOne;
 
 /**
  *
- * @author gitti
+ * @author Ondřej Güttner
  */
 @Entity
 public class Loan implements Serializable {
