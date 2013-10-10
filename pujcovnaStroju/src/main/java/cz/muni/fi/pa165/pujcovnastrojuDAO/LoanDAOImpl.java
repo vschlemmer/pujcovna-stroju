@@ -5,7 +5,7 @@ import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,7 +13,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 public class LoanDAOImpl implements LoanDAO {
@@ -108,9 +107,8 @@ public class LoanDAOImpl implements LoanDAO {
         if (loanState != null) cQuery.where(cb.equal(loanRoot.get("loanState"), loanState));
         if (loanedBy != null) cQuery.where(cb.equal(loanRoot.get("customer"), loanedBy));
         if (includedMachine != null) {
-            Expression<Machine> machineExp = loanRoot.get("machines");
-            Predicate machinePred = machineExp.in(includedMachine);
-            cQuery.where(machinePred);
+            Expression<Collection> machinesExp = loanRoot.get("machines");
+            cQuery.where(cb.isMember(includedMachine, machinesExp));
         }
         
         return em.createQuery(cQuery).getResultList();
