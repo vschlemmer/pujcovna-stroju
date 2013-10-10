@@ -11,7 +11,7 @@
                       value="org.apache.derby.jdbc.ClientDriver"/>
             <property name="hibernate.connection.password" value="app"/>
             <property name="hibernate.connection.url" 
-                      value="jdbc:derby://localhost:1527/TestDB"/>
+                      value="jdbc:derby://localhost:1527/memory:sample;create=true"/>
             <property name="hibernate.cache.provider_class"
                       value="org.hibernate.cache.NoCacheProvider"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
