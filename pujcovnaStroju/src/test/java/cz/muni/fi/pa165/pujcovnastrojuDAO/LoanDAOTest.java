@@ -163,23 +163,31 @@ public class LoanDAOTest extends TestCase {
     @Test
     public void testGetLoansByParams() {
         System.out.println("getLoansByParams");
-        Timestamp loanedFrom = null;
-        Timestamp loanedTill = null;
-        LoanStateEnum loanState = null;
-        SystemUser loanedBy = null;
-        Machine includedMachine = null;
+        Timestamp loanedFrom = new Timestamp(System.currentTimeMillis()+5000);
+        Timestamp loanedTill = new Timestamp(System.currentTimeMillis()+5001);
+        LoanStateEnum loanState = LoanStateEnum.RETURNED;
+        
         Loan loan = createSampleLoan();
         loanDAO.create(loan);
+        
         Loan loan2 = createSampleLoan();
-        loan2.setCustomer(loanedBy);
         loan2.setLoanState(loanState);
         loan2.setLoanTime(loanedFrom);
         loan2.setReturnTime(loanedTill);
         loanDAO.create(loan2);
+        
+        SystemUser loanedBy = loan2.getCustomer();
+        Machine includedMachine = loan2.getMachines().get(0);
+        
         List expResult = new ArrayList();
         expResult.add(loan);
         expResult.add(loan2);
-        List result = loanDAO.getLoansByParams(loanedFrom, loanedTill, loanState, loanedBy, includedMachine);
+        
+        List result = loanDAO.getLoansByParams(null, null, null, null, null);
+        assertEquals(expResult, result);
+        
+        expResult.remove(loan);
+        result = loanDAO.getLoansByParams(loanedFrom, loanedTill, loanState, loanedBy, includedMachine);
         assertEquals(expResult, result);
     }
 }
