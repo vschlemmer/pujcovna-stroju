@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import cz.muni.fi.pa165.pujcovnastroju.Loan;
+import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -54,9 +51,10 @@ public interface LoanDAO {
      * 
      * @param loanedFrom - determines the smallest loanTime of the returned loans
      * @param loanedTill - determines the largest returnTime of the returned loans
-     * @param loanedBy - list of the users whose loans are to be returned
-     * @param includedMachines - list of the machines of which loans are to be returned
+     * @param loanState - determines the current state of loan
+     * @param loanedBy - user whose loans are to be returned
+     * @param includedMachine - machine of which loans are to be returned
      * @return list of the loans satisfying the parameters
      */
-    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, List<SystemUser> loanedBy, List<Machine> includedMachines);
+    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine);
 }

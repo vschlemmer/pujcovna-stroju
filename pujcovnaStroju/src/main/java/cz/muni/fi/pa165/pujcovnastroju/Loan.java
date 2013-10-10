@@ -7,6 +7,8 @@ package cz.muni.fi.pa165.pujcovnastroju;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,11 +30,11 @@ public class Loan implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name="SYSTEMUSER_ID")
     private SystemUser customer;
     
-    @ManyToMany
+    @ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "LOAN_MACHINES", joinColumns = {
         @JoinColumn(name = "LOAN_ID", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "MACHINE_ID", referencedColumnName = "id")})
@@ -40,6 +42,9 @@ public class Loan implements Serializable {
     
     private Timestamp loanTime;
     private Timestamp returnTime;
+    
+    @Column(nullable=false)
+    private LoanStateEnum loanState;
     
     public Long getId() {
         return id;
@@ -79,6 +84,14 @@ public class Loan implements Serializable {
 
     public void setReturnTime(Timestamp returnTime) {
         this.returnTime = returnTime;
+    }
+
+    public LoanStateEnum getLoanState() {
+        return loanState;
+    }
+
+    public void setLoanState(LoanStateEnum loanState) {
+        this.loanState = loanState;
     }
 
     @Override
