@@ -1,15 +1,19 @@
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import cz.muni.fi.pa165.pujcovnastroju.Loan;
+import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
-import java.security.Timestamp;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 public class LoanDAOImpl implements LoanDAO {
@@ -81,24 +85,35 @@ public class LoanDAOImpl implements LoanDAO {
         return query.getResultList();
     }
 
-    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, List<SystemUser> loanedBy, List<Machine> includedMachines) {
+    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine) {
         EntityManager em = emf.createEntityManager();
-        String queryString = "SELECT l FROM Loan l WHERE 1=1";
+        /*String queryString = "SELECT l FROM Loan l WHERE 1=1";
         if (loanedFrom != null) queryString += " AND l.loanedFrom >= :arg1";
-        if (loanedTill != null) queryString += " AND l.loanedFromTill <= :arg2";
+        if (loanedTill != null) queryString += " AND l.loanedTill <= :arg2";
         if (loanedBy != null) queryString += " AND l.customer IN (:arg3)";
-        if (includedMachines != null) queryString += " AND l.includedMachines >= :arg1";
-        TypedQuery<Loan> query = em.createQuery(queryString, Loan.class);
-        /*CriteriaBuilder cb = emf.getCriteriaBuilder();
+        if (includedMachine != null) queryString += " AND l.includedMachines >= :arg1";
+        TypedQuery<Loan> query = em.createQuery(queryString, Loan.class);*/
+        CriteriaBuilder cb = emf.getCriteriaBuilder();
         CriteriaQuery<Loan> cQuery = cb.createQuery(Loan.class);
         Root<Loan> loanRoot = cQuery.from(Loan.class);
         cQuery.select(loanRoot);
-        if (loanedFrom != null) cQuery.where(cb.greaterThanOrEqualTo(loanRoot.get(Loan_.loanedFrom), loanedFrom));
-        if (loanedTill != null) cQuery.where(cb.lessThanOrEqualTo(loanRoot.get(Loan_.loanedTill), loanedTill));
-        if (loanedBy != null) cQuery.where(cb.isMember(loanRoot.get(Loan_.customer), loanedBy));
-        if (includedMachines != null) cQuery.where(cb.);*/
+        if (loanedFrom != null) {
+            Expression<Timestamp> loanedFromExp = loanRoot.get("loanTime");
+            cQuery.where(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
+        }
+        if (loanedTill != null) {
+            Expression<Timestamp> loanedTillExp = loanRoot.get("returnTime");
+            cQuery.where(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
+        }
+        if (loanState != null) cQuery.where(cb.equal(loanRoot.get("loanState"), loanState));
+        if (loanedBy != null) cQuery.where(cb.equal(loanRoot.get("customer"), loanedBy));
+        if (includedMachine != null) {
+            Expression<Machine> machineExp = loanRoot.get("machines");
+            Predicate machinePred = machineExp.in(includedMachine);
+            cQuery.where(machinePred);
+        }
         
-        return query.getResultList();
+        return em.createQuery(cQuery).getResultList();
     }
     
 }
