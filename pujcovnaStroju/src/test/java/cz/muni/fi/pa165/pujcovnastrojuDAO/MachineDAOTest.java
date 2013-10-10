@@ -2,23 +2,30 @@ package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import junit.framework.TestCase;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
 
-import junit.framework.TestCase;
-
 public class MachineDAOTest extends TestCase {
 	
 	
 	private MachineDAOImpl testedObject;
+	EntityManager em;
 	
 	@Before
 	@Override
 	public void setUp() {
-		testedObject = new MachineDAOImpl();
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
+	    em = emf.createEntityManager();
+		testedObject = new MachineDAOImpl(em);
 	}
 	
 	public Machine getSampleMachine() {
@@ -30,6 +37,7 @@ public class MachineDAOTest extends TestCase {
 	}
 	
 	public void createSampleMachines() {
+		em.getTransaction().begin();
 		testedObject.create(getSampleMachine());
 		Machine m2 = new Machine();
 		m2.setLabel("Buldozer b2");
@@ -46,6 +54,7 @@ public class MachineDAOTest extends TestCase {
 		testedObject.create(m2);
 		testedObject.create(m3);
 		testedObject.create(m4);
+		em.getTransaction().commit();
 	}
 	
 	@Test
@@ -102,8 +111,9 @@ public class MachineDAOTest extends TestCase {
 		Machine toBeDeleted = list.get(2);
 		Machine dummyMachine = (Machine) toBeDeleted.clone();
 		
+		em.getTransaction().begin();
 		testedObject.delete(toBeDeleted);
-		
+		em.getTransaction().commit();
 		list = testedObject.getAllMachines();
 		assertEquals(3, list.size());
 		for (Machine m: list) {
