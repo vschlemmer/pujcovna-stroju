@@ -21,7 +21,8 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Loan implements Serializable {
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -517093082752147127L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
