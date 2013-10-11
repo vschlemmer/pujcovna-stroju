@@ -1,29 +1,31 @@
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
+import cz.muni.fi.pa165.pujcovnastroju.Machine;
+import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.Revision;
+import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
+import cz.muni.fi.pa165.pujcovnastroju.UserTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 import junit.framework.TestCase;
 import org.junit.Before;
-
-
-import cz.muni.fi.pa165.pujcovnastroju.Revision;
+import java.sql.Timestamp;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /* * 
   * @author matej.fucek
  */
-public class RevisionDOATest extends TestCase {
+public class RevisionDAOTest extends TestCase {
     private RevisionDAO revDAO;
+    
     @Before
     @Override
     public void setUp() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-        revDAO = new RevisionDAOImpl(emf);
+        EntityManager em = emf.createEntityManager();
+        revDAO = new RevisionDAOImpl(em);
     }
      
     /**
@@ -31,21 +33,43 @@ public class RevisionDOATest extends TestCase {
      * 
      * @return sample revision
      */
-    
     public Revision createSampleRevision() {
         Revision revision = new Revision();
-        revision.setPerformedBy("NovakJozef");
-        revision.setMachine("bager");
         revision.setComment("Opraveno");
-        revision.setRevDate("13.06.2013");
+        revision.setRevDate(new Timestamp(System.currentTimeMillis()));
+        revision.setMachine(createSampleMachine());
+        revision.setSystemUser(createSampleUser());
         return revision;
     }
     
+    /**
+     * Creates a sample machine
+     * 
+     * @return sample machine
+     */
+    public Machine createSampleMachine() {
+            Machine machine1= new Machine();
+            machine1.setLabel("bla bla");
+            machine1.setDecription("BAAALGER");
+            machine1.setType(MachineTypeEnum.BULDOZER);
+            return  machine1; 
+    }
     
+    /**
+     * Creates a sample user
+     * 
+     * @return sample user
+     */
+    public SystemUser createSampleUser(){
+        SystemUser user = new SystemUser();
+        user.setFirstName("Tomas");
+        user.setLastName("Jedno");
+        user.setType(UserTypeEnum.CUSTOMER);
+        return user;
+    }
+                    
      /**
-      * Creates  revision
-      * 
-      * @return new revision
+      * Test revision creation
       */
     public void testCreate() {
         Revision revision1 = createSampleRevision();
@@ -55,10 +79,10 @@ public class RevisionDOATest extends TestCase {
         assertNotNull(revision2.getRevID());
         assertEquals(revision1,revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
-        assertEquals(revision1.getPerformedBy(), revision2.getPerformedBy());
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
         assertEquals(revision1.getRevDate(), revision2.getRevDate());
+        assertEquals(revision1.getSystemUser(), revision2.getSystemUser());
         revDAO.delete(revision1);
         try {
             revDAO.create(null);
@@ -70,7 +94,6 @@ public class RevisionDOATest extends TestCase {
     
      /**
      * Test reading a Revision
-     *  @return specific revision
      */
     public void testRead() {
         Revision revision1 = createSampleRevision();
@@ -78,21 +101,19 @@ public class RevisionDOATest extends TestCase {
         Revision revision2 = revDAO.read(revision1.getRevID());
         assertEquals(revision1,revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
-        assertEquals(revision1.getPerformedBy(), revision2.getPerformedBy());
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
         assertEquals(revision1.getRevDate(), revision2.getRevDate());
+        assertEquals(revision1.getSystemUser(), revision2.getSystemUser());
         revDAO.delete(revision1);
     }
      
     /**
      * Test updating a revision
-     * @return update revision
      */
     public void testUpdate() {
         Revision revision1 = createSampleRevision();
         revDAO.create(revision1);
-        revision1.setPerformedBy("BobKarak");
         revDAO.update(revision1);
         Revision revision2 = revDAO.read(revision1.getRevID());
         assertEquals(revision1,revision2);
@@ -100,13 +121,12 @@ public class RevisionDOATest extends TestCase {
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
         assertEquals(revision1.getRevDate(), revision2.getRevDate());
-        assertEquals("BobKarak", revision2.getPerformedBy());
+        assertEquals(revision1.getSystemUser(), revision2.getSystemUser());
         revDAO.delete(revision1);
     }
     
     /**
      * Test deleting a Revison
-     * @return delete revision
      */
     public void testDelete() {
         Revision revision1 = createSampleRevision();
@@ -117,15 +137,13 @@ public class RevisionDOATest extends TestCase {
     
     /**
      * Test retrieving all revisions
-     * return all revisions
      */
     public void testFindAllRevision() {
         Revision revision1 = createSampleRevision();
         Revision revision2 = createSampleRevision();
-        revision2.setPerformedBy("Priezvisko2");
         revDAO.create(revision1);
         revDAO.create(revision2);
-        List<Revision> revlist1 = new ArrayList<Revision>();
+        List<Revision> revlist1 = new ArrayList<>();
         revlist1.add(revision1);
         revlist1.add(revision2);
         assertEquals(revlist1, revDAO.findAllrevisions());
@@ -133,17 +151,21 @@ public class RevisionDOATest extends TestCase {
         revDAO.delete(revision2);
     }
     
-     /**
-      * Test retrieving specific machine name from specific revision
-      * return specific machine
-      */
-    public void testFindSpecificRevisionedMachine() {
+    /**
+     * Test retrieving revisions by date
+     */
+    public void testFindRevisionsByDate(){
         Revision revision1 = createSampleRevision();
+        Revision revision2 = createSampleRevision();
         revDAO.create(revision1);
-        assertEquals(revDAO.findRevisionedMachine(revision1.getRevID()), revision1.getMachine());
-        revDAO.delete(revision1);
-        
+        revDAO.create(revision2);
+        List<Revision> revisions1 = new ArrayList<>();
+        revisions1.add(revision1);
+        revisions1.add(revision2);
+        Timestamp dateFrom = new Timestamp(System.currentTimeMillis()-36000000);
+        Timestamp dateTo = new Timestamp(System.currentTimeMillis()+36000000);
+        List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
+        assertEquals(revisions1, revisions2);
     }
-
 }
     

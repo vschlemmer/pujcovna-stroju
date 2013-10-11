@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.Revision;
+import java.sql.Timestamp;
 /**
  * * @author Matej Fucek
  */
@@ -49,14 +50,13 @@ public interface RevisionDAO {
      * @throws IllegalArgumentException if the revID is null
      */
     public Revision read (Long revID);
-    
+ 
     /**
-     * Returns serviced machine for specific revision ID  
+     * Retrieves all revisions that were made in given time interval
      * 
-     * @param revID
-     * @return name of the machine in specific revision
-     * @throws IllegalArgumentException if the revID is null
+     * @param dateFrom date from which the revisions should be retrieved
+     * @param dateTo date to which the revisions should be retrieved
+     * @return list of revisions that suit the filter
      */
-    public String findRevisionedMachine(Long revID);
-
+    public List<Revision> findRevisionsByDate(Timestamp dateFrom, Timestamp dateTo);
 }

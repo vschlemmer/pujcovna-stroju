@@ -71,9 +71,10 @@ public class SystemUserDAOTest extends TestCase {
     public Revision createSampleRevision(){
         Revision revision1 = new Revision();
         revision1.setComment("comment");
-        revision1.setPerformedBy("test");
-        revision1.setRevDate("revdate");
         revision1.setSystemUser(null);
+        revision1.setSystemUser(null);
+        revision1.setRevDate(new Timestamp(System.currentTimeMillis()));
+        revision1.setMachine(null);
         return revision1;
     }
     

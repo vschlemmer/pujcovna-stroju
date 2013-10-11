@@ -5,6 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import javax.persistence.CascadeType;
+
 import javax.persistence.ManyToOne;
 /**
  *
@@ -19,17 +22,15 @@ public class Revision implements Serializable{
     private static final long serialVersionUID = -1600141775151321009L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long revID; //PK to identify revsion ID
-    private String performedBy; //  who performend the revision
-    private String comment; // comment stating additional info about the revision
-    private String revDate; // revision date
-    private String machine; // machine mane
+    private Long revID;
+    private String comment;
+    private Timestamp revDate;
     
-    @ManyToOne
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private Machine machine;
+    @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private SystemUser systemUser;
-
-
-
+    
     public Long getRevID()  {
         return revID;
     }
@@ -37,18 +38,7 @@ public class Revision implements Serializable{
     public void setRevID(Long revID) {
         this.revID = revID;
     }
-  
-    //PerformedBy
-    public String getPerformedBy() {
-        return performedBy;    
-    }
     
-    public void setPerformedBy(String performedBy) {
-        this.performedBy = performedBy;
-    }
-
-    
-    //Comment
     public String getComment() {
         return comment;    
     }
@@ -57,21 +47,19 @@ public class Revision implements Serializable{
         this.comment = comment;
     }
 
-    //Machine
-    public String getMachine()  {
+    public Machine getMachine()  {
         return machine;
     }
     
-    public void setMachine(String machine) {
+    public void setMachine(Machine machine) {
         this.machine = machine;
     }
 
-    
-    public String getRevDate() {
+    public Timestamp getRevDate() {
         return revDate;    
     }
 
-    public void setRevDate(String revDate) {
+    public void setRevDate(Timestamp revDate) {
         this.revDate = revDate;
     }
     
@@ -87,7 +75,6 @@ public class Revision implements Serializable{
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + (this.revID != null ? this.revID.hashCode() : 0);
-        hash = 97 * hash + (this.performedBy != null ? this.performedBy.hashCode() : 0);
         hash = 97 * hash + (this.comment != null ? this.comment.hashCode() : 0);
         hash = 97 * hash + (this.revDate != null ? this.revDate.hashCode() : 0);
         hash = 97 * hash + (this.machine != null ? this.machine.hashCode() : 0);
@@ -106,9 +93,6 @@ public class Revision implements Serializable{
         if (this.revID != other.revID && (this.revID == null || !this.revID.equals(other.revID))) {
             return false;
         }
-        if ((this.performedBy == null) ? (other.performedBy != null) : !this.performedBy.equals(other.performedBy)) {
-            return false;
-        }
         if ((this.comment == null) ? (other.comment != null) : !this.comment.equals(other.comment)) {
             return false;
         }
@@ -120,5 +104,6 @@ public class Revision implements Serializable{
         }
         return true;
     }
-  
+
+
 }
