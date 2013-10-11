@@ -9,6 +9,7 @@ import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
+import cz.muni.fi.pa165.pujcovnastroju.UserTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -37,7 +38,7 @@ public class LoanDAOTest extends TestCase {
         SystemUser su = new SystemUser();
         su.setLastName("Smith");
         su.setFirstName("Paul");
-        su.setEmploee(false);
+        su.setType(UserTypeEnum.CUSTOMER);
         loan.setCustomer(su);
         loan.setLoanState(LoanStateEnum.BOOKED);
         List<Machine> machines = new ArrayList<Machine>();

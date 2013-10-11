@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
+import cz.muni.fi.pa165.pujcovnastroju.UserTypeEnum;
 import java.util.List;
 
 /**
@@ -49,15 +50,16 @@ public interface SystemUserDAO {
      * @return list of all users
      */
     public List<SystemUser> findAllSystemUsers();
-    
+        
     /**
-     * Returns list of users with given first name and last name
+     * Retrieves system users that match given parameters. If any parameter is
+     * null, it won't be involved in lookup
      * 
      * @param firstName first name of users
      * @param lastName last name of users
-     * @return list of users with given name
-     * @throws IllegalArgumentException if firstName or lastName is null
+     * @param type type of users
+     * @return list of users that match the given parameters
      */
-    public List<SystemUser> findSystemUserByName(String firstName, String lastName);
+    public List<SystemUser> getSystemUsersByParams(String firstName, String lastName, UserTypeEnum type);
     
 }

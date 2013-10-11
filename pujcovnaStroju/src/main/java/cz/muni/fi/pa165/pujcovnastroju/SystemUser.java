@@ -1,7 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,16 +20,17 @@ public class SystemUser implements Serializable {
     * 	auto generated serial id
     */
     private static final long serialVersionUID = -2299546650455665467L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
-    private boolean emploee;
+    private UserTypeEnum type;
     
-    @OneToMany(mappedBy = "systemUser", cascade = CascadeType.ALL)
-    private List<Revision> revisions = new ArrayList<Revision>();
+    @OneToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Loan> loans;
+    @OneToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    private List<Revision> revisions;
 
     public Long getId() {
         return id;
@@ -56,12 +56,20 @@ public class SystemUser implements Serializable {
         this.lastName = lastName;
     }
 
-    public boolean isEmploee() {
-        return emploee;
+    public UserTypeEnum getType() {
+        return type;
     }
 
-    public void setEmploee(boolean emploee) {
-        this.emploee = emploee;
+    public void setType(UserTypeEnum type) {
+        this.type = type;
+    }
+    
+    public List<Loan> getLoans() {
+        return loans;
+    }
+
+    public void setLoans(List<Loan> loans) {
+        this.loans = loans;
     }
     
     public List<Revision> getRevisions() {
@@ -96,7 +104,7 @@ public class SystemUser implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emploee=" + emploee + '}';
+        return "User{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", type=" + type + '}';
     }
     
 }

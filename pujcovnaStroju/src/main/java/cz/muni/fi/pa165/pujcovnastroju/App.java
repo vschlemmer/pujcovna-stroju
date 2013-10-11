@@ -4,6 +4,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import cz.muni.fi.pa165.pujcovnastrojuDAO.SystemUserDAO;
 import cz.muni.fi.pa165.pujcovnastrojuDAO.SystemUserDAOImpl;
+import javax.persistence.EntityManager;
 
 public class App 
 {
@@ -12,10 +13,13 @@ public class App
         SystemUser user1 = new SystemUser();
         user1.setFirstName("Pepa");
         user1.setLastName("Prvni");
-        user1.setEmploee(true);
+        user1.setType(UserTypeEnum.CUSTOMER);
+        user1.setRevisions(null);
+        user1.setLoans(null);
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-        SystemUserDAO userDAO = new SystemUserDAOImpl(emf);
+        EntityManager em = emf.createEntityManager();
+        SystemUserDAO userDAO = new SystemUserDAOImpl(em);
         userDAO.create(user1);
         for (SystemUser u : userDAO.findAllSystemUsers()){
             System.out.println(u);
