@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import java.util.List;
 
+import java.lang.IllegalArgumentException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -58,12 +59,49 @@ public class MachineDAOTest extends TestCase {
 	}
 	
 	@Test
+	public void testConstruct() {
+		try {
+			MachineDAOImpl obj = new MachineDAOImpl(null);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			return;
+		}
+		fail();
+	}
+	
+	@Test
 	public void testCreateMachine() {
 		Machine m1 = getSampleMachine();
+		em.getTransaction().begin();
 		Machine m2 = testedObject.create(m1);
-		System.out.println(m1);
+		em.getTransaction().commit();
 		assertTrue(m1.equals(m2));
 	}
+	
+	
+
+	@Test
+	public void testCreateMachineWrongArg() {
+		boolean thrown = false;
+		try {
+			testedObject.create(null);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+		thrown = false;
+		try {
+			Machine m = getSampleMachine();
+			m.setLabel(null);
+			testedObject.create(m);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+	}
+	
 	
 	@Test
 	public void testGetAllMaChines() {
@@ -102,6 +140,28 @@ public class MachineDAOTest extends TestCase {
 		assertEquals(dummyMachine, updated);
 	}
 	
+	@Test 
+	public void testUpdateMachineWrongArgs() {
+		boolean thrown = false;
+		try {
+			testedObject.update(null);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+		thrown = false;
+		try {
+			Machine m = getSampleMachine();
+			m.setLabel(null);
+			testedObject.update(m);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+	}
+	
 	@Test
 	public void testDeleteMachine() {
 		createSampleMachines();
@@ -123,5 +183,37 @@ public class MachineDAOTest extends TestCase {
 		}
 	}
 	
+	@Test
+	public void testDeleteMachineWrongArgs() {
+		boolean thrown = false;
+		try {
+			testedObject.update(null);
+		} catch ( Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+		thrown = false;
+		try {
+			Machine m = getSampleMachine();
+			m.setId(null);
+			testedObject.update(m);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			thrown = true;
+		}
+		assertTrue(thrown);
+	}
+		
+	@Test
+	public void testReadMachineWrongArgs() {
+		try {
+			testedObject.read(null);
+		} catch (Exception e) {
+			assertTrue(e instanceof IllegalArgumentException);
+			return;
+		}
+		fail();
+	}
 	
 }

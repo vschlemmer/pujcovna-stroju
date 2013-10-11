@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 
 /**
  * Entity represents a machine in system
- * @author Michal Merta
+ * @author Michal Merta 374015
  *
  */
 @Entity(name="Machine")
@@ -36,12 +36,8 @@ public class Machine implements Serializable, Cloneable {
 	@Column(nullable=false)
 	private MachineTypeEnum type;
         
-        @ManyToMany(mappedBy = "machines")
-        private List<Loan> loans;
-	
-	
-	//TODO what else? possible pictures, some kind of technical specification?
-
+    @ManyToMany(mappedBy = "machines")
+    private List<Loan> loans;
 	
 	
 	public Long getId() {

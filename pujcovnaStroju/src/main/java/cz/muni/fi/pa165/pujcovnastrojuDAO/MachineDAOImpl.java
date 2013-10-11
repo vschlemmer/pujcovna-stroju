@@ -12,6 +12,11 @@ import javax.persistence.criteria.Root;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
 
+/**
+ * 
+ * @author Michal Merta 374015
+ *
+ */
 public class MachineDAOImpl implements MachineDAO{
 	
 	private EntityManager entityManager;
@@ -24,7 +29,7 @@ public class MachineDAOImpl implements MachineDAO{
 	}
 	
 	public MachineDAOImpl() {}
-	
+		
 	public Machine create(Machine machine) {
 		if (machine == null) {
 			throw new IllegalArgumentException("unset argument 'machine");
@@ -32,7 +37,9 @@ public class MachineDAOImpl implements MachineDAO{
 		if (machine.getLabel() == null) {
 			throw new IllegalArgumentException("argument 'label' must be set");
 		}
-		
+		if (machine.getLabel() == null) {
+			throw new IllegalArgumentException("argument 'type' must be set");
+		}
 		entityManager.persist(machine);
 		return machine;
 	}
@@ -67,6 +74,9 @@ public class MachineDAOImpl implements MachineDAO{
 	public void delete(Machine machine) {
 		if (machine == null) {
 			throw new IllegalArgumentException("unset argument 'machine'");
+		}
+		if (machine.getId() == null) {
+			throw new IllegalArgumentException("'id' must be set");
 		}
 		Machine toBeDeleted = entityManager.find(Machine.class, machine.getId());
 		if (toBeDeleted != null) {
