@@ -4,8 +4,8 @@ import cz.muni.fi.pa165.pujcovnastroju.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
-import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -88,7 +88,7 @@ public class LoanDAOImpl implements LoanDAO {
         return query.getResultList();
     }
 
-    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine) {
+    public List<Loan> getLoansByParams(Date loanedFrom, Date loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine) {
         EntityManager em = emf.createEntityManager();
 
         CriteriaBuilder cb = emf.getCriteriaBuilder();
@@ -98,11 +98,11 @@ public class LoanDAOImpl implements LoanDAO {
         
         cQuery.select(loanRoot);
         if (loanedFrom != null) {
-            Expression<Timestamp> loanedFromExp = loanRoot.get("loanTime");
+            Expression<Date> loanedFromExp = loanRoot.get("loanTime");
             cQuery.where(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
         }
         if (loanedTill != null) {
-            Expression<Timestamp> loanedTillExp = loanRoot.get("returnTime");
+            Expression<Date> loanedTillExp = loanRoot.get("returnTime");
             cQuery.where(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
         }
         if (loanState != null) cQuery.where(cb.equal(loanRoot.get("loanState"), loanState));

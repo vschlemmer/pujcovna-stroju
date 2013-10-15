@@ -1,7 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -37,8 +38,12 @@ public class Loan implements Serializable {
         @JoinColumn(name = "MACHINE_ID", referencedColumnName = "id")})
     private List<Machine> machines;
     
-    private Timestamp loanTime;
-    private Timestamp returnTime;
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date loanTime;
+    
+    
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date returnTime;
     
     @Column(nullable=false)
     private LoanStateEnum loanState;
@@ -59,11 +64,11 @@ public class Loan implements Serializable {
         this.customer = customer;
     }
 
-    public Timestamp getLoanTime() {
+    public Date getLoanTime() {
         return loanTime;
     }
 
-    public void setLoanTime(Timestamp loanTime) {
+    public void setLoanTime(Date loanTime) {
         this.loanTime = loanTime;
     }
 
@@ -75,11 +80,11 @@ public class Loan implements Serializable {
         this.machines = machines;
     }
 
-    public Timestamp getReturnTime() {
+    public Date getReturnTime() {
         return returnTime;
     }
 
-    public void setReturnTime(Timestamp returnTime) {
+    public void setReturnTime(Date returnTime) {
         this.returnTime = returnTime;
     }
 

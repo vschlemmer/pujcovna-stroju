@@ -1,6 +1,5 @@
 package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
-import java.sql.Timestamp;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManagerFactory;
 import junit.framework.TestCase;
@@ -11,6 +10,7 @@ import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.UserTypeEnum;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +33,8 @@ public class LoanDAOTest extends TestCase {
     
     public Loan createSampleLoan() {
         Loan loan = new Loan();
-        loan.setLoanTime(new Timestamp(System.currentTimeMillis()));
-        loan.setReturnTime(new Timestamp(System.currentTimeMillis()+36000000));
+        loan.setLoanTime(new Date(System.currentTimeMillis()));
+        loan.setReturnTime(new Date(System.currentTimeMillis()+36000000));
         SystemUser su = new SystemUser();
         su.setLastName("Smith");
         su.setFirstName("Paul");
@@ -86,8 +86,8 @@ public class LoanDAOTest extends TestCase {
         System.out.println("update");
         Loan loan = createSampleLoan();
         loanDAO.create(loan);
-        loan.setLoanTime(new Timestamp(System.currentTimeMillis()+10));
-        loan.setReturnTime(new Timestamp(System.currentTimeMillis()+20));
+        loan.setLoanTime(new Date(System.currentTimeMillis()+10));
+        loan.setReturnTime(new Date(System.currentTimeMillis()+20));
         loan.setCustomer(new SystemUser());
         loan.setMachines(null);
         loan.setLoanState(LoanStateEnum.LOANED);
@@ -160,8 +160,8 @@ public class LoanDAOTest extends TestCase {
     @Test
     public void testGetLoansByParams() {
         System.out.println("getLoansByParams");
-        Timestamp loanedFrom = new Timestamp(System.currentTimeMillis()+5000);
-        Timestamp loanedTill = new Timestamp(System.currentTimeMillis()+5001);
+        Date loanedFrom = new Date(System.currentTimeMillis()+5000);
+        Date loanedTill = new Date(System.currentTimeMillis()+5001);
         LoanStateEnum loanState = LoanStateEnum.RETURNED;
         
         Loan loan = createSampleLoan();

@@ -4,7 +4,7 @@ import cz.muni.fi.pa165.pujcovnastroju.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +14,7 @@ import java.util.List;
 public interface LoanDAO {
     
     /**
+     * Persist given loan into database
      * 
      * @param loan to be created
      * @return created loan
@@ -21,6 +22,7 @@ public interface LoanDAO {
     public Loan create(Loan loan);
     
     /**
+     * Updates given loan 
      * 
      * @param loan to be updated
      * @return updated loan
@@ -28,6 +30,7 @@ public interface LoanDAO {
     public Loan update(Loan loan);
     
     /**
+     * Reads loan with given id from database
      * 
      * @param id of the loan to be read
      * @return loan
@@ -35,6 +38,7 @@ public interface LoanDAO {
     public Loan read(Long id);
     
     /**
+     * Removes given loan from database
      * 
      * @param id of the loan to be deleted
      * @return deleted loan
@@ -42,12 +46,14 @@ public interface LoanDAO {
     public Loan delete(Long id);
     
     /**
+     * Returns all loans stored in the database
      * 
-     * @return all loans stored in the system 
+     * @return list of loans
      */
     public List<Loan> getAllLoans();
     
     /**
+     * Returns loans with the given parameters stored in the database
      * 
      * @param loanedFrom - determines the smallest loanTime of the returned loans
      * @param loanedTill - determines the largest returnTime of the returned loans
@@ -56,5 +62,5 @@ public interface LoanDAO {
      * @param includedMachine - machine of which loans are to be returned
      * @return list of the loans satisfying the parameters
      */
-    public List<Loan> getLoansByParams(Timestamp loanedFrom, Timestamp loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine);
+    public List<Loan> getLoansByParams(Date loanedFrom, Date loanedTill, LoanStateEnum loanState, SystemUser loanedBy, Machine includedMachine);
 }
