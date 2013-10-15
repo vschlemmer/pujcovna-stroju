@@ -5,6 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import cz.muni.fi.pa165.pujcovnastroju.Revision;
+import java.sql.Date;
 import java.sql.Timestamp;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -55,17 +56,17 @@ public class RevisionDAOImpl implements RevisionDAO {
         return query1.getResultList();   
     }
     
-    public List<Revision> findRevisionsByDate(Timestamp dateFrom, Timestamp dateTo){
+    public List<Revision> findRevisionsByDate(Date dateFrom, Date dateTo){
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Revision> cq = cb.createQuery(Revision.class);
         Root<Revision> revisionRoot = cq.from(Revision.class);
         cq.select(revisionRoot);
         if (dateFrom != null) {
-            Expression<Timestamp> dateFromExp = revisionRoot.get("revDate");
+            Expression<Date> dateFromExp = revisionRoot.get("revDate");
             cq.where(cb.greaterThanOrEqualTo(dateFromExp, dateFrom));
         }
         if (dateTo != null) {
-            Expression<Timestamp> dateToExp = revisionRoot.get("revDate");
+            Expression<Date> dateToExp = revisionRoot.get("revDate");
             cq.where(cb.lessThanOrEqualTo(dateToExp, dateTo));
         }
         return em.createQuery(cq).getResultList();

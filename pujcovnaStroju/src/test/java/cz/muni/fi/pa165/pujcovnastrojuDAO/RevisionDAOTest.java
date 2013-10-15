@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.pujcovnastroju.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.UserTypeEnum;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.TestCase;
@@ -14,12 +15,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-/* * 
+/* *
   * @author matej.fucek
  */
 public class RevisionDAOTest extends TestCase {
     private RevisionDAO revDAO;
-    
+
     @Before
     @Override
     public void setUp() {
@@ -27,10 +28,10 @@ public class RevisionDAOTest extends TestCase {
         EntityManager em = emf.createEntityManager();
         revDAO = new RevisionDAOImpl(em);
     }
-     
+
     /**
      * Creates a sample revision
-     * 
+     *
      * @return sample revision
      */
     public Revision createSampleRevision() {
@@ -41,10 +42,10 @@ public class RevisionDAOTest extends TestCase {
         revision.setSystemUser(createSampleUser());
         return revision;
     }
-    
+
     /**
      * Creates a sample machine
-     * 
+     *
      * @return sample machine
      */
     public Machine createSampleMachine() {
@@ -52,12 +53,12 @@ public class RevisionDAOTest extends TestCase {
             machine1.setLabel("bla bla");
             machine1.setDecription("BAAALGER");
             machine1.setType(MachineTypeEnum.BULDOZER);
-            return  machine1; 
+            return  machine1;
     }
-    
+
     /**
      * Creates a sample user
-     * 
+     *
      * @return sample user
      */
     public SystemUser createSampleUser(){
@@ -67,7 +68,7 @@ public class RevisionDAOTest extends TestCase {
         user.setType(UserTypeEnum.CUSTOMER);
         return user;
     }
-                    
+
      /**
       * Test revision creation
       */
@@ -91,7 +92,7 @@ public class RevisionDAOTest extends TestCase {
         catch(IllegalArgumentException ex){
         }
     }
-    
+
      /**
      * Test reading a Revision
      */
@@ -107,7 +108,7 @@ public class RevisionDAOTest extends TestCase {
         assertEquals(revision1.getSystemUser(), revision2.getSystemUser());
         revDAO.delete(revision1);
     }
-     
+
     /**
      * Test updating a revision
      */
@@ -124,7 +125,7 @@ public class RevisionDAOTest extends TestCase {
         assertEquals(revision1.getSystemUser(), revision2.getSystemUser());
         revDAO.delete(revision1);
     }
-    
+
     /**
      * Test deleting a Revison
      */
@@ -134,7 +135,7 @@ public class RevisionDAOTest extends TestCase {
         revDAO.delete(revision1);
         assertNull(revDAO.read(revision1.getRevID()));
     }
-    
+
     /**
      * Test retrieving all revisions
      */
@@ -150,7 +151,7 @@ public class RevisionDAOTest extends TestCase {
         revDAO.delete(revision1);
         revDAO.delete(revision2);
     }
-    
+
     /**
      * Test retrieving revisions by date
      */
@@ -162,10 +163,9 @@ public class RevisionDAOTest extends TestCase {
         List<Revision> revisions1 = new ArrayList<>();
         revisions1.add(revision1);
         revisions1.add(revision2);
-        Timestamp dateFrom = new Timestamp(System.currentTimeMillis()-36000000);
-        Timestamp dateTo = new Timestamp(System.currentTimeMillis()+36000000);
+        Date dateFrom = new Date(System.currentTimeMillis()-36000000);
+        Date dateTo = new Date(System.currentTimeMillis()+36000000);
         List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
         assertEquals(revisions1, revisions2);
     }
 }
-    

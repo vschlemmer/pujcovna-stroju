@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.pujcovnastrojuDAO;
 
 import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.Revision;
+import java.sql.Date;
 import java.sql.Timestamp;
 /**
  * * @author Matej Fucek
@@ -58,5 +59,5 @@ public interface RevisionDAO {
      * @param dateTo date to which the revisions should be retrieved
      * @return list of revisions that suit the filter
      */
-    public List<Revision> findRevisionsByDate(Timestamp dateFrom, Timestamp dateTo);
+    public List<Revision> findRevisionsByDate(Date dateFrom, Date dateTo);
 }

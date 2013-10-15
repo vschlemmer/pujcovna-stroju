@@ -5,10 +5,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import javax.persistence.CascadeType;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 /**
  *
  * @author Matej Fucek
@@ -24,7 +25,9 @@ public class Revision implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long revID;
     private String comment;
-    private Timestamp revDate;
+            
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date revDate;
     
     @ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Machine machine;
@@ -55,11 +58,11 @@ public class Revision implements Serializable{
         this.machine = machine;
     }
 
-    public Timestamp getRevDate() {
+    public Date getRevDate() {
         return revDate;    
     }
 
-    public void setRevDate(Timestamp revDate) {
+    public void setRevDate(Date revDate) {
         this.revDate = revDate;
     }
     
