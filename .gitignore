@@ -3,6 +3,9 @@
 /bin/
 target/
 
+#logs
+*.log
+
 # Package Files #
 *.jar
 *.war
