@@ -7,7 +7,8 @@ package cz.muni.fi.pa165.pujcovnastroju.service;
 import java.sql.Date;
 import java.util.List;
 
-import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+
 
 /**
  *
@@ -22,7 +23,7 @@ public interface RevisionService {
      * @return created Revision
      * @throws IllegalArgumentException if the Revision is null
      */ 
-    public Revision createBizRevision (Revision revID);
+    public RevisionDTO createBizRevision (RevisionDTO revID);
 
     /**
      * Deletes an Revision
@@ -31,23 +32,14 @@ public interface RevisionService {
      * @return deleted RevID
      * @throws IllegalArgumentException if the RevID is null
      */
-    public Revision deleteBizRevision (Revision revID);   
-
-    /**
-     * Updates given revID
-     * 
-     * @param revID to be updated
-     * @return updated RevID
-     * @throws IllegalArgumentException if the RevID is null
-     */
-    public Revision updateBizRevision (Revision revID);
+    public RevisionDTO deleteBizRevision (RevisionDTO revID);
     
     /**
      * Returns all Revisions
      * 
      * @return list of all Revision 
      */
-    public List<Revision> findAllrevisionsBizRevision();
+    public List<RevisionDTO> findAllrevisionsBizRevision();
 
     /**
      * Reads Revision with given revID
@@ -56,7 +48,7 @@ public interface RevisionService {
      * @return Revision with the given revID
      * @throws IllegalArgumentException if the revID is null
      */
-    public Revision readBizRevision (Long revID);
+    public RevisionDTO readBizRevision (Long revID);
  
     /**
      * Retrieves all revisions that were made in given time interval
@@ -65,5 +57,5 @@ public interface RevisionService {
      * @param dateTo date to which the revisions should be retrieved
      * @return list of revisions that suit the filter
      */
-    public List<Revision> findRevisionsByDateBizRevision(Date dateFrom, Date dateTo);
+    public List<RevisionDTO> findRevisionsByDateBizRevision(Date dateFrom, Date dateTo);
 }
