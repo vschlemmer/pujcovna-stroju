@@ -41,6 +41,8 @@ public class LoanDTOConverter {
      * @return LoanDTO or null if loan is null
      */
     public static LoanDTO entityToDTO(Loan loan) {
+	if (loan == null) return null;
+	
 	LoanDTO loanDTO = new LoanDTO();
 	loanDTO.setId(loan.getId());
 	loanDTO.setCustomer(SystemUserDTOConverter.entityToDTO(loan.getCustomer()));
