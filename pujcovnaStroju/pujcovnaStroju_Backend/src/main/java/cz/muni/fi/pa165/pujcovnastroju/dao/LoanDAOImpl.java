@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -16,6 +14,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+import javax.persistence.TransactionRequiredException;
 
 /**
  * 
@@ -59,7 +58,11 @@ public class LoanDAOImpl implements LoanDAO {
 		
 		Loan loan = null;
 		loan = em.find(Loan.class, id);
-		em.remove(loan);
+		try {
+			em.remove(loan);
+		} catch (TransactionRequiredException e) {
+			throw new IllegalArgumentException("transaction required", e);
+		}
 
 		return loan;
 	}
