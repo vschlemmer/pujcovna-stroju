@@ -39,7 +39,7 @@ public interface SystemUserService {
      * @return deleted user
      * @throws IllegalArgumentException if the user is null
      */
-    public SystemUserDTO delete(SystemUserDTO userDTO);
+    public void delete(SystemUserDTO userDTO);
     /**
      * Returns all users
      * 
