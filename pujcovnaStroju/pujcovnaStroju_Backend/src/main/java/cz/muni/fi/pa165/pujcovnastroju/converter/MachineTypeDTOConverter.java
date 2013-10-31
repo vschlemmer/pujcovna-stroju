@@ -10,11 +10,15 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
  */
 public class MachineTypeDTOConverter {
 	public static MachineTypeEnum dtoToEntity(MachineTypeEnumDTO dto) {
+		if (dto == null) return null;
+		
 		MachineTypeEnum type = MachineTypeEnum.valueOf(dto.typeLabel);
 		return type;
 	}
 	
 	public static MachineTypeEnumDTO entityToDto(MachineTypeEnum type) {
+		if (type == null) return null;
+		
 		MachineTypeEnumDTO dto = new MachineTypeEnumDTO();
 		dto.setId(Long.valueOf(type.ordinal()));
 		dto.setTypeLabel(type.name());
