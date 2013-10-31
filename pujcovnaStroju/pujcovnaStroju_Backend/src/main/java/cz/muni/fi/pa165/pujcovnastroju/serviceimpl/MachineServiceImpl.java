@@ -33,9 +33,11 @@ public class MachineServiceImpl implements MachineService {
 		MachineDTO dto = null;
 		Machine machine = null;
 		try {
+			System.out.println("CREATE");
 			machine = machineDao.create(MachineDTOConverter
 					.dtoToEntity(machineDTO));
 			dto = MachineDTOConverter.entityToDto(machine);
+			System.out.println("CREATE END");
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing Machine", e);
@@ -77,7 +79,7 @@ public class MachineServiceImpl implements MachineService {
 		try {
 			machineDao.delete(MachineDTOConverter.dtoToEntity(machineDTO));
 		} catch (IllegalArgumentException e) {
-			throw new DataAccessResourceFailureException(
+			throw new DataAccessResourceFailureException (
 					"Error occured during deleting Machine", e);
 		}
 	}

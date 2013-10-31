@@ -3,11 +3,14 @@ package cz.muni.fi.pa165.pujcovnastroju.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
+
+import org.springframework.stereotype.Repository;
 
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
@@ -17,8 +20,10 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
  * @author Michal Merta 374015
  * 
  */
+@Repository
 public class MachineDAOImpl implements MachineDAO {
-
+	
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	public MachineDAOImpl(EntityManager em) {
