@@ -23,8 +23,9 @@ public class RevisionDAOImpl implements RevisionDAO {
 
 	private EntityManager em;
 
-	public RevisionDAOImpl(EntityManager em) {
-		this.em = em;
+	public RevisionDAOImpl(EntityManager em) throws IllegalArgumentException {
+		if(em == null) throw new IllegalArgumentException("em is null");
+		else this.em = em;
 	}
 
 	public Revision create(Revision revision) {
@@ -51,6 +52,9 @@ public class RevisionDAOImpl implements RevisionDAO {
 	}
 
 	public Revision read(Long RevID) {
+            if (RevID== null){
+                throw new IllegalArgumentException("unset argument 'id'");
+            }
 		return em.find(Revision.class, RevID);
 	}
 
