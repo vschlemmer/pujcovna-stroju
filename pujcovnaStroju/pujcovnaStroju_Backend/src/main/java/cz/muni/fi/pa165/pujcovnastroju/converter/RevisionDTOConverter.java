@@ -2,6 +2,8 @@ package cz.muni.fi.pa165.pujcovnastroju.converter;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -50,4 +52,20 @@ public class RevisionDTOConverter {
 
         return revisionDTO;
     }
+    
+    public static List<RevisionDTO> listToDto(List<Revision> list) {
+		 List<RevisionDTO> resultList = new ArrayList<>();
+		 for (Revision entity: list) {
+			 resultList.add(RevisionDTOConverter.entityToDTO(entity));
+		 }
+		 return resultList;
+	 }
+	 
+	 public static List<Revision> listToEntities(List<RevisionDTO> listDTO) {
+		List<Revision> resultList = new ArrayList<>();
+		for (RevisionDTO dto : listDTO) {
+		    resultList.add(RevisionDTOConverter.dtoToEntity(dto));
+		}
+		return resultList;
+	 }
 }
