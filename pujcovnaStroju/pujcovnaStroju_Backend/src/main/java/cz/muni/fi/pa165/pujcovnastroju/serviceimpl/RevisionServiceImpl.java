@@ -5,11 +5,11 @@ import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
+import java.sql.Date;
 
 /**
  *
@@ -59,15 +59,8 @@ public class RevisionServiceImpl implements RevisionService {
 
     @Override
     public List<RevisionDTO> findAllrevisionsBizRevision() {
-        List<Revision> revisions = rDAO.findAllrevisions();
-        List<RevisionDTO> ret = new ArrayList<>();
-
-        for (Revision r : revisions) {
-            ret.add(RevisionDTOConverter.entityToDTO(r));
-        }
-
-        return ret;
-
+        List<Revision> revisionlist = rDAO.findAllrevisions();
+        return RevisionDTOConverter.listToDto(revisionlist);
     }
 
     @Override
@@ -87,6 +80,9 @@ public class RevisionServiceImpl implements RevisionService {
 
     @Override
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date date, Date date1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<RevisionDTO> revisionlist = new ArrayList<>();
+        List<Revision> revisionList = rDAO.findRevisionsByDate(RevisionDTOConverter.dtoToEntity(Date date, Date date1));   
+    return RevisionDTOConverter.listToDto(revisionList);
+
     }
 }
