@@ -1,14 +1,11 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Default implementation of LoanDTO
+ * 
  * @author xguttner
  */
 public class LoanDTO {

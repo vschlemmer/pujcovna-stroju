@@ -1,7 +1,8 @@
 package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 /**
- *
+ * Default implementation of LoanStateEnumDTO
+ * 
  * @author xguttner
  */
 public class LoanStateEnumDTO {

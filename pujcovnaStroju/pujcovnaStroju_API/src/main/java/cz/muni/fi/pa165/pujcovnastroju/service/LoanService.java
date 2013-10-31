@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * 
  * @author xguttner
  */
 public interface LoanService {
