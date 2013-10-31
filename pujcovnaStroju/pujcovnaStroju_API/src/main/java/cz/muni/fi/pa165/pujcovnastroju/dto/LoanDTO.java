@@ -36,7 +36,6 @@ public class LoanDTO {
 	    this.id = id;
 	}
 	
-	
 	public LoanStateEnumDTO getLoanState() {
 	    return loanState;
 	}
