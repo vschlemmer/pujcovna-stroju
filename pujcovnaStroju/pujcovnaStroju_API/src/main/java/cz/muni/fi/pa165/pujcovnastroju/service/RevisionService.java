@@ -40,7 +40,7 @@ public interface RevisionService {
      * Deletes an Revision
      *
      * @param revID to be deleted
-     * @return deleted RevID
+     
      * @throws IllegalArgumentException if the RevID is null
      */
     public void deleteBizRevision (RevisionDTO revisionDTO);
