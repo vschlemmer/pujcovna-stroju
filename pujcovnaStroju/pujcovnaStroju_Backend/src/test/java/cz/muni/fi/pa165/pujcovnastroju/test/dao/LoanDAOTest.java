@@ -146,7 +146,7 @@ public class LoanDAOTest extends TestCase {
     public void testDelete() {
         System.out.println("delete");
         Loan loan = createSampleLoan();
-	em.getTransaction().commit();
+	em.getTransaction().begin();
         loanDAO.create(loan);
 	em.getTransaction().commit();
         Long id = loan.getId();
