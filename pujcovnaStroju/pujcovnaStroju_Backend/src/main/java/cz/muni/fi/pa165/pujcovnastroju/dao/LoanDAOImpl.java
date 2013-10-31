@@ -23,105 +23,85 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
  */
 public class LoanDAOImpl implements LoanDAO {
 
-	private EntityManagerFactory emf;
+	private EntityManager em;
 
-	public LoanDAOImpl(EntityManagerFactory emf) {
-		this.emf = emf;
+	public LoanDAOImpl(EntityManager em) {
+		if(em == null) throw new IllegalArgumentException("em is null");
+		else this.em = em;
 	}
 
 	public Loan create(Loan loan) {
-		EntityManager em = emf.createEntityManager();
-
-		em.getTransaction().begin();
+		if (loan == null) throw new IllegalArgumentException("loan is null"); 
 		em.persist(loan);
-		em.getTransaction().commit();
-
-		em.close();
-
 		return loan;
 	}
 
 	public Loan update(Loan loan) {
-		if (loan != null) {
-			EntityManager em = emf.createEntityManager();
+		if (loan == null) throw new IllegalArgumentException("loan is null");
+		if (loan.getId() == null) throw new IllegalArgumentException("loan.id is null");
 
-			em.getTransaction().begin();
-			if (loan.getId() != null) {
-				Loan loanStored = em.find(Loan.class, loan.getId());
-				if (loanStored != null)
-					em.merge(loan);
-				else
-					em.persist(loan);
-			} else
-				em.persist(loan);
-			em.getTransaction().commit();
+		Loan loanStored = em.find(Loan.class, loan.getId());
+		if (loanStored != null) em.merge(loan);
+		else em.persist(loan);
 
-			em.close();
-		}
 		return loan;
 	}
 
 	public Loan read(Long id) {
-		EntityManager em = emf.createEntityManager();
-
+		if (id == null) throw new IllegalArgumentException("id is null");
+		
 		Loan loan = (Loan) em.find(Loan.class, id);
-
-		em.close();
-
 		return loan;
 	}
 
 	public Loan delete(Long id) {
+		if (id == null) throw new IllegalArgumentException("id is null");
+		
 		Loan loan = null;
-		if (id != null) {
-			EntityManager em = emf.createEntityManager();
+		loan = em.find(Loan.class, id);
+		em.remove(loan);
 
-			em.getTransaction().begin();
-			loan = em.find(Loan.class, id);
-			em.remove(loan);
-			em.getTransaction().commit();
-
-			em.close();
-		}
 		return loan;
 	}
 
 	public List<Loan> getAllLoans() {
-		EntityManager em = emf.createEntityManager();
-		TypedQuery<Loan> query = em.createQuery("SELECT l FROM Loan l",
-				Loan.class);
-		return query.getResultList();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Loan> cq = cb.createQuery(Loan.class);
+		
+		Root<Loan> loanRoot = cq.from(Loan.class);
+		cq.select(loanRoot);
+		
+		return em.createQuery(cq).getResultList();
 	}
 
 	public List<Loan> getLoansByParams(Date loanedFrom, Date loanedTill,
 			LoanStateEnum loanState, SystemUser loanedBy,
 			Machine includedMachine) {
-		EntityManager em = emf.createEntityManager();
+	    
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Loan> cq = cb.createQuery(Loan.class);
 
-		CriteriaBuilder cb = emf.getCriteriaBuilder();
-		CriteriaQuery<Loan> cQuery = cb.createQuery(Loan.class);
-
-		Root<Loan> loanRoot = cQuery.from(Loan.class);
-
-		cQuery.select(loanRoot);
+		Root<Loan> loanRoot = cq.from(Loan.class);
+		cq.select(loanRoot);
+		
 		if (loanedFrom != null) {
 			Expression<Date> loanedFromExp = loanRoot.get("loanTime");
-			cQuery.where(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
+			cq.where(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
 		}
 		if (loanedTill != null) {
 			Expression<Date> loanedTillExp = loanRoot.get("returnTime");
-			cQuery.where(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
+			cq.where(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
 		}
 		if (loanState != null)
-			cQuery.where(cb.equal(loanRoot.get("loanState"), loanState));
+			cq.where(cb.equal(loanRoot.get("loanState"), loanState));
 		if (loanedBy != null)
-			cQuery.where(cb.equal(loanRoot.get("customer"), loanedBy));
+			cq.where(cb.equal(loanRoot.get("customer"), loanedBy));
 		if (includedMachine != null) {
 			Expression<Collection> machinesExp = loanRoot.get("machines");
-			cQuery.where(cb.isMember(includedMachine, machinesExp));
+			cq.where(cb.isMember(includedMachine, machinesExp));
 		}
 
-		return em.createQuery(cQuery).getResultList();
+		return em.createQuery(cq).getResultList();
 	}
 
 }

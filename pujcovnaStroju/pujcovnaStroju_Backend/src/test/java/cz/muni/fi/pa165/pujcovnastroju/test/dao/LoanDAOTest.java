@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.dao;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.EntityManagerFactory;
 
@@ -28,13 +29,15 @@ import static org.junit.Assert.*;
  */
 public class LoanDAOTest extends TestCase {
     
+    private EntityManager em;
     private LoanDAO loanDAO;
     
     @Before
     @Override
     public void setUp() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-        loanDAO = new LoanDAOImpl(emf);
+	em = emf.createEntityManager();
+        loanDAO = new LoanDAOImpl(em);
     }
     
     public Loan createSampleLoan() {
@@ -69,7 +72,9 @@ public class LoanDAOTest extends TestCase {
         Loan loan = createSampleLoan();
         assertNull(loan.getId());
         Loan expResult = loan;
+	em.getTransaction().begin();
         Loan result = loanDAO.create(loan);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         assertEquals(expResult.getCustomer(), result.getCustomer());
         assertEquals(expResult.getLoanState(), result.getLoanState());
@@ -91,14 +96,18 @@ public class LoanDAOTest extends TestCase {
     public void testUpdate() {
         System.out.println("update");
         Loan loan = createSampleLoan();
+	em.getTransaction().begin();
         loanDAO.create(loan);
+	em.getTransaction().commit();
         loan.setLoanTime(new Date(System.currentTimeMillis()+10));
         loan.setReturnTime(new Date(System.currentTimeMillis()+20));
         loan.setCustomer(new SystemUser());
         loan.setMachines(null);
         loan.setLoanState(LoanStateEnum.LOANED);
         Loan expResult = loan;
+	em.getTransaction().begin();
         Loan result = loanDAO.update(loan);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         assertEquals(expResult.getCustomer(), result.getCustomer());
         assertEquals(expResult.getLoanState(), result.getLoanState());
@@ -114,10 +123,14 @@ public class LoanDAOTest extends TestCase {
     public void testRead() {
         System.out.println("read");
         Loan loan = createSampleLoan();
-        loanDAO.create(loan);
+        em.getTransaction().begin();
+	loanDAO.create(loan);
+	em.getTransaction().commit();
         Long id = loan.getId();
         Loan expResult = loan;
+	em.getTransaction().begin();
         Loan result = loanDAO.read(id);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         assertEquals(expResult.getCustomer(), result.getCustomer());
         assertEquals(expResult.getLoanState(), result.getLoanState());
@@ -133,10 +146,14 @@ public class LoanDAOTest extends TestCase {
     public void testDelete() {
         System.out.println("delete");
         Loan loan = createSampleLoan();
+	em.getTransaction().commit();
         loanDAO.create(loan);
+	em.getTransaction().commit();
         Long id = loan.getId();
         Loan expResult = loan;
+	em.getTransaction().begin();
         Loan result = loanDAO.delete(id);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         assertNull(loanDAO.read(expResult.getId()));
     }
@@ -148,15 +165,23 @@ public class LoanDAOTest extends TestCase {
     public void testGetAllLoans() {
         System.out.println("getAllLoans");
         Loan loan = createSampleLoan();
+	em.getTransaction().begin();
         loanDAO.create(loan);
+	em.getTransaction().commit();
         List expResult = new ArrayList();
         expResult.add(loan);
+	em.getTransaction().begin();
         List result = loanDAO.getAllLoans();
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         Loan loan2 = createSampleLoan();
+	em.getTransaction().begin();
         loanDAO.create(loan2);
+	em.getTransaction().commit();
         expResult.add(loan2);
+	em.getTransaction().begin();
         result = loanDAO.getAllLoans();
+	em.getTransaction().commit();
         assertEquals(expResult, result);
     }
 
@@ -171,6 +196,7 @@ public class LoanDAOTest extends TestCase {
         LoanStateEnum loanState = LoanStateEnum.RETURNED;
         
         Loan loan = createSampleLoan();
+	em.getTransaction().begin();
         loanDAO.create(loan);
         
         Loan loan2 = createSampleLoan();
@@ -178,6 +204,7 @@ public class LoanDAOTest extends TestCase {
         loan2.setLoanTime(loanedFrom);
         loan2.setReturnTime(loanedTill);
         loanDAO.create(loan2);
+	em.getTransaction().commit();
         
         SystemUser loanedBy = loan2.getCustomer();
         Machine includedMachine = loan2.getMachines().get(0);
@@ -186,11 +213,15 @@ public class LoanDAOTest extends TestCase {
         expResult.add(loan);
         expResult.add(loan2);
         
+	em.getTransaction().begin();
         List result = loanDAO.getLoansByParams(null, null, null, null, null);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
         
         expResult.remove(loan);
+	em.getTransaction().begin();
         result = loanDAO.getLoansByParams(loanedFrom, loanedTill, loanState, loanedBy, includedMachine);
+	em.getTransaction().commit();
         assertEquals(expResult, result);
     }
 }

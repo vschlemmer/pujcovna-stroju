@@ -20,6 +20,8 @@ public interface LoanDAO {
 	 * @param loan
 	 *            to be created
 	 * @return created loan
+	 * @throws IllegalArgumentException
+	 *             when loan is null
 	 */
 	public Loan create(Loan loan);
 
@@ -29,6 +31,8 @@ public interface LoanDAO {
 	 * @param loan
 	 *            to be updated
 	 * @return updated loan
+	 * @throws IllegalArgumentException
+	 *             when loan or loan.id is null
 	 */
 	public Loan update(Loan loan);
 
@@ -38,6 +42,8 @@ public interface LoanDAO {
 	 * @param id
 	 *            of the loan to be read
 	 * @return loan
+	 * @throws IllegalArgumentException
+	 *             when id is null
 	 */
 	public Loan read(Long id);
 
@@ -47,6 +53,8 @@ public interface LoanDAO {
 	 * @param id
 	 *            of the loan to be deleted
 	 * @return deleted loan
+	 * @throws IllegalArgumentException
+	 *             when id is null
 	 */
 	public Loan delete(Long id);
 
