@@ -63,6 +63,7 @@ public class MachineDAOImpl implements MachineDAO {
 			toBeUpdated.setLabel(machine.getLabel());
 			toBeUpdated.setDecription(machine.getDecription());
 			toBeUpdated.setType(machine.getType());
+			toBeUpdated.setLoans(machine.getLoans());
 		} else {
 			toBeUpdated = machine;
 			entityManager.persist(machine);

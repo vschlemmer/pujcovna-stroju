@@ -2,7 +2,9 @@ package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 /**
  * 
- * @author Default implementation of Machine type enumeration
+ * @author Michal Merta 
+ * 
+ * Default implementation of Machine type enumeration
  *
  */
 public class MachineTypeEnumDTO {
