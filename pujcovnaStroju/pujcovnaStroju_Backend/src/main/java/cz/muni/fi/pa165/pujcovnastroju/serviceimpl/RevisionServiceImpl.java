@@ -1,15 +1,16 @@
 package cz.muni.fi.pa165.pujcovnastroju.serviceimpl;
 
+import java.sql.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
+
 import cz.muni.fi.pa165.pujcovnastroju.converter.RevisionDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessResourceFailureException;
-import java.sql.Date;
 
 /**
  *
@@ -80,8 +81,7 @@ public class RevisionServiceImpl implements RevisionService {
 
     @Override
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date date, Date date1) {
-        List<RevisionDTO> revisionlist = new ArrayList<>();
-        List<Revision> revisionList = rDAO.findRevisionsByDate(RevisionDTOConverter.dtoToEntity(Date date, Date date1));   
+        List<Revision> revisionList = rDAO.findRevisionsByDate(date, date1);   
     return RevisionDTOConverter.listToDto(revisionList);
 
     }
