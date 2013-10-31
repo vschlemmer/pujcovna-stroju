@@ -13,11 +13,11 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
  */
 public class SystemUserDTOConverter {
 
-    static SystemUser dtoToEntity(SystemUserDTO systemUser) {
+    public static SystemUser dtoToEntity(SystemUserDTO systemUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    static SystemUserDTO entityToDTO(SystemUser systemUser) {
+    public static SystemUserDTO entityToDTO(SystemUser systemUser) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
