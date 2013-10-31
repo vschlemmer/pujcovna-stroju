@@ -71,6 +71,14 @@ public class Machine implements Serializable, Cloneable {
 	public void setType(MachineTypeEnum type) {
 		this.type = type;
 	}
+	
+	public List<Loan> getLoans() {
+		return loans;
+	}
+
+	public void setLoans(List<Loan> loans) {
+		this.loans = loans;
+	}
 
 	@Override
 	public Object clone() {
