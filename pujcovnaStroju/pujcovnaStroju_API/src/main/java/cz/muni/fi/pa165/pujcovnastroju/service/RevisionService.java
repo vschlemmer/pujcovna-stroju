@@ -23,16 +23,27 @@ public interface RevisionService {
      * @return created Revision
      * @throws IllegalArgumentException if the Revision is null
      */ 
-    public RevisionDTO createBizRevision (RevisionDTO revID);
+    public RevisionDTO createBizRevision (RevisionDTO revisionDTO);
+    
+    
+    /**
+	
+     * Updates given revID
+     *
+     * @param revID to be updated
+     * @return updated RevID
+     * @throws IllegalArgumentException if the RevID is null
+     */
+    public RevisionDTO updateBizRevision(RevisionDTO revisionDTO);
 
     /**
      * Deletes an Revision
-     * 
+     *
      * @param revID to be deleted
      * @return deleted RevID
      * @throws IllegalArgumentException if the RevID is null
      */
-    public RevisionDTO deleteBizRevision (RevisionDTO revID);
+    public void deleteBizRevision (RevisionDTO revisionDTO);
     
     /**
      * Returns all Revisions
