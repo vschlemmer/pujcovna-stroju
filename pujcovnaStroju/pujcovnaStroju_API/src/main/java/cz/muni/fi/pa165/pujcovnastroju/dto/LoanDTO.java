@@ -2,6 +2,7 @@ package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Default implementation of LoanDTO
@@ -64,4 +65,28 @@ public class LoanDTO {
 	public void setReturnTime(Date returnTime) {
 	    this.returnTime = returnTime;
 	}
+
+    public boolean equals(Object obj) {
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final LoanDTO other = (LoanDTO) obj;
+	if (!Objects.equals(this.id, other.id)) {
+	    return false;
+	}
+	return true;
+    }
+
+    public int hashCode() {
+	int hash = 7;
+	hash = 23 * hash + Objects.hashCode(this.id);
+	return hash;
+    }
+
+    public String toString() {
+	return "LoanDTO{" + "id=" + id + ", customer=" + customer + ", machines=" + machines + ", loanTime=" + loanTime + ", returnTime=" + returnTime + ", loanState=" + loanState + '}';
+    }
 }
