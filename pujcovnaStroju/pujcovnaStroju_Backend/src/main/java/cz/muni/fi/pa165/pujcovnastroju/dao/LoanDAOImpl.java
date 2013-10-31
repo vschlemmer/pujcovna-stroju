@@ -25,18 +25,18 @@ public class LoanDAOImpl implements LoanDAO {
 
 	private EntityManager em;
 
-	public LoanDAOImpl(EntityManager em) {
+	public LoanDAOImpl(EntityManager em) throws IllegalArgumentException {
 		if(em == null) throw new IllegalArgumentException("em is null");
 		else this.em = em;
 	}
 
-	public Loan create(Loan loan) {
+	public Loan create(Loan loan) throws IllegalArgumentException {
 		if (loan == null) throw new IllegalArgumentException("loan is null"); 
 		em.persist(loan);
 		return loan;
 	}
 
-	public Loan update(Loan loan) {
+	public Loan update(Loan loan) throws IllegalArgumentException {
 		if (loan == null) throw new IllegalArgumentException("loan is null");
 		if (loan.getId() == null) throw new IllegalArgumentException("loan.id is null");
 
@@ -47,14 +47,14 @@ public class LoanDAOImpl implements LoanDAO {
 		return loan;
 	}
 
-	public Loan read(Long id) {
+	public Loan read(Long id) throws IllegalArgumentException {
 		if (id == null) throw new IllegalArgumentException("id is null");
 		
 		Loan loan = (Loan) em.find(Loan.class, id);
 		return loan;
 	}
 
-	public Loan delete(Long id) {
+	public Loan delete(Long id) throws IllegalArgumentException {
 		if (id == null) throw new IllegalArgumentException("id is null");
 		
 		Loan loan = null;

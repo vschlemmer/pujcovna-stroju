@@ -23,7 +23,7 @@ public interface LoanDAO {
 	 * @throws IllegalArgumentException
 	 *             when loan is null
 	 */
-	public Loan create(Loan loan);
+	public Loan create(Loan loan) throws IllegalArgumentException;
 
 	/**
 	 * Updates given loan
@@ -34,7 +34,7 @@ public interface LoanDAO {
 	 * @throws IllegalArgumentException
 	 *             when loan or loan.id is null
 	 */
-	public Loan update(Loan loan);
+	public Loan update(Loan loan) throws IllegalArgumentException;
 
 	/**
 	 * Reads loan with given id from database
@@ -45,7 +45,7 @@ public interface LoanDAO {
 	 * @throws IllegalArgumentException
 	 *             when id is null
 	 */
-	public Loan read(Long id);
+	public Loan read(Long id) throws IllegalArgumentException;
 
 	/**
 	 * Removes given loan from database
@@ -56,7 +56,7 @@ public interface LoanDAO {
 	 * @throws IllegalArgumentException
 	 *             when id is null
 	 */
-	public Loan delete(Long id);
+	public Loan delete(Long id) throws IllegalArgumentException;
 
 	/**
 	 * Returns all loans stored in the database
