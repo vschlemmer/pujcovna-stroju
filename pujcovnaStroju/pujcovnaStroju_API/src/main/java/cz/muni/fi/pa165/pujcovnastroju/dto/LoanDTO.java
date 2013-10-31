@@ -35,7 +35,7 @@ public class LoanDTO {
 	public void setId(Long id) {
 	    this.id = id;
 	}
-
+	
 	public LoanStateEnumDTO getLoanState() {
 	    return loanState;
 	}
