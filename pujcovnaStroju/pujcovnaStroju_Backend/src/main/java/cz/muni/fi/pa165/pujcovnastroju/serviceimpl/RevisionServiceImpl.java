@@ -81,8 +81,8 @@ public class RevisionServiceImpl implements RevisionService {
 
     @Override
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date date, Date date1) {
-        List<Revision> revisionList = rDAO.findRevisionsByDate(date, date1);   
-    return RevisionDTOConverter.listToDto(revisionList);
+        List<Revision> revisionList = rDAO.findRevisionsByDate(date, date1);
+        return RevisionDTOConverter.listToDto(revisionList);
 
     }
 }
