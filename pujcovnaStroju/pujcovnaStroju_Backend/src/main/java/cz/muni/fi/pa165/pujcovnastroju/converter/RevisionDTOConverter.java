@@ -52,20 +52,38 @@ public class RevisionDTOConverter {
 
         return revisionDTO;
     }
+
     
+    /**
+     * Converts list of entity objects to list of DTOs
+     * 
+     * @param list to be converted
+     * @return list of DTOs or null if list is null
+     */
     public static List<RevisionDTO> listToDto(List<Revision> list) {
-		 List<RevisionDTO> resultList = new ArrayList<>();
-		 for (Revision entity: list) {
-			 resultList.add(RevisionDTOConverter.entityToDTO(entity));
-		 }
-		 return resultList;
-	 }
-	 
-	 public static List<Revision> listToEntities(List<RevisionDTO> listDTO) {
-		List<Revision> resultList = new ArrayList<>();
-		for (RevisionDTO dto : listDTO) {
-		    resultList.add(RevisionDTOConverter.dtoToEntity(dto));
-		}
-		return resultList;
-	 }
+        if (list == null) {
+            return null;
+        }
+        List<RevisionDTO> resultList = new ArrayList<>();
+        for (Revision entity : list) {
+            resultList.add(RevisionDTOConverter.entityToDTO(entity));
+        }
+        return resultList;
+    }
+/**
+     * Converts list of DTOs to list of entity objects
+     * 
+     * @param listDTO to be converted
+     * @return list of Loan or null if listDTO is null
+     */
+    public static List<Revision> listToEntities(List<RevisionDTO> listDTO) {
+        if (listDTO == null) {
+            return null;
+        }
+        List<Revision> resultList = new ArrayList<>();
+        for (RevisionDTO dto : listDTO) {
+            resultList.add(RevisionDTOConverter.dtoToEntity(dto));
+        }
+        return resultList;
+    }
 }
