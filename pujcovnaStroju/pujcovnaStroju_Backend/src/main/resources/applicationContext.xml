@@ -11,20 +11,19 @@
           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
           http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
-	
+
 	<context:annotation-config />
 	<tx:annotation-driven />
 
 
 	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		p:dataSource-ref="dataSource" p:persistence-xml-location="classpath:META-INF/persistence.xml"
-		p:persistence-unit-name="TestPU">
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="TestPU" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-
 		<property name="driverClassName" value="org.apache.derby.jdbc.ClientDriver" />
 		<property name="url"
 			value="jdbc:derby://localhost:1527/memory:sample;create=true" />
@@ -32,12 +31,12 @@
 		<property name="password" value="app" />
 	</bean>
 
-	<bean id="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"></property>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
 	<bean name="MachineDAO" class="cz.muni.fi.pa165.pujcovnastroju.dao.MachineDAOImpl"></bean>
-	<bean name="machineService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.MachineServiceImpl"></bean>
+	<bean name="machineService"
+		class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.MachineServiceImpl"></bean>
 
 </beans>
