@@ -28,14 +28,16 @@ public class RevisionDAOImpl implements RevisionDAO {
 		else this.em = em;
 	}
 
-	public Revision create(Revision revision) {
+	public Revision create(Revision revision) throws IllegalArgumentException {
+		if (revision == null) throw new IllegalArgumentException("loan is null");
 		em.getTransaction().begin();
 		em.persist(revision);
 		em.getTransaction().commit();
 		return em.find(Revision.class, revision.getRevID());
 	}
 
-	public Revision delete(Revision revision) {
+	public Revision delete(Revision revision) throws IllegalArgumentException {
+		if (revision == null) throw new IllegalArgumentException("revision is null");
 		em.getTransaction().begin();
 		Revision revision1 = em.merge(revision);
 		em.remove(revision1);
@@ -43,7 +45,9 @@ public class RevisionDAOImpl implements RevisionDAO {
 		return em.find(Revision.class, revision.getRevID());
 	}
 
-	public Revision update(Revision revision) {
+	public Revision update(Revision revision) throws IllegalArgumentException {
+		if (revision == null) throw new IllegalArgumentException("revision is null");
+		if (revision.getRevID() == null) throw new IllegalArgumentException("revision.id is null");
 		em.getTransaction().begin();
 		Revision revision1 = em.merge(revision);
 		em.persist(revision1);
