@@ -38,7 +38,7 @@ public interface RevisionService {
      * Deletes an Revision
      *
      * @param revisionDTO to be deleted
-     *
+     *@return empty deleted Revision
      * @throws IllegalArgumentException if the revisionDTO is null
      */
     public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO);
