@@ -132,7 +132,7 @@ public class RevisionServiceTest extends AbstractTest {
      }
 	
      revID = new RevisionDTO ();
-     //revisionDTOProcessed = revisionService.deleteBizRevision();
+     revisionDTOProcessed = revisionService.deleteBizRevision(revID);
      assertNotNull(revisionDTOProcessed);
      }
      
