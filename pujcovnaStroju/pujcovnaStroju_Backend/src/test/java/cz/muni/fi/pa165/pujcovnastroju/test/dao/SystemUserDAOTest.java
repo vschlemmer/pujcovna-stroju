@@ -20,6 +20,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import org.junit.Test;
 
 /**
  *
@@ -28,6 +29,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 public class SystemUserDAOTest extends TestCase {
     private EntityManager em;
     private SystemUserDAO userDAO;
+    
     
     @Before
     @Override
@@ -87,6 +89,7 @@ public class SystemUserDAOTest extends TestCase {
     /**
      * Test creation of a user
      */
+    @Test
     public void testCreate(){
         SystemUser user1 = createSampleUser();
         assertNull(user1.getId());
@@ -96,6 +99,10 @@ public class SystemUserDAOTest extends TestCase {
         assertNotNull(user1.getId());
         assertNotNull(user2.getId());
         assertEquals(user1,user2);
+        assertEquals(user1.getId(), user2.getId());
+        assertEquals(user1.getFirstName(), user2.getFirstName());
+        assertEquals(user1.getLastName(), user2.getLastName());
+        assertEquals(user1.getType(), user2.getType());
         em.getTransaction().begin();
         userDAO.delete(user1);
         em.getTransaction().commit();
@@ -112,6 +119,7 @@ public class SystemUserDAOTest extends TestCase {
     /**
      * Test reading a user
      */
+    @Test
     public void testRead(){
         SystemUser user1 = createSampleUser();
         em.getTransaction().begin();
@@ -119,6 +127,10 @@ public class SystemUserDAOTest extends TestCase {
         em.getTransaction().commit();
         SystemUser user2 = userDAO.read(user1.getId());
         assertEquals(user1,user2);
+        assertEquals(user1.getId(), user2.getId());
+        assertEquals(user1.getFirstName(), user2.getFirstName());
+        assertEquals(user1.getLastName(), user2.getLastName());
+        assertEquals(user1.getType(), user2.getType());
         em.getTransaction().begin();
         userDAO.delete(user1);
         em.getTransaction().commit();
@@ -127,6 +139,7 @@ public class SystemUserDAOTest extends TestCase {
     /**
      * Test updating a user
      */
+    @Test
     public void testUpdate(){
         SystemUser user1 = createSampleUser();
         em.getTransaction().begin();
@@ -136,7 +149,9 @@ public class SystemUserDAOTest extends TestCase {
         em.getTransaction().begin();
         userDAO.update(user1);
         em.getTransaction().commit();
+        em.getTransaction().begin();
         SystemUser user2 = userDAO.read(user1.getId());
+        em.getTransaction().commit();
         assertEquals(user1,user2);
         assertEquals("Dve", user2.getLastName());
         em.getTransaction().begin();
@@ -151,6 +166,8 @@ public class SystemUserDAOTest extends TestCase {
         SystemUser user1 = createSampleUser();
         em.getTransaction().begin();
         userDAO.create(user1);
+        em.getTransaction().commit();
+        em.getTransaction().begin();
         userDAO.delete(user1);
         em.getTransaction().commit();
         assertNull(userDAO.read(user1.getId()));
@@ -191,7 +208,9 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.create(user2);
         userDAO.create(user3);
         em.getTransaction().commit();
+        em.getTransaction().begin();
         List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMER);
+        em.getTransaction().commit();
         assertEquals(userList1, userDAO.findAllSystemUsers());
         assertEquals(3, userList1.size());
         em.getTransaction().begin();
