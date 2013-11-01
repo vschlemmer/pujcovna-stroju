@@ -53,10 +53,9 @@ public class RevisionDTOConverter {
         return revisionDTO;
     }
 
-    
     /**
      * Converts list of entity objects to list of DTOs
-     * 
+     *
      * @param list to be converted
      * @return list of DTOs or null if list is null
      */
@@ -70,9 +69,10 @@ public class RevisionDTOConverter {
         }
         return resultList;
     }
-/**
+
+    /**
      * Converts list of DTOs to list of entity objects
-     * 
+     *
      * @param listDTO to be converted
      * @return list of Loan or null if listDTO is null
      */
