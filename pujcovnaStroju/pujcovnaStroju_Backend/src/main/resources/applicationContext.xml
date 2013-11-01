@@ -41,5 +41,6 @@
         <bean name="SystemUserService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.SystemUserServiceImpl"></bean>
 	<bean name="LoanDAO" class="cz.muni.fi.pa165.pujcovnastroju.dao.LoanDAOImpl"></bean>
 	<bean name="loanService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.LoanServiceImpl"></bean>
-
+        <bean name="RevisionDAO" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImpl"></bean>
+        <bean name="revisionService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImplServiceImpl"></bean>
 </beans>
