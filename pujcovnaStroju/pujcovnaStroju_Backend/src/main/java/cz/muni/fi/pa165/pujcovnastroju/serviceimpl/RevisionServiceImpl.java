@@ -82,11 +82,11 @@ public class RevisionServiceImpl implements RevisionService {
     @Override
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date date, Date date1) {
         if (date == null) {
-			throw new IllegalArgumentException("unset argument 'date'");
-		}
+            throw new IllegalArgumentException("unset argument 'date'");
+        }
         if (date1 == null) {
-			throw new IllegalArgumentException("unset argument 'date1'");
-		}
+            throw new IllegalArgumentException("unset argument 'date1'");
+        }
         List<Revision> revisionList = rDAO.findRevisionsByDate(date, date1);
         return RevisionDTOConverter.listToDto(revisionList);
     }
