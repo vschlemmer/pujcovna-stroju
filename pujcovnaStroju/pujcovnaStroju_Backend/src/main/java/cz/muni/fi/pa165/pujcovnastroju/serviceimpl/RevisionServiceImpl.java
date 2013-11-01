@@ -29,6 +29,7 @@ public class RevisionServiceImpl implements RevisionService {
         Revision revision = null;
         try {
             revision = rDAO.create(RevisionDTOConverter.dtoToEntity(rdto));
+            dto = RevisionDTOConverter.entityToDTO(revision);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
                     "Error occured during storing Revision", e);
