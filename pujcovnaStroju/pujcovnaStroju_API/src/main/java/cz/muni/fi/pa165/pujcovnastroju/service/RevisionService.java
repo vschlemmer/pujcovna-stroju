@@ -20,7 +20,7 @@ public interface RevisionService {
      *
      * @param revisionDTO to be created
      * @return created RevisionDTO
-     * @throws IllegalArgumentException if the Revision is null
+     * @throws DataAccessResourceFailureException if the Revision is null
      */
     public RevisionDTO createBizRevision(RevisionDTO revisionDTO);
 
@@ -30,7 +30,7 @@ public interface RevisionService {
      *
      * @param revisionDTO to be updated
      * @return updated RevisionDTO
-     * @throws IllegalArgumentException if the RevID is null
+     * @throws DataAccessResourceFailureException if the RevID is null
      */
     public RevisionDTO updateBizRevision(RevisionDTO revisionDTO);
 
@@ -39,14 +39,14 @@ public interface RevisionService {
      *
      * @param revisionDTO to be deleted
      *@return empty deleted Revision
-     * @throws IllegalArgumentException if the revisionDTO is null
+     * @throws DataAccessResourceFailureException if the revisionDTO is null
      */
     public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO);
 
     /**
      * Returns all revisions
      *
-     * @throws IllegalArgumentException if the revID is null
+     * @throws DataAccessResourceFailureException if the revID is null
      * @return list of all Revision
      */
     public List<RevisionDTO> findAllrevisionsBizRevision();
@@ -56,7 +56,7 @@ public interface RevisionService {
      *
      * @param revID of the Revision
      * @return Revision with the given revID
-     * @throws IllegalArgumentException if the revID is null
+     * @throws DataAccessResourceFailureException if the revID is null
      */
     public RevisionDTO readBizRevision(Long revID);
 
@@ -66,7 +66,7 @@ public interface RevisionService {
      * @param dateFrom date from which the revisions should be retrieved
      * @param dateTo date to which the revisions should be retrieved
      * @return list of revisions that suit the filter
-     * @throws IllegalArgumentException if the revID is null
+     * @throws DataAccessResourceFailureException if the revID is null
      */
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date dateFrom, Date dateTo);
 }
