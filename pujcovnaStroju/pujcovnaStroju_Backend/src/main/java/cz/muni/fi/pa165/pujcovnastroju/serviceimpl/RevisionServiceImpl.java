@@ -53,13 +53,17 @@ public class RevisionServiceImpl implements RevisionService {
     }
 
     @Override
-    public void deleteBizRevision(RevisionDTO revisionDTO) {
-        try {
-            rDAO.delete(RevisionDTOConverter.dtoToEntity(revisionDTO));
+    public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO) {
+        RevisionDTO dto = null;
+        Revision revision = null;
+    	try {
+    		revision = rDAO.delete(RevisionDTOConverter.dtoToEntity(revisionDTO));
+    		dto = RevisionDTOConverter.entityToDTO(revision);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
                     "Error occured during deleting Revision", e);
         }
+    	return dto;
     }
 
     @Override

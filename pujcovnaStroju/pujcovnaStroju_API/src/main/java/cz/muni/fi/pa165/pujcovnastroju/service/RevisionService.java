@@ -41,7 +41,7 @@ public interface RevisionService {
      *
      * @throws IllegalArgumentException if the revisionDTO is null
      */
-    public void deleteBizRevision(RevisionDTO revisionDTO);
+    public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO);
 
     /**
      * Returns all revisions
