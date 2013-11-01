@@ -48,6 +48,8 @@ public interface RevisionDAO {
 	 * Returns all Revisions
 	 * 
 	 * @return list of all Revision
+         * @throws IllegalArgumentException
+	 *             if the RevID is null
 	 */
 	public List<Revision> findAllrevisions();
 
@@ -57,8 +59,7 @@ public interface RevisionDAO {
 	 * @param revID
 	 *            of the Revision
 	 * @return Revision with the given revID
-	 * @throws IllegalArgumentException
-	 *             if the revID is null
+	 *
 	 */
 	public Revision read(Long revID);
 
