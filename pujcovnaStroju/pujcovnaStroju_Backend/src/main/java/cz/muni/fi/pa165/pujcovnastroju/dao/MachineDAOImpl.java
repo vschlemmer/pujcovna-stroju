@@ -22,7 +22,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
  */
 @Repository
 public class MachineDAOImpl implements MachineDAO {
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -79,7 +79,7 @@ public class MachineDAOImpl implements MachineDAO {
 		return result;
 	}
 
-	public void delete(Machine machine) {
+	public Machine delete(Machine machine) {
 		if (machine == null) {
 			throw new IllegalArgumentException("unset argument 'machine'");
 		}
@@ -91,6 +91,7 @@ public class MachineDAOImpl implements MachineDAO {
 		if (toBeDeleted != null) {
 			entityManager.remove(toBeDeleted);
 		}
+		return toBeDeleted;
 	}
 
 	public List<Machine> getAllMachines() {

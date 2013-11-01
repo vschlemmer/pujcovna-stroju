@@ -73,13 +73,16 @@ public class MachineServiceImpl implements MachineService {
 	}
 
 	@Override
-	public void delete(MachineDTO machineDTO) {
+	public MachineDTO delete(MachineDTO machineDTO) {
+		Machine machine = null;
 		try {
-			machineDao.delete(MachineDTOConverter.dtoToEntity(machineDTO));
+			machine = machineDao.delete(MachineDTOConverter
+					.dtoToEntity(machineDTO));
 		} catch (IllegalArgumentException e) {
-			throw new DataAccessResourceFailureException (
+			throw new DataAccessResourceFailureException(
 					"Error occured during deleting Machine", e);
 		}
+		return MachineDTOConverter.entityToDto(machine);
 	}
 
 	@Override

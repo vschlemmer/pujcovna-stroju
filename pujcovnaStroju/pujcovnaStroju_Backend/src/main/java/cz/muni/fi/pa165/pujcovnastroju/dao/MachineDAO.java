@@ -46,10 +46,11 @@ public interface MachineDAO {
 	 * deletes given Machine from database
 	 * 
 	 * @param machine
+	 * @return deleted machine
 	 * @throws IllegalArgumentException
 	 *             when machine or machine.id are null
 	 */
-	public void delete(Machine machine);
+	public Machine delete(Machine machine);
 
 	/**
 	 * returns all machines presented in database

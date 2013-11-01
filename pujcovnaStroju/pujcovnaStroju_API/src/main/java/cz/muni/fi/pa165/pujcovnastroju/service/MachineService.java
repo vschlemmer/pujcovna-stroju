@@ -54,7 +54,7 @@ public interface MachineService {
 	 * @throws IllegalArgumentException
 	 *             when MachineDTO or MachineDTO.id are null
 	 */
-	public void delete(MachineDTO machine);
+	public MachineDTO delete(MachineDTO machine);
 
 	/**
 	 * returns all MachineDTOs presented in database

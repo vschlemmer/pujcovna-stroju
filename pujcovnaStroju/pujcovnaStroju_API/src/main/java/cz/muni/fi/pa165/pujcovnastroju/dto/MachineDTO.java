@@ -18,6 +18,7 @@ public class MachineDTO {
 	private String decription;
 	private MachineTypeEnumDTO type;
 	private List<LoanDTO> loans;
+	private List<RevisionDTO> revisions;
 	
 	public Long getId() {
 		return id;
@@ -48,6 +49,12 @@ public class MachineDTO {
 	}
 	public void setLoans(List<LoanDTO> loans) {
 		this.loans = loans;
+	}
+	public List<RevisionDTO> getRevisions() {
+		return revisions;
+	}
+	public void setRevisions(List<RevisionDTO> revisions) {
+		this.revisions = revisions;
 	}
 	
 	@Override
