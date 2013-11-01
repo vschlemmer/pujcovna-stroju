@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineTypeDTOConverter;
@@ -23,6 +24,7 @@ import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
  * @author Michal Merta 374015
  */
 @Service("machineService")
+@Transactional
 public class MachineServiceImpl implements MachineService {
 
 	@Autowired

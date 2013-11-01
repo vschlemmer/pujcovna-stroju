@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cz.muni.fi.pa165.pujcovnastroju.converter.LoanDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.converter.LoanStateEnumDTOConverter;
@@ -24,6 +25,7 @@ import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
  * @author xguttner
  */
 @Service("loanService")
+@Transactional
 public class LoanServiceImpl implements LoanService {
 
 	@Autowired
