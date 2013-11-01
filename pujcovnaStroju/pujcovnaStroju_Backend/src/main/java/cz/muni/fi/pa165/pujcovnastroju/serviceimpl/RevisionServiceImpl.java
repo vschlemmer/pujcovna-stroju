@@ -11,11 +11,13 @@ import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Matej fucek
  */
+@Service("revisionService")
 public class RevisionServiceImpl implements RevisionService {
 
     @Autowired
