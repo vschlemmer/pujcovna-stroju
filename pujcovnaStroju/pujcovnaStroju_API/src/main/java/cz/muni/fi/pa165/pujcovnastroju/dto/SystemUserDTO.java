@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of SysteUser DTO
@@ -8,7 +9,7 @@ import java.util.List;
  * @author Vojtech Schlemmer
  */
 public class SystemUserDTO {
-    
+
     private Long id;
     private String firstName;
     private String lastName;
@@ -52,4 +53,39 @@ public class SystemUserDTO {
     public void setRevisions(List<RevisionDTO> revisions) {
         this.revisions = revisions;
     }
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SystemUserDTO other = (SystemUserDTO) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.firstName, other.firstName)) {
+            return false;
+        }
+        if (!Objects.equals(this.lastName, other.lastName)) {
+            return false;
+        }
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SystemUserDTO{" + "id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", type=" + type + ", loans=" + loans + ", revisions=" + revisions + '}';
+    }
+    
 }

@@ -21,7 +21,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 @Repository
 public class SystemUserDAOImpl implements SystemUserDAO {
 	
-	@PersistenceContext
+    @PersistenceContext
     private EntityManager em;
 
     public SystemUserDAOImpl(){};
@@ -30,18 +30,17 @@ public class SystemUserDAOImpl implements SystemUserDAO {
     }
     
     public EntityManager getEm() {
-		return em;
-	}
-	public void setEm(EntityManager em) {
-		this.em = em;
-	}
-	public SystemUser create(SystemUser user) throws IllegalArgumentException {
+        return em;
+    }
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+    public SystemUser create(SystemUser user) throws IllegalArgumentException {
         if (user == null) {
             throw new IllegalArgumentException("Argument user must be set");
         }
         em.persist(user);
-        SystemUser user1 = em.find(SystemUser.class, user.getId());
-        return user1;
+        return user;
     }
 
     public SystemUser read(Long id) throws IllegalArgumentException {

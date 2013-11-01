@@ -29,7 +29,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             userDTO2 = SystemUserDTOConverter.entityToDTO(user);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
-                    "Error occured during storing Machine", e);
+                    "Error occured during storing user", e);
         }
         return userDTO2;
     }
@@ -43,7 +43,7 @@ public class SystemUserServiceImpl implements SystemUserService {
             userDTO = SystemUserDTOConverter.entityToDTO(user);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
-                    "Error occured during storing Machine", e);
+                    "Error occured during storing user", e);
         }
         return userDTO;
     }
@@ -57,19 +57,20 @@ public class SystemUserServiceImpl implements SystemUserService {
             userDTO2 = SystemUserDTOConverter.entityToDTO(user);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
-                    "Error occured during storing Machine", e);
+                    "Error occured during storing user", e);
         }
         return userDTO2;
     }
     
     @Override
-    public void delete(SystemUserDTO userDTO){
+    public SystemUserDTO delete(SystemUserDTO userDTO){
         try{
             userDao.delete(SystemUserDTOConverter.dtoToEntity(userDTO));
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
-                    "Error occured during storing Machine", e);
+                    "Error occured during storing user", e);
         }
+        return userDTO;
     }
     
     @Override
