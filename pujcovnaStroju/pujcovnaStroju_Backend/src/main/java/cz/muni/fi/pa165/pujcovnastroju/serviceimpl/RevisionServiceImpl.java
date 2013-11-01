@@ -56,14 +56,14 @@ public class RevisionServiceImpl implements RevisionService {
     public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO) {
         RevisionDTO dto = null;
         Revision revision = null;
-    	try {
-    		revision = rDAO.delete(RevisionDTOConverter.dtoToEntity(revisionDTO));
-    		dto = RevisionDTOConverter.entityToDTO(revision);
+        try {
+            revision = rDAO.delete(RevisionDTOConverter.dtoToEntity(revisionDTO));
+            dto = RevisionDTOConverter.entityToDTO(revision);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
                     "Error occured during deleting Revision", e);
         }
-    	return dto;
+        return dto;
     }
 
     @Override
@@ -95,7 +95,11 @@ public class RevisionServiceImpl implements RevisionService {
         if (date1 == null) {
             throw new IllegalArgumentException("unset argument 'date1'");
         }
+        RevisionDTO dto = null;
+        Revision revision = null;
         List<Revision> revisionList = rDAO.findRevisionsByDate(date, date1);
+
         return RevisionDTOConverter.listToDto(revisionList);
+
     }
 }
