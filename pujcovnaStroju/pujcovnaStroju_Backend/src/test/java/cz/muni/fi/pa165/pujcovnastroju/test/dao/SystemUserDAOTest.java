@@ -27,9 +27,9 @@ import org.junit.Test;
  * @author Vojtech Schlemmer
  */
 public class SystemUserDAOTest extends TestCase {
+    private EntityManager em;
     private SystemUserDAO userDAO;
     
-    private EntityManager em;
     
     @Before
     @Override
@@ -80,7 +80,6 @@ public class SystemUserDAOTest extends TestCase {
     public Revision createSampleRevision(){
         Revision revision1 = new Revision();
         revision1.setComment("comment");
-        revision1.setSystemUser(null);
         revision1.setSystemUser(null);
         revision1.setRevDate(new Timestamp(System.currentTimeMillis()));
         revision1.setMachine(null);
@@ -154,15 +153,12 @@ public class SystemUserDAOTest extends TestCase {
         SystemUser user2 = userDAO.read(user1.getId());
         em.getTransaction().commit();
         assertEquals(user1,user2);
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getFirstName(), user2.getFirstName());
-        assertEquals(user1.getType(), user2.getType());
         assertEquals("Dve", user2.getLastName());
         em.getTransaction().begin();
         userDAO.delete(user1);
         em.getTransaction().commit();
     }
-    
+
     /**
      * Test deleting a user
      */
@@ -217,6 +213,10 @@ public class SystemUserDAOTest extends TestCase {
         em.getTransaction().commit();
         assertEquals(userList1, userDAO.findAllSystemUsers());
         assertEquals(3, userList1.size());
-    }
-    
+        em.getTransaction().begin();
+        userDAO.delete(user1);
+        userDAO.delete(user2);
+        userDAO.delete(user3);
+        em.getTransaction().commit();
+    }    
 }
