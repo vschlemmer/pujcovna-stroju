@@ -23,11 +23,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 /* *
-  * @author matej.fucek
+ * @author matej.fucek
  */
 public class RevisionDAOTest extends TestCase {
+
     private RevisionDAO revDAO;
-private EntityManager em;
+    private EntityManager em;
+
     @Before
     @Override
     public void setUp() {
@@ -56,11 +58,11 @@ private EntityManager em;
      * @return sample machine
      */
     public Machine createSampleMachine() {
-            Machine machine1= new Machine();
-            machine1.setLabel("bla bla");
-            machine1.setDecription("BAAALGER");
-            machine1.setType(MachineTypeEnum.BULDOZER);
-            return  machine1;
+        Machine machine1 = new Machine();
+        machine1.setLabel("bla bla");
+        machine1.setDecription("BAAALGER");
+        machine1.setType(MachineTypeEnum.BULDOZER);
+        return machine1;
     }
 
     /**
@@ -68,7 +70,7 @@ private EntityManager em;
      *
      * @return sample user
      */
-    public SystemUser createSampleUser(){
+    public SystemUser createSampleUser() {
         SystemUser user = new SystemUser();
         user.setFirstName("Tomas");
         user.setLastName("Jedno");
@@ -76,20 +78,20 @@ private EntityManager em;
         return user;
     }
 
-     /**
-      * Test revision creation
-      */
+    /**
+     * Test revision creation
+     */
     public void testCreate() {
         //System.out.println("create");
         Revision revision1 = createSampleRevision();
         assertNull(revision1.getRevID());
         em.getTransaction().begin();//priadne
         Revision revision2 = revDAO.create(revision1);
-        
+
         em.getTransaction().commit();//priadne
         assertNotNull(revision1.getRevID());
         assertNotNull(revision2.getRevID());
-        assertEquals(revision1,revision2);
+        assertEquals(revision1, revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
@@ -99,12 +101,11 @@ private EntityManager em;
         try {
             revDAO.create(null);
             fail();
-        }
-        catch(IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
         }
     }
 
-     /**
+    /**
      * Test reading a Revision
      */
     public void testRead() {
@@ -113,7 +114,7 @@ private EntityManager em;
         revDAO.create(revision1);
         Revision revision2 = revDAO.read(revision1.getRevID());
         em.getTransaction().commit();//pridane
-        assertEquals(revision1,revision2);
+        assertEquals(revision1, revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
@@ -134,7 +135,7 @@ private EntityManager em;
         revDAO.update(revision1);
         em.getTransaction().commit();//pridane
         Revision revision2 = revDAO.read(revision1.getRevID());
-        assertEquals(revision1,revision2);
+        assertEquals(revision1, revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
         assertEquals(revision1.getMachine(), revision2.getMachine());
         assertEquals(revision1.getComment(), revision2.getComment());
@@ -178,7 +179,7 @@ private EntityManager em;
     /**
      * Test retrieving revisions by date
      */
-    public void testFindRevisionsByDate(){
+    public void testFindRevisionsByDate() {
         Revision revision1 = createSampleRevision();
         Revision revision2 = createSampleRevision();
         em.getTransaction().begin();
@@ -190,8 +191,8 @@ private EntityManager em;
         List<Revision> revisions1 = new ArrayList<>();
         revisions1.add(revision1);
         revisions1.add(revision2);
-        Date dateFrom = new Date(System.currentTimeMillis()-36000000);
-        Date dateTo = new Date(System.currentTimeMillis()+36000000);
+        Date dateFrom = new Date(System.currentTimeMillis() - 36000000);
+        Date dateTo = new Date(System.currentTimeMillis() + 36000000);
         List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
         assertEquals(revisions1, revisions2);
     }
