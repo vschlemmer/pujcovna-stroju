@@ -1,13 +1,12 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.service;
 
-import cz.muni.fi.pa165.pujcovnastroju.dao.SystemUserDAO;
-import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
-import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
-import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
-import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.SystemUserServiceImpl;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +17,15 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
+
+import cz.muni.fi.pa165.pujcovnastroju.dao.SystemUserDAO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.SystemUserServiceImpl;
 
 /**
  *
@@ -77,7 +81,7 @@ public class SystemUserServiceTest extends AbstractTest {
 	try {
 	    userService.create(userDTO);
 	    assertNotNull(userDTO); //if the exception is not thrown, test doesn't pass
-	} catch (DataAccessResourceFailureException e) {
+	} catch (DataAccessException e) {
 	    assertNull(userDTO);
 	}
 	
@@ -95,7 +99,7 @@ public class SystemUserServiceTest extends AbstractTest {
 	try {
 	    userService.update(userDTO);
 	    assertNotNull(userDTO); //if the exception is not thrown, test doesn't pass
-	} catch (DataAccessResourceFailureException e) {
+	} catch (DataAccessException e) {
 	    assertNull(userDTO);
 	}
 	
@@ -113,7 +117,7 @@ public class SystemUserServiceTest extends AbstractTest {
 	try {
 	    userService.read(id);
 	    assertNotNull(id); //if the exception is not thrown, test doesn't pass
-	} catch (DataAccessResourceFailureException e) {
+	} catch (DataAccessException e) {
 	    assertNull(id);
 	}
 	
@@ -134,7 +138,7 @@ public class SystemUserServiceTest extends AbstractTest {
 	try {
 	    userService.delete(userDTO);
 	    assertNotNull(userDTO); //if the exception is not thrown, test doesn't pass
-	} catch (DataAccessResourceFailureException e) {
+	} catch (DataAccessException e) {
 	    assertNull(userDTO);
 	}
 	

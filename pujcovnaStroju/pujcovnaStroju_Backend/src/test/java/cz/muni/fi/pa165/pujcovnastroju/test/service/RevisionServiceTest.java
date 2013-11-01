@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
@@ -76,7 +77,7 @@ public class RevisionServiceTest extends AbstractTest {
         try {
             revisionService.createBizRevision(revisionDTO);
             assertNotNull(revisionDTO); //if the exception is not thrown, test doesn't pass
-        } catch (DataAccessResourceFailureException e) {
+        } catch (DataAccessException e) {
             assertNull(revisionDTO);
         }
 
@@ -110,7 +111,7 @@ public class RevisionServiceTest extends AbstractTest {
         try {
             revisionService.readBizRevision(revID);
             assertNotNull(revID); //if the exception is not thrown, test doesn't pass
-        } catch (DataAccessResourceFailureException e) {
+        } catch (DataAccessException e) {
             assertNull(revID);
         }
         revID = (long) 1;
@@ -129,7 +130,7 @@ public class RevisionServiceTest extends AbstractTest {
         try {
             revisionService.deleteBizRevision(revID);
             assertNotNull(revID); //if the exception is not thrown, test doesn't pass
-        } catch (DataAccessResourceFailureException e) {
+        } catch (DataAccessException e) {
             assertNull(revID);
         }
 
@@ -166,12 +167,6 @@ public class RevisionServiceTest extends AbstractTest {
         List<Revision> revisionList = new ArrayList<>();
         revisionList.add(new Revision());
         revisionList.add(new Revision());
-     
-        try {
-        	revisionService.findRevisionsByDateBizRevision(null, null);
-        	fail();
-        } catch (IllegalArgumentException e) {}
-        
         
         Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(revisionList);
         List<Revision> returnedRevisions = mockRevisionDao.findRevisionsByDate(new Date(324), new Date(2344));

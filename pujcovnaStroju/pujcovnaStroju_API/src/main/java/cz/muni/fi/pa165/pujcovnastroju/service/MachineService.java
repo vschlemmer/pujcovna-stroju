@@ -9,14 +9,12 @@ import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
 
-
-
 /**
- *
+ * 
  * @author Michal Merta
  */
 public interface MachineService {
- 
+
 	/**
 	 * persist MachineDTO into database
 	 * 
@@ -32,7 +30,7 @@ public interface MachineService {
 	 * 
 	 * @param MachineDTO
 	 * @return updated object
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when given object, it's label or type are null
 	 */
 	public MachineDTO update(MachineDTO machineDTO);
@@ -42,7 +40,7 @@ public interface MachineService {
 	 * 
 	 * @param id
 	 * @return MachineDTO object or null if it's not presented in database
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             wher id is null or lower then zero
 	 */
 	public MachineDTO read(Long id);
@@ -51,7 +49,7 @@ public interface MachineService {
 	 * deletes given MachineDTO from database
 	 * 
 	 * @param MachineDTO
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when MachineDTO or MachineDTO.id are null
 	 */
 	public MachineDTO delete(MachineDTO machine);
@@ -70,5 +68,5 @@ public interface MachineService {
 	 * @return List of all MachineDTOs with given type in database
 	 */
 	public List<MachineDTO> getMachineDTOsByType(MachineTypeEnumDTO type);
-	
+
 }

@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author xguttner
  */
 public class LoanDTO {
-    
+
 	private Long id;
 	private SystemUserDTO customer;
 	private List<MachineDTO> machines;
@@ -19,74 +19,77 @@ public class LoanDTO {
 	private LoanStateEnumDTO loanState;
 
 	public SystemUserDTO getCustomer() {
-	    return customer;
+		return customer;
 	}
 
 	public void setCustomer(SystemUserDTO customer) {
-	    this.customer = customer;
+		this.customer = customer;
 	}
 
 	public Long getId() {
-	    return id;
+		return id;
 	}
 
 	public void setId(Long id) {
-	    this.id = id;
+		this.id = id;
 	}
-	
+
 	public LoanStateEnumDTO getLoanState() {
-	    return loanState;
+		return loanState;
 	}
 
 	public void setLoanState(LoanStateEnumDTO loanState) {
-	    this.loanState = loanState;
+		this.loanState = loanState;
 	}
 
 	public Date getLoanTime() {
-	    return loanTime;
+		return loanTime;
 	}
 
 	public void setLoanTime(Date loanTime) {
-	    this.loanTime = loanTime;
+		this.loanTime = loanTime;
 	}
 
 	public List<MachineDTO> getMachines() {
-	    return machines;
+		return machines;
 	}
 
 	public void setMachines(List<MachineDTO> machines) {
-	    this.machines = machines;
+		this.machines = machines;
 	}
 
 	public Date getReturnTime() {
-	    return returnTime;
+		return returnTime;
 	}
 
 	public void setReturnTime(Date returnTime) {
-	    this.returnTime = returnTime;
+		this.returnTime = returnTime;
 	}
 
-    public boolean equals(Object obj) {
-	if (obj == null) {
-	    return false;
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final LoanDTO other = (LoanDTO) obj;
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		return true;
 	}
-	if (getClass() != obj.getClass()) {
-	    return false;
-	}
-	final LoanDTO other = (LoanDTO) obj;
-	if (!Objects.equals(this.id, other.id)) {
-	    return false;
-	}
-	return true;
-    }
 
-    public int hashCode() {
-	int hash = 7;
-	hash = 23 * hash + Objects.hashCode(this.id);
-	return hash;
-    }
+	public int hashCode() {
+		int hash = 7;
+		hash = 23 * hash + Objects.hashCode(this.id);
+		return hash;
+	}
 
-    public String toString() {
-	return "LoanDTO{" + "id=" + id + ", customer=" + customer + ", machines=" + machines + ", loanTime=" + loanTime + ", returnTime=" + returnTime + ", loanState=" + loanState + '}';
-    }
+	public String toString() {
+		return "LoanDTO{" + "id=" + id + ", customer=" + customer
+				+ ", machines=" + machines + ", loanTime=" + loanTime
+				+ ", returnTime=" + returnTime + ", loanState=" + loanState
+				+ '}';
+	}
 }

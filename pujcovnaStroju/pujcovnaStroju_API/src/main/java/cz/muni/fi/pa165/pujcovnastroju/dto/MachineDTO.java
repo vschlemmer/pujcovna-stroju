@@ -19,44 +19,55 @@ public class MachineDTO {
 	private MachineTypeEnumDTO type;
 	private List<LoanDTO> loans;
 	private List<RevisionDTO> revisions;
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getLabel() {
 		return label;
 	}
+
 	public void setLabel(String label) {
 		this.label = label;
 	}
+
 	public String getDecription() {
 		return decription;
 	}
+
 	public void setDecription(String decription) {
 		this.decription = decription;
 	}
+
 	public MachineTypeEnumDTO getType() {
 		return type;
 	}
+
 	public void setType(MachineTypeEnumDTO type) {
 		this.type = type;
 	}
+
 	public List<LoanDTO> getLoans() {
 		return loans;
 	}
+
 	public void setLoans(List<LoanDTO> loans) {
 		this.loans = loans;
 	}
+
 	public List<RevisionDTO> getRevisions() {
 		return revisions;
 	}
+
 	public void setRevisions(List<RevisionDTO> revisions) {
 		this.revisions = revisions;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,7 +80,7 @@ public class MachineDTO {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -106,12 +117,11 @@ public class MachineDTO {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "MachineDTO [id=" + id + ", label=" + label + ", decription="
 				+ decription + ", type=" + type + ", loans=" + loans + "]";
 	}
 
-	
 }

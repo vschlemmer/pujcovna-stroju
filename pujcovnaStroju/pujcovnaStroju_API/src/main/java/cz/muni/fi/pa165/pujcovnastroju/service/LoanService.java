@@ -1,11 +1,12 @@
 package cz.muni.fi.pa165.pujcovnastroju.service;
 
+import java.util.Date;
+import java.util.List;
+
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanStateEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 
@@ -18,7 +19,7 @@ public interface LoanService {
 	 * @param loanDTO
 	 *            to be persisted
 	 * @return persisted loanDTO
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when loan is null
 	 */
 	public LoanDTO create(LoanDTO loanDTO);
@@ -29,7 +30,7 @@ public interface LoanService {
 	 * @param loanDTO
 	 *            to be updated
 	 * @return updated loanDTO
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when loan or loan.id is null
 	 */
 	public LoanDTO update(LoanDTO loanDTO);
@@ -40,7 +41,7 @@ public interface LoanService {
 	 * @param id
 	 *            of the loanDTO to be read
 	 * @return loanDTO or null if it's not presented in db
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when id is null
 	 */
 	public LoanDTO read(Long id);
@@ -51,7 +52,7 @@ public interface LoanService {
 	 * @param id
 	 *            of the loanDTO to be deleted
 	 * @return deleted loanDTO
-	 * @throws IllegalArgumentException
+	 * @throws DataAccessException
 	 *             when id is null
 	 */
 	public LoanDTO delete(Long id);

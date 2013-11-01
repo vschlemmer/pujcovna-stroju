@@ -7,7 +7,6 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.criterion.MatchMode;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineTypeDTOConverter;
@@ -86,19 +86,19 @@ public class MachineServiceTest extends AbstractTest {
 		Mockito.when(mockMachineDao.getMachinesByType(MachineTypeEnum.CAN_OPENER))
 				.thenReturn(typedMachines);
 		Mockito.doThrow(
-				new DataAccessResourceFailureException(
+				new IllegalArgumentException(
 						"Error occured during creating machine."))
 				.when(mockMachineDao).create(null);
 		Mockito.doThrow(
-				new DataAccessResourceFailureException(
+				new IllegalArgumentException(
 						"Error occured during deleting machine."))
 				.when(mockMachineDao).delete(null);
 		Mockito.doThrow(
-				new DataAccessResourceFailureException(
+				new IllegalArgumentException(
 						"Error occured during updating machine."))
 				.when(mockMachineDao).update(null);
 		Mockito.doThrow(
-				new DataAccessResourceFailureException(
+				new IllegalArgumentException(
 						"Error occured during retrieving machine."))
 				.when(mockMachineDao).read(null);
 
@@ -110,7 +110,7 @@ public class MachineServiceTest extends AbstractTest {
 		try {
 			service.create(null);
 			fail();
-		} catch (DataAccessResourceFailureException e) {
+		} catch (DataAccessException e) {
 		}
 		service.create(dto);
 		assertNotNull(dto);
@@ -123,7 +123,7 @@ public class MachineServiceTest extends AbstractTest {
 		try {
 			service.delete(null);
 			fail();
-		} catch (DataAccessResourceFailureException e) {
+		} catch (DataAccessException e) {
 		}
 
 		MachineDTO dto = new MachineDTO();
@@ -141,7 +141,7 @@ public class MachineServiceTest extends AbstractTest {
 		try {
 			service.update(null);
 			fail();
-		} catch (DataAccessResourceFailureException e) {
+		} catch (DataAccessException e) {
 		}
 		try {
 			MachineDTO dto = new MachineDTO();
@@ -163,7 +163,7 @@ public class MachineServiceTest extends AbstractTest {
 		try {
 			service.read(null);
 			fail();
-		} catch (DataAccessResourceFailureException e) {
+		} catch (DataAccessException e) {
 		}
 
 		try {
