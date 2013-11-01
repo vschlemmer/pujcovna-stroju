@@ -32,7 +32,7 @@ public class RevisionServiceTest extends AbstractTest {
 
     @Mock
     RevisionDAO mockRevisionDao;
-    @InjectMocks  
+    @InjectMocks
     RevisionService revisionService = new RevisionServiceImpl();
 
     @Before
@@ -45,14 +45,14 @@ public class RevisionServiceTest extends AbstractTest {
             }
         });
         Mockito.when(mockRevisionDao.create(null)).thenThrow(new IllegalArgumentException("Error occured during storing revision."));
-        
+
         Mockito.when(mockRevisionDao.update(Matchers.any(Revision.class))).thenAnswer(new Answer<Revision>() {
-		@Override
-		public Revision answer(InvocationOnMock inv) throws Throwable {
-		    Object[] args = inv.getArguments();
-		    return (Revision)args[0];
-		}
-	    });
+            @Override
+            public Revision answer(InvocationOnMock inv) throws Throwable {
+                Object[] args = inv.getArguments();
+                return (Revision) args[0];
+            }
+        });
 
         Mockito.when(mockRevisionDao.update(null)).thenThrow(new IllegalArgumentException("Error occured during updating Revision."));
 
@@ -118,26 +118,22 @@ public class RevisionServiceTest extends AbstractTest {
         assertNotNull(revisionDTOProcessed);
     }
 
-    
-   
-     @Test
-      public void TestDeleteBizRevision() {
-     RevisionDTO revID = null;
-     RevisionDTO revisionDTOProcessed = null;
-     try {
-     revisionService.deleteBizRevision(revID);
-     assertNotNull(revID); //if the exception is not thrown, test doesn't pass
-     } catch (DataAccessResourceFailureException e) {
-     assertNull(revID);
-     }
-	
-     revID = new RevisionDTO ();
-     revisionDTOProcessed = revisionService.deleteBizRevision(revID);
-     assertNotNull(revisionDTOProcessed);
-     }
-     
-     
-     
+    @Test
+    public void TestDeleteBizRevision() {
+        RevisionDTO revID = null;
+        RevisionDTO revisionDTOProcessed = null;
+        try {
+            revisionService.deleteBizRevision(revID);
+            assertNotNull(revID); //if the exception is not thrown, test doesn't pass
+        } catch (DataAccessResourceFailureException e) {
+            assertNull(revID);
+        }
+
+        revID = new RevisionDTO();
+        revisionDTOProcessed = revisionService.deleteBizRevision(revID);
+        assertNotNull(revisionDTOProcessed);
+    }
+
     @Test
     public void TestFindAllrevisionsBizRevision() {
         List<RevisionDTO> revisionDTOs = null;
@@ -162,26 +158,12 @@ public class RevisionServiceTest extends AbstractTest {
 
     @Test
     public void TestFindRevisionsByDateBizRevision() {
-        List<RevisionDTO> revisionDTOs = null;
+
         List<Revision> revisionList = new ArrayList<>();
         revisionList.add(new Revision());
         revisionList.add(new Revision());
-
         Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(null);
 
-        revisionDTOs = revisionService.findRevisionsByDateBizRevision(null, null);
-        assertNull(revisionDTOs);
-
         Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(revisionList);
-
-        revisionDTOs = revisionService.findRevisionsByDateBizRevision(null, null);
-        assertEquals(revisionDTOs.size(), 2);
-
-        revisionList.add(new Revision());
-        revisionDTOs = revisionService.findRevisionsByDateBizRevision(null, null);
-        assertEquals(revisionDTOs.size(), 3);
-
-
-
     }
 }
