@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -14,21 +15,34 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+
 import javax.persistence.TransactionRequiredException;
+
+import org.springframework.stereotype.Repository;
 
 /**
  * 
  * @author Ondřej Güttner
  */
+@Repository
 public class LoanDAOImpl implements LoanDAO {
 
+	@PersistenceContext
 	private EntityManager em;
 
+	public LoanDAOImpl() {};
 	public LoanDAOImpl(EntityManager em) throws IllegalArgumentException {
 		if(em == null) throw new IllegalArgumentException("em is null");
 		else this.em = em;
 	}
+	
 
+	public EntityManager getEm() {
+		return em;
+	}
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
 	public Loan create(Loan loan) throws IllegalArgumentException {
 		if (loan == null) throw new IllegalArgumentException("loan is null"); 
 		em.persist(loan);

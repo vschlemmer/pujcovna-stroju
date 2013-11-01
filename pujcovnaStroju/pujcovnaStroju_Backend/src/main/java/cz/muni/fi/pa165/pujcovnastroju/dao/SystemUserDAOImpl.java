@@ -19,6 +19,7 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 
     private EntityManager em;
 
+    public SystemUserDAOImpl(){};
     public SystemUserDAOImpl(EntityManager em) {
         this.em = em;
     }
