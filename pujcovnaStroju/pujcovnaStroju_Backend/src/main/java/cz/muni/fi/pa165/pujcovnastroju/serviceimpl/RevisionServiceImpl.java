@@ -43,6 +43,7 @@ public class RevisionServiceImpl implements RevisionService {
         Revision revision = null;
         try {
             revision = rDAO.update(RevisionDTOConverter.dtoToEntity(revisionDTO));
+            dto = RevisionDTOConverter.entityToDTO(revision);
         } catch (IllegalArgumentException e) {
             throw new DataAccessResourceFailureException(
                     "Error occured during updating Revision", e);
