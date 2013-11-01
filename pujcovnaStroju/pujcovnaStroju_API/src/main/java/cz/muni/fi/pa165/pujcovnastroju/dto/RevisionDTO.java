@@ -2,13 +2,12 @@ package cz.muni.fi.pa165.pujcovnastroju.dto;
 
 import java.util.Date;
 
-
 /**
  * @author Matej Fucek
  *
  */
-public class RevisionDTO 
-{
+public class RevisionDTO {
+
     private Long revID;
     private MachineDTO machine;
     private Date revDate;
@@ -87,7 +86,4 @@ public class RevisionDTO
         }
         return true;
     }
-    
-
 }
-
