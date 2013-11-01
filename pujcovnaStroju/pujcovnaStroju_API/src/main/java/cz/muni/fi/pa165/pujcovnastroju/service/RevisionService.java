@@ -10,7 +10,7 @@ import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 
 /**
- * 
+ *
  * @author Matej
  */
 public interface RevisionService {
