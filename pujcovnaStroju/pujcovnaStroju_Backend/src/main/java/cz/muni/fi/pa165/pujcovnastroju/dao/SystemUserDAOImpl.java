@@ -3,10 +3,13 @@ package cz.muni.fi.pa165.pujcovnastroju.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import org.springframework.stereotype.Repository;
 
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
@@ -15,16 +18,24 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
  * 
  * @author Vojtech Schlemmer
  */
+@Repository
 public class SystemUserDAOImpl implements SystemUserDAO {
-
+	
+	@PersistenceContext
     private EntityManager em;
 
     public SystemUserDAOImpl(){};
     public SystemUserDAOImpl(EntityManager em) {
         this.em = em;
     }
-
-    public SystemUser create(SystemUser user) throws IllegalArgumentException {
+    
+    public EntityManager getEm() {
+		return em;
+	}
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+	public SystemUser create(SystemUser user) throws IllegalArgumentException {
         if (user == null) {
             throw new IllegalArgumentException("Argument user must be set");
         }
