@@ -21,19 +21,18 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 @Repository
 public class RevisionDAOImpl implements RevisionDAO {
 
-	@PersistenceContext
+    @PersistenceContext
     private EntityManager em;
 
-    
     public EntityManager getEm() {
-		return em;
-	}
+        return em;
+    }
 
-	public void setEm(EntityManager em) {
-		this.em = em;
-	}
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 
-	public RevisionDAOImpl(EntityManager em) throws IllegalArgumentException {
+    public RevisionDAOImpl(EntityManager em) throws IllegalArgumentException {
         if (em == null) {
             throw new IllegalArgumentException("em is null");
         } else {
@@ -47,9 +46,9 @@ public class RevisionDAOImpl implements RevisionDAO {
         }
         //em.getTransaction().begin();
         em.persist(revision);
-       // em.getTransaction().commit()
+        // em.getTransaction().commit()
         return em.find(Revision.class, revision.getRevID());
-        
+
     }
 
     public Revision delete(Revision revision) throws IllegalArgumentException {
@@ -59,7 +58,7 @@ public class RevisionDAOImpl implements RevisionDAO {
         //em.getTransaction().begin();
         Revision revision1 = em.merge(revision);
         em.remove(revision1);
-       // em.getTransaction().commit();
+        // em.getTransaction().commit();
         return em.find(Revision.class, revision.getRevID());
     }
 
@@ -70,10 +69,10 @@ public class RevisionDAOImpl implements RevisionDAO {
         if (revision.getRevID() == null) {
             throw new IllegalArgumentException("revision.id is null");
         }
-       // em.getTransaction().begin();
+        // em.getTransaction().begin();
         Revision revision1 = em.merge(revision);
         em.persist(revision1);
-       // em.getTransaction().commit();
+        // em.getTransaction().commit();
         return em.find(Revision.class, revision1.getRevID());
     }
 
