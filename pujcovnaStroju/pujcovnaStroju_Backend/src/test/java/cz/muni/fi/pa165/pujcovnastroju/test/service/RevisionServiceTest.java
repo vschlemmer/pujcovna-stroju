@@ -32,7 +32,7 @@ public class RevisionServiceTest extends AbstractTest {
 
     @Mock
     RevisionDAO mockRevisionDao;
-    @InjectMocks
+    @InjectMocks  
     RevisionService revisionService = new RevisionServiceImpl();
 
     @Before
@@ -44,6 +44,15 @@ public class RevisionServiceTest extends AbstractTest {
                 return (Revision) args[0];
             }
         });
+        Mockito.when(mockRevisionDao.create(null)).thenThrow(new IllegalArgumentException("Error occured during storing revision."));
+        
+        Mockito.when(mockRevisionDao.update(Matchers.any(Revision.class))).thenAnswer(new Answer<Revision>() {
+		@Override
+		public Revision answer(InvocationOnMock inv) throws Throwable {
+		    Object[] args = inv.getArguments();
+		    return (Revision)args[0];
+		}
+	    });
 
         Mockito.when(mockRevisionDao.update(null)).thenThrow(new IllegalArgumentException("Error occured during updating Revision."));
 
@@ -51,7 +60,7 @@ public class RevisionServiceTest extends AbstractTest {
         Mockito.when(mockRevisionDao.read((long) 2)).thenReturn(new Revision());
         Mockito.when(mockRevisionDao.read(null)).thenThrow(new IllegalArgumentException("Error occured during reading Revision."));
 
-        //Mockito.when(mockRevisionDao.delete(Revision).thenReturn(new Revision());
+        Mockito.when(mockRevisionDao.delete(Matchers.any(Revision.class))).thenReturn(new Revision());
         Mockito.when(mockRevisionDao.delete(null)).thenThrow(new IllegalArgumentException("Error occured during deleting Revision."));
     }
 
@@ -109,11 +118,11 @@ public class RevisionServiceTest extends AbstractTest {
         assertNotNull(revisionDTOProcessed);
     }
 
-    /* 
+    
    
-     * @Test
-     * public void TestDeleteBizRevision() {
-     Revision revID = null;
+     @Test
+      public void TestDeleteBizRevision() {
+     RevisionDTO revID = null;
      RevisionDTO revisionDTOProcessed = null;
      try {
      revisionService.deleteBizRevision(revID);
@@ -122,10 +131,13 @@ public class RevisionServiceTest extends AbstractTest {
      assertNull(revID);
      }
 	
-     revID = (long)1;
-     revisionDTOProcessed = revisionService.deleteBizRevision(revID);
+     revID = new RevisionDTO ();
+     //revisionDTOProcessed = revisionService.deleteBizRevision();
      assertNotNull(revisionDTOProcessed);
-     }*/
+     }
+     
+     
+     
     @Test
     public void TestFindAllrevisionsBizRevision() {
         List<RevisionDTO> revisionDTOs = null;
