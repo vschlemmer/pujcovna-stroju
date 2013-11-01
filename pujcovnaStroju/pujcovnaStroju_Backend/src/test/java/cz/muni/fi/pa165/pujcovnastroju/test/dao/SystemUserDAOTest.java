@@ -26,13 +26,14 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
  * @author Vojtech Schlemmer
  */
 public class SystemUserDAOTest extends TestCase {
+    private EntityManager em;
     private SystemUserDAO userDAO;
     
     @Before
     @Override
     public void setUp() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-        EntityManager em = emf.createEntityManager();
+        em = emf.createEntityManager();
         userDAO = new SystemUserDAOImpl(em);
     }
     
@@ -78,7 +79,6 @@ public class SystemUserDAOTest extends TestCase {
         Revision revision1 = new Revision();
         revision1.setComment("comment");
         revision1.setSystemUser(null);
-        revision1.setSystemUser(null);
         revision1.setRevDate(new Timestamp(System.currentTimeMillis()));
         revision1.setMachine(null);
         return revision1;
@@ -90,17 +90,19 @@ public class SystemUserDAOTest extends TestCase {
     public void testCreate(){
         SystemUser user1 = createSampleUser();
         assertNull(user1.getId());
+        em.getTransaction().begin();
         SystemUser user2 = userDAO.create(user1);
+        em.getTransaction().commit();
         assertNotNull(user1.getId());
         assertNotNull(user2.getId());
         assertEquals(user1,user2);
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getFirstName(), user2.getFirstName());
-        assertEquals(user1.getLastName(), user2.getLastName());
-        assertEquals(user1.getType(), user2.getType());
+        em.getTransaction().begin();
         userDAO.delete(user1);
+        em.getTransaction().commit();
         try{
+            em.getTransaction().begin();
             userDAO.create(null);
+            em.getTransaction().commit();
             fail();
         }catch(IllegalArgumentException ex){
             // ok
@@ -112,14 +114,14 @@ public class SystemUserDAOTest extends TestCase {
      */
     public void testRead(){
         SystemUser user1 = createSampleUser();
+        em.getTransaction().begin();
         userDAO.create(user1);
+        em.getTransaction().commit();
         SystemUser user2 = userDAO.read(user1.getId());
         assertEquals(user1,user2);
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getFirstName(), user2.getFirstName());
-        assertEquals(user1.getLastName(), user2.getLastName());
-        assertEquals(user1.getType(), user2.getType());
+        em.getTransaction().begin();
         userDAO.delete(user1);
+        em.getTransaction().commit();
     }
     
     /**
@@ -127,25 +129,30 @@ public class SystemUserDAOTest extends TestCase {
      */
     public void testUpdate(){
         SystemUser user1 = createSampleUser();
+        em.getTransaction().begin();
         userDAO.create(user1);
+        em.getTransaction().commit();
         user1.setLastName("Dve");
+        em.getTransaction().begin();
         userDAO.update(user1);
+        em.getTransaction().commit();
         SystemUser user2 = userDAO.read(user1.getId());
         assertEquals(user1,user2);
-        assertEquals(user1.getId(), user2.getId());
-        assertEquals(user1.getFirstName(), user2.getFirstName());
-        assertEquals(user1.getType(), user2.getType());
         assertEquals("Dve", user2.getLastName());
+        em.getTransaction().begin();
         userDAO.delete(user1);
+        em.getTransaction().commit();
     }
-    
+
     /**
      * Test deleting a user
      */
     public void testDelete(){
         SystemUser user1 = createSampleUser();
+        em.getTransaction().begin();
         userDAO.create(user1);
         userDAO.delete(user1);
+        em.getTransaction().commit();
         assertNull(userDAO.read(user1.getId()));
     }
     
@@ -156,14 +163,18 @@ public class SystemUserDAOTest extends TestCase {
         SystemUser user1 = createSampleUser();
         SystemUser user2 = createSampleUser();
         user2.setLastName("Dve");
+        em.getTransaction().begin();
         userDAO.create(user1);
         userDAO.create(user2);
+        em.getTransaction().commit();
         List<SystemUser> userlist1 = new ArrayList<>();
         userlist1.add(user1);
         userlist1.add(user2);
         assertEquals(userlist1, userDAO.findAllSystemUsers());
+        em.getTransaction().begin();
         userDAO.delete(user1);
         userDAO.delete(user2);
+        em.getTransaction().commit();
     }
     
     /**
@@ -175,12 +186,18 @@ public class SystemUserDAOTest extends TestCase {
         user2.setLastName("Dve");
         SystemUser user3 = createSampleUser();
         user3.setLastName("Tri");
+        em.getTransaction().begin();
         userDAO.create(user1);
         userDAO.create(user2);
         userDAO.create(user3);
+        em.getTransaction().commit();
         List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMER);
         assertEquals(userList1, userDAO.findAllSystemUsers());
         assertEquals(3, userList1.size());
-    }
-    
+        em.getTransaction().begin();
+        userDAO.delete(user1);
+        userDAO.delete(user2);
+        userDAO.delete(user3);
+        em.getTransaction().commit();
+    }    
 }
