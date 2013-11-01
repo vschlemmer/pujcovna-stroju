@@ -43,7 +43,7 @@ public class RevisionDAOImpl implements RevisionDAO {
 
     public Revision create(Revision revision) throws IllegalArgumentException {
         if (revision == null) {
-            throw new IllegalArgumentException("loan is null");
+            throw new IllegalArgumentException("revision is null");
         }
         em.getTransaction().begin();
         em.persist(revision);
