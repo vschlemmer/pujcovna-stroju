@@ -68,7 +68,7 @@ public class RevisionDAOImpl implements RevisionDAO {
 
     public Revision read(Long RevID) {
         if (RevID == null) {
-            throw new IllegalArgumentException("unset argument 'id'");
+            throw new IllegalArgumentException("unset argument 'RevID'");
         }
         return em.find(Revision.class, RevID);
     }
@@ -78,13 +78,13 @@ public class RevisionDAOImpl implements RevisionDAO {
         CriteriaQuery<Revision> cq = cb.createQuery(Revision.class);
         Root<Revision> revisionRoot = cq.from(Revision.class);
         cq.select(revisionRoot);
-        
+
         return em.createQuery(cq).getResultList();
-        
-       // TypedQuery<Revision> query1 = em.createQuery(
+
+        // TypedQuery<Revision> query1 = em.createQuery(
         //        "SELECT r FROM Revision r", Revision.class);
         //return query1.getResultList();
-       
+
     }
 
     public List<Revision> findRevisionsByDate(Date dateFrom, Date dateTo) {
