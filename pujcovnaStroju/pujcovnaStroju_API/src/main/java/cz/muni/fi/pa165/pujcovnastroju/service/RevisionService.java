@@ -19,8 +19,8 @@ public interface RevisionService {
      /**
      * Creates a new Revision
      * 
-     * @param revID to be created
-     * @return created Revision
+     * @param revisionDTO to be created
+     * @return created RevisionDTO
      * @throws IllegalArgumentException if the Revision is null
      */ 
     public RevisionDTO createBizRevision (RevisionDTO revisionDTO);
@@ -30,24 +30,23 @@ public interface RevisionService {
 	
      * Updates given revID
      *
-     * @param revID to be updated
-     * @return updated RevID
+     * @param revisionDTO to be updated
+     * @return updated RevisionDTO
      * @throws IllegalArgumentException if the RevID is null
      */
     public RevisionDTO updateBizRevision(RevisionDTO revisionDTO);
 
     /**
      * Deletes an Revision
-     *
-     * @param revID to be deleted
+     * @param revisionDTO to be deleted
      
-     * @throws IllegalArgumentException if the RevID is null
+     * @throws IllegalArgumentException if the revisionDTO is null
      */
     public void deleteBizRevision (RevisionDTO revisionDTO);
     
     /**
-     * Returns all Revisions
-     * 
+     * Returns all revisions
+     * @throws IllegalArgumentException if the revID is null
      * @return list of all Revision 
      */
     public List<RevisionDTO> findAllrevisionsBizRevision();
@@ -67,6 +66,7 @@ public interface RevisionService {
      * @param dateFrom date from which the revisions should be retrieved
      * @param dateTo date to which the revisions should be retrieved
      * @return list of revisions that suit the filter
+     * @throws IllegalArgumentException if the revID is null
      */
     public List<RevisionDTO> findRevisionsByDateBizRevision(Date dateFrom, Date dateTo);
 }
