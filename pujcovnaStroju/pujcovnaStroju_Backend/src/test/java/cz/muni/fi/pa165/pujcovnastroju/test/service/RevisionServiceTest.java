@@ -1,13 +1,9 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.service;
 
-import cz.muni.fi.pa165.pujcovnastroju.dao.LoanDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
-import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
-import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.LoanServiceImpl;
 import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImpl;
 import java.util.ArrayList;
 import java.sql.Date;
