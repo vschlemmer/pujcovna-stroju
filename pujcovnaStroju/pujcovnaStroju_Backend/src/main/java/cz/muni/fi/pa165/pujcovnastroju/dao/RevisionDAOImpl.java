@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.pujcovnastroju.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import java.sql.Date;
@@ -13,17 +14,30 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;
 
+import org.springframework.stereotype.Repository;
+
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 
 /**
  *
  * @author Matej Fucek
  */
+@Repository
 public class RevisionDAOImpl implements RevisionDAO {
 
+	@PersistenceContext
     private EntityManager em;
 
-    public RevisionDAOImpl(EntityManager em) throws IllegalArgumentException {
+    
+    public EntityManager getEm() {
+		return em;
+	}
+
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+
+	public RevisionDAOImpl(EntityManager em) throws IllegalArgumentException {
         if (em == null) {
             throw new IllegalArgumentException("em is null");
         } else {

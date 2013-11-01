@@ -39,7 +39,7 @@
 	<bean name="machineService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.MachineServiceImpl"></bean>
         <bean name="SystemUserDAO" class="cz.muni.fi.pa165.pujcovnastroju.dao.SystemUserDAOImpl"></bean>
         <bean name="SystemUserService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.SystemUserServiceImpl"></bean>
-	<bean name="LoanDAO" class="cz.muni.fi.pa165.pujcovnastroju.dao.LoanDAOImpl" /></bean>
+	<bean name="LoanDAO" class="cz.muni.fi.pa165.pujcovnastroju.dao.LoanDAOImpl"></bean>
 	<bean name="loanService" class="cz.muni.fi.pa165.pujcovnastroju.serviceimpl.LoanServiceImpl"></bean>
 
 </beans>
