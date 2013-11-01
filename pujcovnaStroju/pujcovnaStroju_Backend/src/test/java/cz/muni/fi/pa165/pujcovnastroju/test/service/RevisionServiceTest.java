@@ -1,13 +1,14 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.service;
 
-import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
-import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
-import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
-import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImpl;
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +19,13 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import org.springframework.dao.DataAccessResourceFailureException;
+
+import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
+import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImpl;
 
 /**
  *
@@ -162,8 +166,15 @@ public class RevisionServiceTest extends AbstractTest {
         List<Revision> revisionList = new ArrayList<>();
         revisionList.add(new Revision());
         revisionList.add(new Revision());
-        Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(null);
-
+     
+        try {
+        	revisionService.findRevisionsByDateBizRevision(null, null);
+        	fail();
+        } catch (IllegalArgumentException e) {}
+        
+        
         Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(revisionList);
+        List<Revision> returnedRevisions = mockRevisionDao.findRevisionsByDate(new Date(324), new Date(2344));
+        assertEquals(returnedRevisions, revisionList);
     }
 }
