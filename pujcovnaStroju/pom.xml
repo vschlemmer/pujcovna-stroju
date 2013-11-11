@@ -5,18 +5,20 @@
 	<artifactId>parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	
+
 	<modules>
 		<module>pujcovnaStroju_Backend</module>
 		<module>pujcovnaStroju_API</module>
+		<module>pujcovnaStroju_Frontend</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
 	</properties>
-	
+
 	<url>https://github.com/bender-futur/pujcovna-stroju/</url>
-	
+
 	<build>
 		<plugins>
 			<plugin>
