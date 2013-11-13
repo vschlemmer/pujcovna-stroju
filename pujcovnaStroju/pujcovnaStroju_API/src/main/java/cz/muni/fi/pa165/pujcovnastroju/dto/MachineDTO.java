@@ -15,7 +15,7 @@ public class MachineDTO {
 
 	private Long id;
 	private String label;
-	private String decription;
+	private String description;
 	private MachineTypeEnumDTO type;
 	private List<LoanDTO> loans;
 	private List<RevisionDTO> revisions;
@@ -36,12 +36,12 @@ public class MachineDTO {
 		this.label = label;
 	}
 
-	public String getDecription() {
-		return decription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDecription(String decription) {
-		this.decription = decription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public MachineTypeEnumDTO getType() {
@@ -73,7 +73,7 @@ public class MachineDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((decription == null) ? 0 : decription.hashCode());
+				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		result = prime * result + ((loans == null) ? 0 : loans.hashCode());
@@ -90,10 +90,10 @@ public class MachineDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		MachineDTO other = (MachineDTO) obj;
-		if (decription == null) {
-			if (other.decription != null)
+		if (description == null) {
+			if (other.description != null)
 				return false;
-		} else if (!decription.equals(other.decription))
+		} else if (!description.equals(other.description))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -121,7 +121,7 @@ public class MachineDTO {
 	@Override
 	public String toString() {
 		return "MachineDTO [id=" + id + ", label=" + label + ", decription="
-				+ decription + ", type=" + type + ", loans=" + loans + "]";
+				+ description + ", type=" + type + ", loans=" + loans + "]";
 	}
 
 }
