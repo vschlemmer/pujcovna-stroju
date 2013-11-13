@@ -61,7 +61,7 @@ public class MachineDAOImpl implements MachineDAO {
 				.find(Machine.class, machine.getId());
 		if (toBeUpdated != null) {
 			toBeUpdated.setLabel(machine.getLabel());
-			toBeUpdated.setDecription(machine.getDecription());
+			toBeUpdated.setDescription(machine.getDescription());
 			toBeUpdated.setType(machine.getType());
 			toBeUpdated.setLoans(machine.getLoans());
 		} else {

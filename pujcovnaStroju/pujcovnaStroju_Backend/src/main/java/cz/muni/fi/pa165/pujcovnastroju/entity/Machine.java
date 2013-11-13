@@ -34,7 +34,7 @@ public class Machine implements Serializable, Cloneable {
     private String label;
 
     @Column(nullable = true, length = 255)
-    private String decription;
+    private String description;
 
     @Column(nullable = false)
     private MachineTypeEnum type;
@@ -63,12 +63,12 @@ public class Machine implements Serializable, Cloneable {
         this.label = label;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String decription) {
+        this.description = decription;
     }
 
     public MachineTypeEnum getType() {
@@ -100,7 +100,7 @@ public class Machine implements Serializable, Cloneable {
         Machine newMachine = new Machine();
         newMachine.setId(this.id);
         newMachine.setLabel(this.getLabel());
-        newMachine.setDecription(this.getDecription());
+        newMachine.setDescription(this.getDescription());
         newMachine.setType(this.getType());
         return newMachine;
     }
@@ -110,7 +110,7 @@ public class Machine implements Serializable, Cloneable {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((decription == null) ? 0 : decription.hashCode());
+                + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((label == null) ? 0 : label.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -126,10 +126,10 @@ public class Machine implements Serializable, Cloneable {
         if (getClass() != obj.getClass())
             return false;
         Machine other = (Machine) obj;
-        if (decription == null) {
-            if (other.decription != null)
+        if (description == null) {
+            if (other.description != null)
                 return false;
-        } else if (!decription.equals(other.decription))
+        } else if (!description.equals(other.description))
             return false;
         if (id == null) {
             if (other.id != null)
@@ -149,7 +149,7 @@ public class Machine implements Serializable, Cloneable {
     @Override
     public String toString() {
         return "Machine [id=" + id + ", label=" + label + ", decription="
-                + decription + ", type=" + type + "]";
+                + description + ", type=" + type + "]";
     }
 
 }

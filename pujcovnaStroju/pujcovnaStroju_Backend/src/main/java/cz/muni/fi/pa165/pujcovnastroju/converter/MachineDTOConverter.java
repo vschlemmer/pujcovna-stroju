@@ -24,7 +24,7 @@ public class MachineDTOConverter {
 		entity.setId(dto.getId());
 		entity.setType(MachineTypeDTOConverter.dtoToEntity(dto.getType()));
 		entity.setLabel(dto.getLabel());
-		entity.setDecription(dto.getDecription());
+		entity.setDescription(dto.getDescription());
 		return entity;
 	}
 
@@ -36,7 +36,7 @@ public class MachineDTOConverter {
 		dto.setId(entity.getId());
 		dto.setType(MachineTypeDTOConverter.entityToDto(entity.getType()));
 		dto.setLabel(entity.getLabel());
-		dto.setDecription(entity.getDecription());
+		dto.setDescription(entity.getDescription());
 		return dto;
 	}
 

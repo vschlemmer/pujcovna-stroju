@@ -14,7 +14,7 @@ public class MachineTypeDTOConverter {
 		if (dto == null)
 			return null;
 
-		MachineTypeEnum type = MachineTypeEnum.valueOf(dto.typeLabel);
+		MachineTypeEnum type = MachineTypeEnum.BULDOZER;
 		return type;
 	}
 
