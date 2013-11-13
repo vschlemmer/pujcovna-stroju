@@ -1,7 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.dao;
 
 import java.util.List;
-import java.lang.IllegalArgumentException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,7 +32,7 @@ public class MachineDAOTest extends TestCase {
 	public Machine getSampleMachine() {
 		Machine m1 = new Machine();
 		m1.setLabel("Buldozer b1");
-		m1.setDecription("Red buldozer with yellow stripes");
+		m1.setDescription("Red buldozer with yellow stripes");
 		m1.setType(MachineTypeEnum.BULDOZER);
 		return m1;
 	}
@@ -43,15 +42,15 @@ public class MachineDAOTest extends TestCase {
 		testedObject.create(getSampleMachine());
 		Machine m2 = new Machine();
 		m2.setLabel("Buldozer b2");
-		m2.setDecription("Red buldozer with white stripes");
+		m2.setDescription("Red buldozer with white stripes");
 		m2.setType(MachineTypeEnum.BULDOZER);
 		Machine m3 = new Machine();
 		m3.setLabel("Drill");
-		m3.setDecription("Red drill with with broken trigger");
+		m3.setDescription("Red drill with with broken trigger");
 		m3.setType(MachineTypeEnum.DRILL);
 		Machine m4 = new Machine();
 		m4.setLabel("Buldozer b4");
-		m4.setDecription("Red buldozer with white spots");
+		m4.setDescription("Red buldozer with white spots");
 		m4.setType(MachineTypeEnum.BULDOZER);
 		testedObject.create(m2);
 		testedObject.create(m3);

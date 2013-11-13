@@ -60,7 +60,7 @@ public class RevisionDAOTest extends TestCase {
     public Machine createSampleMachine() {
         Machine machine1 = new Machine();
         machine1.setLabel("bla bla");
-        machine1.setDecription("BAAALGER");
+        machine1.setDescription("BAAALGER");
         machine1.setType(MachineTypeEnum.BULDOZER);
         return machine1;
     }
