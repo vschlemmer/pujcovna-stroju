@@ -27,6 +27,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.MachineServiceImpl;
+import org.hibernate.annotations.common.util.impl.Log_$logger;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MachineServiceTest extends AbstractTest {
@@ -150,7 +151,6 @@ public class MachineServiceTest extends AbstractTest {
 					.entityToDto(MachineTypeEnum.CAN_OPENER));
 			dto.setLabel("abc");
 			MachineDTO updated = service.update(dto);
-
 			assertNotNull(updated);
 			assertEquals(dto, updated);
 		} catch (Exception e) {
