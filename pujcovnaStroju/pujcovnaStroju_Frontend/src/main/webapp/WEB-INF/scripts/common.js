@@ -5,6 +5,6 @@ function showPart(id) {
 
 function hidePart(id) {
 	var d = document.getElementById(id);
-	d.className = d.className + " .offscreen";
+	d.className = d.className + " offscreen";
 }
 
