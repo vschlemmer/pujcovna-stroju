@@ -9,8 +9,10 @@
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 <div class="content">
-	<h2><spring:message code="lang.listMachines" text="List of machines" /></h2>
-		
+	<h2>
+		<spring:message code="lang.listMachines" text="List of machines" />
+	</h2>
+
 	<table id="standardTable">
 		<thead>
 			<tr>
@@ -28,7 +30,8 @@
 					<td>${machine.label}</td>
 					<td>${machine.type.typeLabel}</td>
 					<td>${machine.description}</td>
-					<td><a href="<c:url value="/machine/detail/${machine.id}"/>">link</a> </td>
+					<td><a href="<c:url value="/machine/detail/${machine.id}"/>">link</a>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -71,5 +74,25 @@
 
 		</form:form>
 	</ul>
+	<c:if test="${storeStatus}">
+		<div class="success">
+			<p>
+				<spring:message code="lang.machineStoreSuccess"
+					text="Machine successfully stored" />
+			</p>
+		</div>
+	</c:if>
+
+	<c:if test="${storeStatus == 'false'}">
+		<div class="error">
+			<p>
+				<spring:message code="lang.machineStoreFailure"
+					text="Error occurred during machine storing" />
+			</p>
+			<p>${errorMessage}</p>
+		</div>
+	</c:if>
+
+</div>
 </div>
 <jsp:include page="parts/footer.jsp"></jsp:include>

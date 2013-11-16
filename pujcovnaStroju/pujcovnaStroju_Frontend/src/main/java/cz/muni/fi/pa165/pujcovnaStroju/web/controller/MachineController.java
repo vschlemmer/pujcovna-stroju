@@ -1,6 +1,9 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpRequest;
+import org.springframework.jdbc.object.StoredProcedure;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
@@ -15,8 +19,9 @@ import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 
 /**
  * Machine controller implementation
+ * 
  * @author Michal Merta
- *
+ * 
  */
 @Controller
 @RequestMapping("/machine")
@@ -40,28 +45,73 @@ public class MachineController {
 		return "redirect:/machine/list";
 	}
 
-	@RequestMapping("/list")
-	public ModelAndView listMachines(ModelMap model) {
+	@RequestMapping(value = "/list"
+//			, params = {"stored","errorText"}, method = RequestMethod.GET
+			)
+	public ModelAndView listMachines(ModelMap model,
+			@RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
+			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
+			) {
+		
 		model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
 		DefaultController.addHeaderFooterInfo(model);
-		return new ModelAndView("listMachines","command",new MachineDTO());
+		System.out.println(storeStatus);
+		System.out.println(errorMessage);
+		if (storeStatus.equalsIgnoreCase("true")) {
+			model.addAttribute("storeStatus","true");
+		}
+		
+		if (storeStatus.equalsIgnoreCase("false")) {
+			model.addAttribute("storeStatus","false");
+			model.addAttribute("errorMessage",errorMessage);	
+		}
+		
+		return new ModelAndView("listMachines", "command", new MachineDTO());
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String addContact(@ModelAttribute("machine") MachineDTO machine,
-			BindingResult result) {
-		//TODO handle exceptions
-		machineService.create(machine);
-
+			BindingResult result, ModelMap model) {
+		boolean stored = false;
+		String errorMsg = null;
+		
+		try {
+			stored = machineService.create(machine) != null;
+		} catch (DataAccessException e) {
+			stored = false;
+			errorMsg = e.getMessage();
+		}
+		
+		model.addAttribute("storeStatus",stored);
+		if (errorMsg != null) {
+			model.addAttribute("errorMessage",errorMsg);
+		}
 		return "redirect:list";
 	}
 
 	@RequestMapping("/detail/{id}")
-	public void viewMachine(@PathVariable String id, ModelMap model) {
-		model.addAttribute("message", "view " + id);
-	}
+	public
+	String viewMachine(@PathVariable String id, ModelMap model) {
+		DefaultController.addHeaderFooterInfo(model);
+		model.addAttribute("pageTitle", "lang.detailMachineTitle");
+		MachineDTO machine = null;
+		boolean found = false;
+		try {
+			Long machineID = Long.valueOf(id);
+			machine = machineService.read(machineID);
+			found = true;
+		} catch (DataAccessException | NumberFormatException e) {
+			//TODO log
+		}
 
+		model.addAttribute("machine", machine);
+		if (!found) {
+			model.addAttribute("id", id);
+		}
+		
+		return "machineDetail";
+	}
 
 }
