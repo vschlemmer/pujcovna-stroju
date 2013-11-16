@@ -1,3 +1,73 @@
+/*basic design*/
+div.container
+{
+width:100%;
+margin:0px;
+border:1px solid gray;
+line-height:150%;
+}
+div.header,div.footer
+{
+padding:0.5em;
+color:white;
+background-color:#65a5d1;
+clear:left;
+}
+h1.header
+{
+padding:0;
+margin:0;
+color:#65a5d1;
+}
+div.left
+{
+float:left;
+width:160px;
+margin:0;
+padding:1em;
+}
+div.content
+{
+margin-left:190px;
+border-left:1px solid gray;
+padding:1em;
+}
+h2.content
+{
+padding:0;
+margin:0;
+color:blue;
+float:right;
+}
+
+/*table*/
+#standardTable
+{
+font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+width:100%;
+border-collapse:collapse;
+}
+#standardTable td, #standardTable th 
+{
+font-size:1em;
+border:1px solid #65a5d1;
+padding:3px 7px 2px 7px;
+}
+#standardTable th 
+{
+font-size:1.1em;
+text-align:left;
+padding-top:5px;
+padding-bottom:4px;
+background-color:#65a5d1;
+color:#ffffff;
+}
+#standardTable tr.#standardTable td 
+{
+color:#000000;
+background-color:#65a5d1;
+}
+
 .offscreen {
     position:absolute;
     left:-10000px;

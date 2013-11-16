@@ -11,4 +11,7 @@
 <title><spring:message code="${pageTitle}" text="${pageTitle}"/></title>
 </head>
 <body>
---------------------
+<div class="container">
+<div class="header">
+<spring:message code="${pageHeader}" text="${pageHeader}"/>
+</div>

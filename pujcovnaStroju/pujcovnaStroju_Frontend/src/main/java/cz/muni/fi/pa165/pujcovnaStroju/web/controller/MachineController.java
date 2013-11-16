@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
-import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 
+/**
+ * Machine controller implementation
+ * @author Michal Merta
+ *
+ */
 @Controller
 @RequestMapping("/machine")
 public class MachineController {
@@ -41,20 +45,20 @@ public class MachineController {
 		model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
-		model.addAttribute("pageFooter", "lang.footer");
+		DefaultController.addHeaderFooterInfo(model);
 		return new ModelAndView("listMachines","command",new MachineDTO());
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String addContact(@ModelAttribute("machine") MachineDTO machine,
 			BindingResult result) {
-
+		//TODO handle exceptions
 		machineService.create(machine);
 
 		return "redirect:list";
 	}
 
-	@RequestMapping("/{id}")
+	@RequestMapping("/detail/{id}")
 	public void viewMachine(@PathVariable String id, ModelMap model) {
 		model.addAttribute("message", "view " + id);
 	}
