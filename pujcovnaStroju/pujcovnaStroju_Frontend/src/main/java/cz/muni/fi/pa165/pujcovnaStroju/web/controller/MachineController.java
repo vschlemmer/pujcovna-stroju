@@ -57,8 +57,6 @@ public class MachineController {
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
 		DefaultController.addHeaderFooterInfo(model);
-		System.out.println(storeStatus);
-		System.out.println(errorMessage);
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus","true");
 		}

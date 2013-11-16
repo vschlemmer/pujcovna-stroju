@@ -47,35 +47,39 @@
 
 	</table>
 
-	<button type="button" id="newMachineButton"
-		onclick="javascript:showPart('addMachineWrapper');hidePart('newMachineButton')">
-		<spring:message code="lang.buttonAddMachine" text="New Machine" />
-	</button>
+	<div class="buttonPosition">
+		<button type="button" id="newMachineButton" class="button"
+			onclick="javascript:showPart('addMachineWrapper');hidePart('newMachineButton')">
+			<spring:message code="lang.buttonAddMachine" text="New Machine" />
+		</button>
+	</div>
 	<ul id="addMachineWrapper" class="offscreen">
 		<form:form method="post" id="addMachineForm" name="addMachineForm"
 			action="add">
 			<table>
 				<tr>
 					<td><form:label path="label">label</form:label></td>
-					<td><form:input path="label" /></td>
+					<td><form:input cssClass="inputField" path="label" /></td>
+					<td><label id="machineFormIDWarning" class="offscreen warningMessage">mandatory field</label>
 				</tr>
 				<tr>
 					<td><form:label path="type">type</form:label></td>
-					<td><form:input path="type" /></td>
+					<td><form:input cssClass="inputField" path="type" /></td>
 				</tr>
 				<tr>
 					<td><form:label path="description">description</form:label></td>
-					<td><form:input path="description" /></td>
+					<td><form:input cssClass="inputField" path="description" id="machineFormLabel"/></td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="submit" value="Add machine" /></td>
+					<td colspan="2"><input class="button" type="button"
+						value="Add machine" onclick="javascript:validateAndSubmitMachineForm()"/></td>
 				</tr>
 			</table>
 
 		</form:form>
 	</ul>
 	<c:if test="${storeStatus}">
-		<div class="success">
+		<div class="success" id="machineSuccessWindow">
 			<p>
 				<spring:message code="lang.machineStoreSuccess"
 					text="Machine successfully stored" />
@@ -84,7 +88,7 @@
 	</c:if>
 
 	<c:if test="${storeStatus == 'false'}">
-		<div class="error">
+		<div class="error" id="machineErrorWindow">
 			<p>
 				<spring:message code="lang.machineStoreFailure"
 					text="Error occurred during machine storing" />
@@ -93,6 +97,6 @@
 		</div>
 	</c:if>
 
-</div>
+
 </div>
 <jsp:include page="parts/footer.jsp"></jsp:include>

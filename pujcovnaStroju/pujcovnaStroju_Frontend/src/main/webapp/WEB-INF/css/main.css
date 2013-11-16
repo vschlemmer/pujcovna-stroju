@@ -1,101 +1,131 @@
 /*basic design*/
-div.container
-{
-width:100%;
-margin:0px;
-border:1px solid gray;
-line-height:150%;
+div.container {
+	width: 100%;
+	margin: 0px;
+	border: 1px solid gray;
+	line-height: 150%;
 }
-div.header,div.footer
-{
-padding:0.5em;
-color:white;
-background-color:#65a5d1;
-clear:left;
+
+div.header,div.footer {
+	padding: 0.5em;
+	color: white;
+	background-color: #65a5d1;
+	clear: left;
 }
-h1.header
-{
-padding:0;
-margin:0;
-color:#65a5d1;
+
+h1.header {
+	padding: 0;
+	margin: 0;
+	color: #65a5d1;
 }
-div.left
-{
-float:left;
-width:160px;
-margin:0;
-padding:1em;
+
+div.left {
+	float: left;
+	width: 160px;
+	margin: 0;
+	padding: 1em;
 }
-div.content
-{
-margin-left:190px;
-border-left:1px solid gray;
-padding:1em;
+
+div.content {
+	margin-left: 190px;
+	border-left: 1px solid gray;
+	padding: 1em;
 }
-h2
-{
-padding:0;
-margin-left = 15px;
-margin-bottom = 15px;
-color:#65a5d1;
-float:left;
+
+h2 {
+	padding: 0; margin-left = 15px; margin-bottom = 15px;
+	color: #65a5d1;
+	float: left;
 }
 
 /*table*/
-#standardTable
-{
-font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-width:100%;
-border-collapse:collapse;
+#standardTable {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	width: 100%;
+	border-collapse: collapse;
 }
-#standardTable td, #standardTable th 
-{
-font-size:1em;
-border:1px solid #65a5d1;
-padding:3px 7px 2px 7px;
+
+#standardTable td,#standardTable th {
+	font-size: 1em;
+	border: 1px solid #65a5d1;
+	padding: 3px 7px 2px 7px;
 }
-#standardTable th 
-{
-font-size:1.1em;
-text-align:left;
-padding-top:5px;
-padding-bottom:4px;
-background-color:#65a5d1;
-color:#ffffff;
+
+#standardTable th {
+	font-size: 1.1em;
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 4px;
+	background-color: #65a5d1;
+	color: #ffffff;
 }
-#standardTable tr.#standardTable td 
-{
-color:#000000;
-background-color:#65a5d1;
+
+#standardTable tr .#standardTable td {
+	color: #000000;
+	background-color: #65a5d1;
 }
 
 .offscreen {
-    position:absolute;
-    left:-10000px;
-    top:auto;
-    width:1px;
-    height:1px;
-    overflow:hidden;
-    display:inline;
+	position: absolute;
+	left: -10000px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	display: inline;
 }
 
-.info, .success, .warning, .error, .validation {
-border: 1px solid;
-margin: 10px 0px;
-padding:15px 10px 15px 50px;
-background-repeat: no-repeat;
-background-position: 10px center;
-width: 500px;
+/*information boxes*/
+.info,.success,.warning,.error,.validation {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding: 15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	width: 500px;
 }
 
 .error {
-color: black;
-border-color: #D51F06;
-background-color: #FFBABA;
+	color: black;
+	border-color: #D51F06;
+	background-color: #FFBABA;
 }
 
 .success {
-color: black;
-border-color: #49D749;
-background-color: #6FE06F;
+	color: black;
+	border-color: #49D749;
+	background-color: #6FE06F;
 }
+
+/* form decoration*/
+form {
+	border: 1px solid #65a5d1;
+	padding: 5px;
+	width: auto;
+}
+
+.inputField {
+	border-bottom-color:  #65a5d1;
+	border-top-color:  #65a5d1;
+	border-left-color:  #65a5d1;
+	border-right-color:  #65a5d1;
+}
+
+.buttonDiv {
+	margin: 10px;
+}
+.button {
+   border-color: #96d1f8;
+   border-width: 1px;
+   background: #65a5d1;
+   }
+.button:hover {
+    collor: grey;
+   }
+.button:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+ .warningMessage {
+    color: red;
+ }
