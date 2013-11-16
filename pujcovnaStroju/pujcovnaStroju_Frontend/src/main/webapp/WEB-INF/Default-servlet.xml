@@ -37,6 +37,7 @@
 	
     <mvc:resources mapping="/css/**" location="/WEB-INF/css/*" />
     <mvc:resources mapping="/scripts/**" location="/WEB-INF/scripts/*" />
+    <mvc:resources mapping="/images/**" location="/WEB-INF/images/*" />
 	<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
 	<bean id="conversionService"
 		class="org.springframework.context.support.ConversionServiceFactoryBean">

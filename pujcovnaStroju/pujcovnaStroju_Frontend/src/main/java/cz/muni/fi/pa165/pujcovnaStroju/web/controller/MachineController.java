@@ -46,52 +46,61 @@ public class MachineController {
 	}
 
 	@RequestMapping(value = "/list"
-//			, params = {"stored","errorText"}, method = RequestMethod.GET
-			)
-	public ModelAndView listMachines(ModelMap model,
+	// , params = {"stored","errorText"}, method = RequestMethod.GET
+	)
+	public ModelAndView listMachines(
+			ModelMap model,
 			@RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
-			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
-			) {
-		
+			@RequestParam(value = "deleteStatus", required = false, defaultValue = "") String deleteStatus,
+			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage) {
+
 		model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
 		DefaultController.addHeaderFooterInfo(model);
 		if (storeStatus.equalsIgnoreCase("true")) {
-			model.addAttribute("storeStatus","true");
+			model.addAttribute("storeStatus", "true");
 		}
-		
+
 		if (storeStatus.equalsIgnoreCase("false")) {
-			model.addAttribute("storeStatus","false");
-			model.addAttribute("errorMessage",errorMessage);	
+			model.addAttribute("storeStatus", "false");
+			model.addAttribute("errorMessage", errorMessage);
 		}
-		
+
+		if (deleteStatus.equalsIgnoreCase("true")) {
+			model.addAttribute("deleteStatus", "true");
+		}
+
+		if (deleteStatus.equalsIgnoreCase("false")) {
+			model.addAttribute("deleteStatus", "false");
+			model.addAttribute("errorMessage", errorMessage);
+		}
+
 		return new ModelAndView("listMachines", "command", new MachineDTO());
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String addContact(@ModelAttribute("machine") MachineDTO machine,
+	public String addMachine(@ModelAttribute("machine") MachineDTO machine,
 			BindingResult result, ModelMap model) {
 		boolean stored = false;
 		String errorMsg = null;
-		
+
 		try {
 			stored = machineService.create(machine) != null;
 		} catch (DataAccessException e) {
 			stored = false;
 			errorMsg = e.getMessage();
 		}
-		
-		model.addAttribute("storeStatus",stored);
+
+		model.addAttribute("storeStatus", stored);
 		if (errorMsg != null) {
-			model.addAttribute("errorMessage",errorMsg);
+			model.addAttribute("errorMessage", errorMsg);
 		}
 		return "redirect:list";
 	}
 
 	@RequestMapping("/detail/{id}")
-	public
-	String viewMachine(@PathVariable String id, ModelMap model) {
+	public String viewMachine(@PathVariable String id, ModelMap model) {
 		DefaultController.addHeaderFooterInfo(model);
 		model.addAttribute("pageTitle", "lang.detailMachineTitle");
 		MachineDTO machine = null;
@@ -101,15 +110,39 @@ public class MachineController {
 			machine = machineService.read(machineID);
 			found = true;
 		} catch (DataAccessException | NumberFormatException e) {
-			//TODO log
+			// TODO log
 		}
 
 		model.addAttribute("machine", machine);
 		if (!found) {
 			model.addAttribute("id", id);
 		}
-		
+
 		return "machineDetail";
+	}
+
+	@RequestMapping(value = "/delete/{id}")
+	public String deleteMachine(@PathVariable String id, ModelMap model) {
+		boolean deleted = false;
+		String errorMsg = null;
+		MachineDTO machine = new MachineDTO();
+		try {
+			Long machineID = Long.valueOf(id);
+			machine = machineService.read(machineID);
+			machineService.delete(machine);
+			deleted = true;
+		} catch (DataAccessException | NumberFormatException
+				| NullPointerException e) {
+			// TODO log
+			deleted = false;
+			errorMsg = e.getMessage();
+		}
+
+		model.addAttribute("deleteStatus", deleted);
+		if (errorMsg != null) {
+			model.addAttribute("errorMessage", errorMsg);
+		}
+		return "redirect:/machine/list";
 	}
 
 }
