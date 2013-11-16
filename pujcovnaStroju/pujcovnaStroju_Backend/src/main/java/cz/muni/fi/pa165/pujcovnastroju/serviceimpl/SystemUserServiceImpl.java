@@ -12,11 +12,15 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
  * @author Vojtech Schlemmer
  */
+@Service("userService")
+@Transactional
 public class SystemUserServiceImpl implements SystemUserService {
 
 	@Autowired
@@ -78,7 +82,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 	@Override
 	public List<SystemUserDTO> findAllSystemUsers() {
 		List<SystemUser> userList = userDao.findAllSystemUsers();
-		return SystemUserDTOConverter.listToDTO(userList);
+                return SystemUserDTOConverter.listToDTO(userList);
 	}
 
 	@Override

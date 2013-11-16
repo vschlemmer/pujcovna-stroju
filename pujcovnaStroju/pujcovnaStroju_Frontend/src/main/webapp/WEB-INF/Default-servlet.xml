@@ -40,13 +40,13 @@
     <mvc:resources mapping="/images/**" location="/WEB-INF/images/*" />
 	<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
 	<bean id="conversionService"
-		class="org.springframework.context.support.ConversionServiceFactoryBean">
-		<property name="converters">
-			<list>
-				<bean
-					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOConverter" />
-			</list>
-		</property>
+            class="org.springframework.context.support.ConversionServiceFactoryBean">
+            <property name="converters">
+                <list>
+                    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOConverter" />
+                    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter" />
+                </list>
+            </property>
 	</bean>
 
 

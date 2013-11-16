@@ -21,3 +21,22 @@ function validateAndSubmitMachineForm() {
 	}
 }
 
+function validateAndSubmitUserForm() {
+	hidePart('userSuccessWindow');
+	hidePart('userErrorWindow');
+	var firstName = document.forms['addUserForm'].firstName.value;
+        var lastName = document.forms['addUserForm'].lastName.value;
+        var type = document.forms['addUserForm'].type.value;
+	if(firstName == "") {
+            showPart('userFormFirstNameWarning');
+	}
+        if(lastName == "") {
+            showPart('userFormLastNameWarning');
+	} 
+        if(type == "") {
+            showPart('userFormTypeWarning');
+        }
+        if (firstName != "" && lastName != "" && type != "") {
+            document.getElementById('addUserForm').submit();
+	}
+}
