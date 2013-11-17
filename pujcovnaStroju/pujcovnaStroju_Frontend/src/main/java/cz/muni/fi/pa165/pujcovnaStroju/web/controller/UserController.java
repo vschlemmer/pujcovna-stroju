@@ -121,4 +121,45 @@ public class UserController {
         }
         return "redirect:/user/list";
     }
+    
+    @RequestMapping(value = "/update/{id}")
+    public ModelAndView updateUser(@PathVariable String id, ModelMap model) {
+        DefaultController.addHeaderFooterInfo(model);
+        model.addAttribute("pageTitle", "lang.updateUserTitle");
+        SystemUserDTO user = null;
+        boolean found = false;
+        try {
+            System.err.println("blabla1");
+            Long userID = Long.valueOf(id);
+            user = userService.read(userID);
+            found = true;
+        } catch (DataAccessException | NumberFormatException e) {
+            // TODO log
+        }
+        model.addAttribute("user", user);
+        if (!found) {
+            model.addAttribute("id", id);
+        }
+        return new ModelAndView("updateUser", "command", new SystemUserDTO());
+    }
+    
+    @RequestMapping(value = "/update/update", method = RequestMethod.POST)
+    public String editUser(@ModelAttribute("user") SystemUserDTO user,
+                    BindingResult result, ModelMap model) {
+        boolean updated = false;
+        String errorMsg = null;
+        try {
+            System.err.println("blabla2");
+            updated = userService.update(user) != null;
+        } catch (DataAccessException e) {
+            updated = false;
+            errorMsg = e.getMessage();
+        }
+        model.addAttribute("updateStatus", updated);
+        if (errorMsg != null) {
+            model.addAttribute("errorMessage", errorMsg);
+        }
+        return "redirect:/user/list";
+    }
+    
 }

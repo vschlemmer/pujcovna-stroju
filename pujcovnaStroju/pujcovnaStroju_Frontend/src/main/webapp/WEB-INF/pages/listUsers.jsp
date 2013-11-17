@@ -9,44 +9,50 @@
 
 <div class="content">
     <h2><spring:message code="lang.listUsers" text="List of users" /></h2>
-    <table id="standardTable">
-        <thead>
-            <tr>
-                <th><spring:message code="lang.id" text="ID" /></th>
-                <th><spring:message code="lang.firstName" text="First Name" /></th>
-                <th><spring:message code="lang.lastName" text="Last Name" /></th>
-                <th><spring:message code="lang.type" text="Type" /></th>
-                <th><spring:message code="lang.actions" text="Actions" /></th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:forEach items="${users}" var="user">
+    <br /><br /><br />
+    <c:if test="${empty users}">
+        <spring:message code="lang.noUsers" text="Actions" /><br />
+    </c:if>
+    
+    <c:if test="${not empty users}">
+        <table id="standardTable">
+            <thead>
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.firstName}</td>
-                    <td>${user.lastName}</td>
-                    <td>${user.type.typeLabel}</td>
-                    <td><a href="<c:url value="/user/detail/${user.id}"/>">
-                            <img alt="detail" src="<c:url value="/images/search.png"/>">
-                        </a>
-                        <a href="<c:url value="/user/delete/${user.id}"/>"> 
-                            <img alt="delete" src="<c:url value="/images/delete.png" />">
-                        </a>
-                    </td>
+                    <th><spring:message code="lang.id" text="ID" /></th>
+                    <th><spring:message code="lang.firstName" text="First Name" /></th>
+                    <th><spring:message code="lang.lastName" text="Last Name" /></th>
+                    <th><spring:message code="lang.type" text="Type" /></th>
+                    <th><spring:message code="lang.actions" text="Actions" /></th>
                 </tr>
-            </c:forEach>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th><spring:message code="lang.id" text="ID" /></th>
-                <th><spring:message code="lang.firstName" text="First Name" /></th>
-                <th><spring:message code="lang.lastName" text="Last Name" /></th>
-                <th><spring:message code="lang.type" text="Type" /></th>
-                <th><spring:message code="lang.actions" text="Actions" /></th>
-            </tr>
-        </tfoot>
-    </table>            
-            
+            </thead>
+            <tbody>
+                <c:forEach items="${users}" var="user">
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.firstName}</td>
+                        <td>${user.lastName}</td>
+                        <td>${user.type.typeLabel}</td>
+                        <td><a href="<c:url value="/user/detail/${user.id}"/>">
+                                <img alt="detail" src="<c:url value="/images/search.png"/>"></a>
+                            <a href="<c:url value="/user/delete/${user.id}"/>">
+                                <img alt="delete" src="<c:url value="/images/delete.png" />"></a>
+                            <a href="<c:url value="/user/update/${user.id}"/>">
+                                <img alt="update" src="<c:url value="/images/update.png" />"></a>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th><spring:message code="lang.id" text="ID" /></th>
+                    <th><spring:message code="lang.firstName" text="First Name" /></th>
+                    <th><spring:message code="lang.lastName" text="Last Name" /></th>
+                    <th><spring:message code="lang.type" text="Type" /></th>
+                    <th><spring:message code="lang.actions" text="Actions" /></th>
+                </tr>
+            </tfoot>
+        </table>            
+    </c:if>    
     <div class="buttonPosition">
         <button type="button" id="newUserButton" class="button"
                 onclick="javascript:showPart('addUserWrapper');hidePart('newUserButton')">
@@ -91,7 +97,7 @@
                 <tr>
                     <td colspan="2"><input class="button" type="button"
                             value="Add user"
-                            onclick="javascript:validateAndSubmitUserForm()" /></td>
+                            onclick="javascript:validateAndSubmitAddUserForm()" /></td>
                 </tr>
             </table>
 
@@ -112,6 +118,25 @@
             <p>
                 <spring:message code="lang.userStoreFailure"
                                 text="Error occurred during storing user" />
+            </p>
+            <p>${errorMessage}</p>
+        </div>
+    </c:if>
+    
+    <c:if test="${updateStatus}">
+        <div class="success" id="userSuccessWindow">
+            <p>
+                <spring:message code="lang.userUpdateSuccess"
+                                text="User successfully updated" />
+            </p>
+        </div>
+    </c:if>
+
+    <c:if test="${updateStatus == 'false'}">
+        <div class="error" id="userErrorWindow">
+            <p>
+                <spring:message code="lang.userUpdateFailure"
+                                text="Error occurred during updating user" />
             </p>
             <p>${errorMessage}</p>
         </div>

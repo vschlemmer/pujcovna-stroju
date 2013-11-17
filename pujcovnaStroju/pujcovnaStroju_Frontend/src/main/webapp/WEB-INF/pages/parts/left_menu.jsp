@@ -4,11 +4,11 @@
     pageEncoding="UTF-8"%>
 
 <div class="left">
-    <h2><spring:message
-            code="lang.leftMenuTitle" text="Menu" /></h2>
-	<a href="<c:url value="/machine/list"/>"><spring:message
-			code="lang.listMachines" text="List of machines" />
-        </a> <br/>
-        <a href="<c:url value="/user/list"/>"><spring:message
-			code="lang.listUsers" text="List of users" /></a>
+    <h2><spring:message code="lang.leftMenuTitle" text="Menu" /></h2>
+    <br /><br />
+    <a href="<c:url value="/machine/list"/>"><spring:message
+                    code="lang.listMachines" text="List of machines" />
+    </a> <br/>
+    <a href="<c:url value="/user/list"/>"><spring:message
+                    code="lang.listUsers" text="List of users" /></a>
 </div>

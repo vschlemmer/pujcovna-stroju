@@ -21,22 +21,45 @@ function validateAndSubmitMachineForm() {
 	}
 }
 
-function validateAndSubmitUserForm() {
-	hidePart('userSuccessWindow');
-	hidePart('userErrorWindow');
-	var firstName = document.forms['addUserForm'].firstName.value;
-        var lastName = document.forms['addUserForm'].lastName.value;
-        var type = document.forms['addUserForm'].type.value;
-	if(firstName == "") {
-            showPart('userFormFirstNameWarning');
-	}
-        if(lastName == "") {
-            showPart('userFormLastNameWarning');
-	} 
-        if(type == "") {
-            showPart('userFormTypeWarning');
-        }
-        if (firstName != "" && lastName != "" && type != "") {
-            document.getElementById('addUserForm').submit();
-	}
+function validateAndSubmitAddUserForm() {
+    hidePart('userSuccessWindow');
+    hidePart('userErrorWindow');
+    var firstName = document.forms['addUserForm'].firstName.value;
+    var lastName = document.forms['addUserForm'].lastName.value;
+    var type = document.forms['addUserForm'].type.value;
+    if(firstName == "") {
+        showPart('userFormFirstNameWarning');
+    }
+    if(lastName == "") {
+        showPart('userFormLastNameWarning');
+    } 
+    if(type == "") {
+        showPart('userFormTypeWarning');
+    }
+    if (firstName != "" && lastName != "" && type != "") {
+        document.getElementById('addUserForm').submit();
+    }
+}
+
+function validateAndSubmitUpdateUserForm() {
+    hidePart('userSuccessWindow');
+    hidePart('userErrorWindow');
+    var firstName = document.forms['updateUserForm'].firstName.value;
+    var lastName = document.forms['updateUserForm'].lastName.value;
+    var type = document.forms['updateUserForm'].type.value;
+    if(firstName == "") {
+        showPart('userFormFirstNameWarning');
+    }
+    if(lastName == "") {
+        showPart('userFormLastNameWarning');
+    } 
+    if(type == "") {
+        showPart('userFormTypeWarning');
+    }
+    if(id == "") {
+        showPart('userFormTypeWarning');
+    }
+    if (firstName != "" && lastName != "" && type != "" && id != "") {
+        document.getElementById('updateUserForm').submit();
+    }
 }
