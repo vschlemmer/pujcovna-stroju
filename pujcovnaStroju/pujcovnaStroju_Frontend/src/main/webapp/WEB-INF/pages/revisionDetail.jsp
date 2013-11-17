@@ -14,7 +14,7 @@
     </h2>
 
     <c:if test="${not empty revision}">
-        <p>${revision.id}</p>
+        <p>${revision.revID}</p>
         <%--<p>${revision.machine}</p>--%>
         <p>${revision.revDate}</p>
         <p>${revision.comment}</p>
