@@ -76,7 +76,6 @@ function validateAndSubmitUpdateUserForm() {
     if(comment == "") {
         showPart('revisionFormCommentWarning');
     } 
-    
     if (revDate != "" && comment != "") {
         document.getElementById('addRevisionForm').submit();
     }
@@ -90,14 +89,13 @@ function validateAndSubmitUpdateRevisionForm() {
     if(revDate == "") {
         showPart('revisionFormRevDateWarning');
     }
-    if(lastName == "") {
+    if(comment == "") {
         showPart('revisionFormCommentWarning');
     } 
-    
-    if(id == "") {
-        showPart('revisionFormTypeWarning');
+    if(revID == "") {
+        showPart('revisionFormRevIDWarning');
     }
-    if (revDate != "" && comment!= "" && id != "") {
+    if (revDate != "" && comment != "" && revID != "") {
         document.getElementById('updateRevisionForm').submit();
     } 
 
