@@ -27,18 +27,18 @@
                 </tr>
             </thead>
             <tbody>
-                <c:forEach items="${revisions}" var="revisions">
+                <c:forEach items="${revisions}" var="revision">
                     <tr>
-                        <td>${revision.id}</td>
+                        <td>${revision.revID}</td>
                         <%--<td>${revision.machine}</td>--%>
                         <td>${revision.revDate}</td>
                         <td>${revision.comment}</td>
                        <%-- <td>${revision.systemUser}</td>--%>
-                        <td><a href="<c:url value="/revision/detail/${revision.id}"/>">
+                        <td><a href="<c:url value="/revision/detail/${revision.revID}"/>">
                                 <img alt="detail" src="<c:url value="/images/search.png"/>"></a>
-                            <a href="<c:url value="/revision/delete/${revision.id}"/>">
+                            <a href="<c:url value="/revision/delete/${revision.revID}"/>">
                                 <img alt="delete" src="<c:url value="/images/delete.png" />"></a>
-                            <a href="<c:url value="/revision/update/${revision.id}"/>">
+                            <a href="<c:url value="/revision/update/${revision.revID}"/>">
                                 <img alt="update" src="<c:url value="/images/update.png" />"></a>
                         </td>
                     </tr>
