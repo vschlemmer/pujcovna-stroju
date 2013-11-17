@@ -20,9 +20,10 @@
                 <tr>
                     <th><spring:message code="lang.id" text="RevisionID" /></th>
                     <%--<th><spring:message code="lang.machine" text="Machine" /></th>--%>
-                    <th><spring:message code="lang.revDate" text="revDate" /></th>
+                    <th><spring:message code="lang.revDate" text="RevDate" /></th>
                     <th><spring:message code="lang.comment" text="Comment" /></th>
                     <%--<th><spring:message code="lang.systemUser" text="systemUser" /></th>--%>
+                    <th><spring:message code="lang.actions" text="Actions" /></th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,7 @@
                    <%-- <th><spring:message code="lang.machine" text="machine" /></th>--%>
                     <th><spring:message code="lang.revDate" text="RevDate" /></th>
                     <th><spring:message code="lang.comment" text="Comment" /></th>
+                    <th><spring:message code="lang.actions" text="Actions" /></th>
                     <%--<th><spring:message code="lang.systemUser" text="SystemUser" /></th>--%>
                 </tr>
             </tfoot>
