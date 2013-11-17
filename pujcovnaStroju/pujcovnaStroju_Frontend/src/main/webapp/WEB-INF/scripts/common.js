@@ -62,6 +62,7 @@ function validateAndSubmitUpdateUserForm() {
     if (firstName != "" && lastName != "" && type != "" && id != "") {
         document.getElementById('updateUserForm').submit();
     }
+   }
     
     function validateAndSubmitAddRevisionForm() {
     hidePart('revisionSuccessWindow');
@@ -99,5 +100,5 @@ function validateAndSubmitUpdateRevisionForm() {
     if (revDate != "" && comment!= "" && id != "") {
         document.getElementById('updateRevisionForm').submit();
     } 
-}
+
 }
