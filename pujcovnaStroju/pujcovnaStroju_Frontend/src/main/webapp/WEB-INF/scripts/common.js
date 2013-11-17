@@ -62,4 +62,42 @@ function validateAndSubmitUpdateUserForm() {
     if (firstName != "" && lastName != "" && type != "" && id != "") {
         document.getElementById('updateUserForm').submit();
     }
+    
+    function validateAndSubmitAddRevisionForm() {
+    hidePart('revisionSuccessWindow');
+    hidePart('revisionErrorWindow');
+    var revDate = document.forms['addRevisionForm'].revDate.value;
+    var comment = document.forms['addRevisionForm'].comment.value;
+    
+    if (revDate == "") {
+        showPart('revisionFormRevDateWarning');
+    }
+    if(comment == "") {
+        showPart('revisionFormCommentWarning');
+    } 
+    
+    if (revDate != "" && comment != "") {
+        document.getElementById('addRevisionForm').submit();
+    }
+}
+function validateAndSubmitUpdateRevisionForm() {
+    hidePart('revisionSuccessWindow');
+    hidePart('revisionErrorWindow');
+    var revDate = document.forms['updateRevisionForm'].revDate.value;
+    var comment = document.forms['updateRevisionForm'].comment.value;
+   
+    if(revDate == "") {
+        showPart('revisionFormRevDateWarning');
+    }
+    if(lastName == "") {
+        showPart('revisionFormCommentWarning');
+    } 
+    
+    if(id == "") {
+        showPart('revisionFormTypeWarning');
+    }
+    if (revDate != "" && comment!= "" && id != "") {
+        document.getElementById('updateRevisionForm').submit();
+    } 
+}
 }

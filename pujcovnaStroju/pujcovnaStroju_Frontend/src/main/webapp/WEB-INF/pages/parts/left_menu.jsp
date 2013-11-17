@@ -10,5 +10,7 @@
                     code="lang.listMachines" text="List of machines" />
     </a> <br/>
     <a href="<c:url value="/user/list"/>"><spring:message
-                    code="lang.listUsers" text="List of users" /></a>
+                    code="lang.listUsers" text="List of users" /></a><br/>
+     <a href="<c:url value="/revision/list"/>"><spring:message
+                    code="lang.listRevisions" text="List of revisions" /></a>
 </div>
