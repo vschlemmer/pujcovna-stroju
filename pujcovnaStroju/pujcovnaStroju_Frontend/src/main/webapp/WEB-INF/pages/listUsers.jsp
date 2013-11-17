@@ -26,7 +26,12 @@
                     <td>${user.firstName}</td>
                     <td>${user.lastName}</td>
                     <td>${user.type.typeLabel}</td>
-                    <td><a href="<c:url value="/user/detail/${user.id}"/>">link</a>
+                    <td><a href="<c:url value="/user/detail/${user.id}"/>">
+                            <img alt="detail" src="<c:url value="/images/search.png"/>">
+                        </a>
+                        <a href="<c:url value="/user/delete/${user.id}"/>"> 
+                            <img alt="delete" src="<c:url value="/images/delete.png" />">
+                        </a>
                     </td>
                 </tr>
             </c:forEach>

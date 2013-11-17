@@ -45,7 +45,6 @@ public class UserController {
         @RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
         @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
         ) {
-        System.err.println("all users:" + userService.findAllSystemUsers());
         model.addAttribute("users", userService.findAllSystemUsers());
         model.addAttribute("list", "list of users");
         model.addAttribute("pageTitle", "lang.listUsersTitle");
@@ -67,7 +66,6 @@ public class UserController {
                     BindingResult result, ModelMap model) {
         boolean stored = false;
         String errorMsg = null;
-        System.err.println("Adding user");
         try {
             stored = userService.create(user) != null;
         } catch (DataAccessException e) {
@@ -99,5 +97,28 @@ public class UserController {
             model.addAttribute("id", id);
         }
         return "userDetail";
+    }
+    
+    @RequestMapping(value = "/delete/{id}")
+    public String deleteUser(@PathVariable String id, ModelMap model) {
+        boolean deleted = false;
+        String errorMsg = null;
+        SystemUserDTO userDTO = new SystemUserDTO();
+        try {
+            Long userID = Long.valueOf(id);
+            userDTO = userService.read(userID);
+            userService.delete(userDTO);
+            deleted = true;
+        } catch (DataAccessException | NumberFormatException
+                        | NullPointerException e) {
+            // TODO log
+            deleted = false;
+            errorMsg = e.getMessage();
+        }
+        model.addAttribute("deleteStatus", deleted);
+        if (errorMsg != null) {
+            model.addAttribute("errorMessage", errorMsg);
+        }
+        return "redirect:/user/list";
     }
 }
