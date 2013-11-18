@@ -88,12 +88,15 @@
                     <td><form:label path="type">
                         <spring:message code="lang.type" text="Type" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="type" /></td>
+                    <td><form:select path="type" items="${types}" /></td>
                     <td><label id="userFormTypeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
                 </tr>
+                
+                
+                
                 <tr>
                     <td colspan="2"><input class="button" type="button"
                             value="Add user"
