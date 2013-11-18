@@ -8,9 +8,14 @@
     <br /><br />
     <a href="<c:url value="/machine/list"/>"><spring:message
                     code="lang.listMachines" text="List of machines" />
-    </a> <br/>
+    </a><br/>
     <a href="<c:url value="/user/list"/>"><spring:message
-                    code="lang.listUsers" text="List of users" /></a><br/>
-     <a href="<c:url value="/revision/list"/>"><spring:message
-                    code="lang.listRevisions" text="List of revisions" /></a>
+                    code="lang.listUsers" text="List of users" />
+    </a><br/>
+    <a href="<c:url value="/revision/list"/>"><spring:message
+                    code="lang.listRevisions" text="List of revisions" />
+    </a><br/>
+    <a href="<c:url value="/loan/list"/>"><spring:message
+                    code="lang.listLoans" text="List of Loans" />
+    </a>
 </div>

@@ -1,9 +1,8 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
-import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
-import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
-import java.util.Arrays;
+import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
+import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,29 +18,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * User Controller implementation
- * 
- * @author Vojtech Schlemmer
+ *
+ * @author xguttner
  */
 @Controller
-@RequestMapping("/user")
-public class UserController {
-    
-    private SystemUserService userService;
+@RequestMapping("/loan")
+public class LoanController {
+    private LoanService loanService;
     
     @Autowired
-    public UserController(SystemUserService userService){
-        this.userService = userService;
+    public LoanController(LoanService loanService){
+        this.loanService = loanService;
     }
     
     @RequestMapping("")
     public String redirectToList(ModelMap model) {
-            return "redirect:/user/list";
+            return "redirect:/loan/list";
     }
 
     @RequestMapping("/")
     public String redirectToListBackslash(ModelMap model) {
-            return "redirect:/user/list";
+            return "redirect:/loan/list";
     }
     
     @RequestMapping(value = "/list")
@@ -49,10 +46,10 @@ public class UserController {
         @RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
         @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
         ) {
-        model.addAttribute("users", userService.findAllSystemUsers());
-        model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
-        model.addAttribute("list", "list of users");
-        model.addAttribute("pageTitle", "lang.listUsersTitle");
+        model.addAttribute("loans", loanService.getAllLoans());
+        model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+        model.addAttribute("list", "list of loans");
+        model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
         System.out.println(storeStatus);
         System.out.println(errorMessage);
@@ -63,16 +60,16 @@ public class UserController {
                 model.addAttribute("storeStatus","false");
                 model.addAttribute("errorMessage",errorMessage);	
         }
-        return new ModelAndView("listUsers", "command", new SystemUserDTO());
+        return new ModelAndView("listLoans", "command", new LoanDTO());
     }
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") SystemUserDTO user,
+    public String addLoan(@ModelAttribute("loan") LoanDTO loan,
                     BindingResult result, ModelMap model) {
         boolean stored = false;
         String errorMsg = null;
         try {
-            stored = userService.create(user) != null;
+            stored = loanService.create(loan) != null;
         } catch (DataAccessException e) {
             stored = false;
             errorMsg = e.getMessage();
@@ -85,34 +82,34 @@ public class UserController {
     }
     
     @RequestMapping("/detail/{id}")
-    public String viewUser(@PathVariable String id, ModelMap model) {
+    public String viewLoan(@PathVariable String id, ModelMap model) {
         DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.detailUserTitle");
-        SystemUserDTO user = null;
+        model.addAttribute("pageTitle", "lang.detailLoanTitle");
+        LoanDTO loan = null;
         boolean found = false;
         try {
-            Long userID = Long.valueOf(id);
-            user = userService.read(userID);
+            Long loanID = Long.valueOf(id);
+            loan = loanService.read(loanID);
             found = true;
         } catch (DataAccessException | NumberFormatException e) {
             // TODO log
         }
-        model.addAttribute("user", user);
+        model.addAttribute("loan", loan);
         if (!found) {
             model.addAttribute("id", id);
         }
-        return "userDetail";
+        return "loanDetail";
     }
     
     @RequestMapping(value = "/delete/{id}")
-    public String deleteUser(@PathVariable String id, ModelMap model) {
+    public String deleteLoan(@PathVariable String id, ModelMap model) {
         boolean deleted = false;
         String errorMsg = null;
-        SystemUserDTO userDTO = new SystemUserDTO();
+        LoanDTO loanDTO = new LoanDTO();
         try {
-            Long userID = Long.valueOf(id);
-            userDTO = userService.read(userID);
-            userService.delete(userDTO);
+            Long loanID = Long.valueOf(id);
+            loanDTO = loanService.read(loanID);
+            loanService.delete(loanDTO.getId());
             deleted = true;
         } catch (DataAccessException | NumberFormatException
                         | NullPointerException e) {
@@ -124,47 +121,47 @@ public class UserController {
         if (errorMsg != null) {
             model.addAttribute("errorMessage", errorMsg);
         }
-        return "redirect:/user/list";
+        return "redirect:/loan/list";
     }
     
     @RequestMapping(value = "/update/{id}")
-    public ModelAndView updateUser(@PathVariable String id, ModelMap model) {
+    public ModelAndView updateLoan(@PathVariable String id, ModelMap model) {
         DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.updateUserTitle");
-        SystemUserDTO user = null;
+        model.addAttribute("pageTitle", "lang.updateLoanTitle");
+        LoanDTO loan = null;
         boolean found = false;
         try {
-            Long userID = Long.valueOf(id);
-            user = userService.read(userID);
+            Long loanID = Long.valueOf(id);
+            loan = loanService.read(loanID);
             found = true;
         } catch (DataAccessException | NumberFormatException e) {
             // TODO log
         }
         
         // prevent the actual type of the user to show in the list twice
-        List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
-        for(UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()){
-            if (!enum1.toString().equals(user.getType().getTypeLabel())){
+        List<LoanStateEnum> enums = new LinkedList<>();
+        for(LoanStateEnum enum1 : LoanStateEnum.class.getEnumConstants()){
+            if (!enum1.toString().equals(loan.getLoanState().getTypeLabel())){
                 enums.add(enum1);
             }
         }
-        UserTypeEnum[] types = (UserTypeEnum[]) enums.toArray(new UserTypeEnum[enums.size()]);
+        LoanStateEnum[] loanStates = (LoanStateEnum[]) enums.toArray(new LoanStateEnum[enums.size()]);
         
-        model.addAttribute("types", enums);
-        model.addAttribute("user", user);
+        model.addAttribute("loanStates", loanStates);
+        model.addAttribute("loan", loan);
         if (!found) {
             model.addAttribute("id", id);
         }
-        return new ModelAndView("updateUser", "command", new SystemUserDTO());
+        return new ModelAndView("updateLoan", "command", new LoanDTO());
     }
     
     @RequestMapping(value = "/update/update", method = RequestMethod.POST)
-    public String editUser(@ModelAttribute("user") SystemUserDTO user,
+    public String editLoan(@ModelAttribute("loan") LoanDTO loan,
                     BindingResult result, ModelMap model) {
         boolean updated = false;
         String errorMsg = null;
         try {
-            updated = userService.update(user) != null;
+            updated = loanService.update(loan) != null;
         } catch (DataAccessException e) {
             updated = false;
             errorMsg = e.getMessage();
@@ -173,7 +170,6 @@ public class UserController {
         if (errorMsg != null) {
             model.addAttribute("errorMessage", errorMsg);
         }
-        return "redirect:/user/list";
+        return "redirect:/loan/list";
     }
-    
 }

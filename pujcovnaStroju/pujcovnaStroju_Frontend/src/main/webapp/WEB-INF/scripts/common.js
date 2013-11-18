@@ -100,3 +100,43 @@ function validateAndSubmitUpdateRevisionForm() {
     } 
 
 }
+
+function validateAndSubmitAddLoanForm() {
+    hidePart('loanSuccessWindow');
+    hidePart('loanErrorWindow');
+    var loanTime = document.forms['addLoanForm'].loanTime.value;
+    var returnTime = document.forms['addLoanForm'].returnTime.value;
+    var loanState = document.forms['addLoanForm'].loanState.value;
+    if(loanTime == "") {
+        showPart('loanFormLoanTimeWarning');
+    }
+    if(returnTime == "") {
+        showPart('loanFormReturnTimeWarning');
+    }
+    if(loanState == "") {
+        showPart('loanFormLoanStateWarning');
+    }
+    if (loanTime != "" && returnTime != "" && loanState != "") {
+        document.getElementById('addLoanForm').submit();
+    }
+}
+
+function validateAndSubmitUpdateUserForm() {
+    hidePart('loanSuccessWindow');
+    hidePart('loanErrorWindow');
+    var loanTime = document.forms['updateLoanForm'].loanTime.value;
+    var returnTime = document.forms['updateLoanForm'].returnTime.value;
+    var loanState = document.forms['updateLoanForm'].loanState.value;
+    if(loanTime == "") {
+        showPart('loanFormLoanTimeWarning');
+    }
+    if(returnTime == "") {
+        showPart('loanFormReturnTimeWarning');
+    }
+    if(loanState == "") {
+        showPart('loanFormLoanStateWarning');
+    }
+    if (loanTime != "" && returnTime != "" && loanState != "" && id != "") {
+        document.getElementById('updateLoanForm').submit();
+    }
+   }
