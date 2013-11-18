@@ -33,7 +33,7 @@
                         <spring:message code="lang.loanTime" text="Loan Time" />
                         </form:label></td>
                     <td><form:input cssClass="inputField" path="loanTime" value="${loan.loanTime}" /></td>
-                    <td><label id="userFormLoanTimeWarning"
+                    <td><label id="loanFormLoanTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
@@ -43,7 +43,7 @@
                         <spring:message code="lang.returnTime" text="Return Time" />
                         </form:label></td>
                     <td><form:input cssClass="inputField" path="returnTime" value="${loan.returnTime}" /></td>
-                    <td><label id="userFormReturnTimeWarning"
+                    <td><label id="loanFormReturnTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
@@ -53,7 +53,7 @@
                         <spring:message code="lang.loanState" text="Loan State" />
                         </form:label></td>
                     <td><form:select path="loanState" items="${loanStates}" /></td>
-                    <td><label id="userFormLoanWarning"
+                    <td><label id="loanFormLoanWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>

@@ -1,8 +1,11 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
+import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
+import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +28,12 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/loan")
 public class LoanController {
     private LoanService loanService;
+    private SystemUserService customerService;
     
     @Autowired
-    public LoanController(LoanService loanService){
+    public LoanController(LoanService loanService, SystemUserService customerService){
         this.loanService = loanService;
+	this.customerService = customerService;
     }
     
     @RequestMapping("")
@@ -42,12 +47,13 @@ public class LoanController {
     }
     
     @RequestMapping(value = "/list")
-    public ModelAndView listUsers(ModelMap model,
+    public ModelAndView listLoans(ModelMap model,
         @RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
         @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
         ) {
         model.addAttribute("loans", loanService.getAllLoans());
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+	model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
         model.addAttribute("list", "list of loans");
         model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
@@ -69,6 +75,9 @@ public class LoanController {
         boolean stored = false;
         String errorMsg = null;
         try {
+	    System.out.println(loan.getCustomer().getId()+"<-id");
+	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
+	    loan.setCustomer(customer);
             stored = loanService.create(loan) != null;
         } catch (DataAccessException e) {
             stored = false;

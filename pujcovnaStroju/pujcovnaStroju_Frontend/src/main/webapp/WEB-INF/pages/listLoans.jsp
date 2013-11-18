@@ -20,6 +20,7 @@
                 <tr>
                     <th><spring:message code="lang.id" text="ID" /></th>
                     <th><spring:message code="lang.customer" text="Customer" /></th>
+		    <th><spring:message code="lang.machines" text="Machines" /></th>
                     <th><spring:message code="lang.loanTime" text="Loan Time" /></th>
                     <th><spring:message code="lang.returnTime" text="Return Time" /></th>
                     <th><spring:message code="lang.loanState" text="Loan State" /></th>
@@ -31,6 +32,13 @@
                     <tr>
                         <td>${loan.id}</td>
                         <td>${loan.customer.firstName} ${loan.customer.lastName} ${loan.customer.id}</td>
+			<td>
+			    <ul>
+				<c:forEach items="${loan.machines}" var="machine">
+				    <li><a href="<c:url value="/machine/detail/${machine.id}"/>">${machine.label}</a></li>
+				</c:forEach>
+			    </ul>
+			</td>
                         <td>${loan.loanTime}</td>
                         <td>${loan.returnTime}</td>
 			<td>${loan.loanState.typeLabel}</td>
@@ -48,6 +56,7 @@
                 <tr>
                     <th><spring:message code="lang.id" text="ID" /></th>
                     <th><spring:message code="lang.customer" text="Customer" /></th>
+		    <th><spring:message code="lang.machines" text="Machines" /></th>
                     <th><spring:message code="lang.loanTime" text="Loan Time" /></th>
                     <th><spring:message code="lang.returnTime" text="Return Time" /></th>
                     <th><spring:message code="lang.loanState" text="Loan State" /></th>
@@ -71,7 +80,10 @@
                     <td><form:label path="customer">
                         <spring:message code="lang.customer" text="Customer" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="customer" /></td>
+                    <td><form:select path="customer">
+			    <form:options items="${customers}" itemLabel="firstName" itemValue="id" />
+			</form:select>
+		    </td>
                     <td><label id="loanFormCustomerWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
@@ -82,7 +94,7 @@
                         <spring:message code="lang.loanTime" text="Loan Time" />
                         </form:label></td>
                     <td><form:input cssClass="inputField" path="loanTime" /></td>
-                    <td><label id="userFormLoanTimeWarning"
+                    <td><label id="loanFormLoanTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
@@ -92,7 +104,7 @@
                         <spring:message code="lang.returnTime" text="Return Time" />
                         </form:label></td>
                     <td><form:input cssClass="inputField" path="returnTime" /></td>
-                    <td><label id="userFormReturnTimeWarning"
+                    <td><label id="loanFormReturnTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
@@ -102,7 +114,7 @@
                         <spring:message code="lang.loanState" text="Loan State" />
                         </form:label></td>
                     <td><form:select path="loanState" items="${loanStates}" /></td>
-                    <td><label id="userFormLoanWarning"
+                    <td><label id="loanFormLoanWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>

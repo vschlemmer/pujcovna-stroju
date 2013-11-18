@@ -29,12 +29,12 @@ public class Loan implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH })
 	@JoinColumn(name = "SYSTEMUSER_ID")
 	private SystemUser customer;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH })
 	@JoinTable(name = "LOAN_MACHINES", joinColumns = { @JoinColumn(name = "LOAN_ID", referencedColumnName = "id") }, inverseJoinColumns = { @JoinColumn(name = "MACHINE_ID", referencedColumnName = "id") })
 	private List<Machine> machines;
