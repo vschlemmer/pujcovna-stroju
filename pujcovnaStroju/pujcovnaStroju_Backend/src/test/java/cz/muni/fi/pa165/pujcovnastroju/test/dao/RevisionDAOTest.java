@@ -46,7 +46,7 @@ public class RevisionDAOTest extends TestCase {
     public Revision createSampleRevision() {
         Revision revision = new Revision();
         revision.setComment("Opraveno");
-        revision.setRevDate(new Timestamp(System.currentTimeMillis()));
+        revision.setRevDate(new Date(System.currentTimeMillis()));
         revision.setMachine(createSampleMachine());
         revision.setSystemUser(createSampleUser());
         return revision;
@@ -191,8 +191,8 @@ public class RevisionDAOTest extends TestCase {
         List<Revision> revisions1 = new ArrayList<>();
         revisions1.add(revision1);
         revisions1.add(revision2);
-        Date dateFrom = new Date(System.currentTimeMillis() - 36000000);
-        Date dateTo = new Date(System.currentTimeMillis() + 36000000);
+	Date dateFrom = new Date(System.currentTimeMillis() - 360000000);
+        Date dateTo = new Date(System.currentTimeMillis() + 360000000);
         List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
         assertEquals(revisions1, revisions2);
     }
