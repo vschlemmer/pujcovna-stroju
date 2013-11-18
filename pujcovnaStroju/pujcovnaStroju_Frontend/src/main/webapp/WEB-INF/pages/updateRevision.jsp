@@ -27,7 +27,7 @@
                     <td>
                         <form:input cssClass="inputField" path="revDate" value="${revision.revDate}" />
                     </td>
-                    <td><label id="revisionFormRevDatetWarning"
+                    <td><label id="revisionFormRevDateWarning"
                                class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label>
