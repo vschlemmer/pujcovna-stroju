@@ -50,6 +50,8 @@ public class LoanDAOImpl implements LoanDAO {
 	public Loan create(Loan loan) throws IllegalArgumentException {
 		if (loan == null)
 			throw new IllegalArgumentException("loan is null");
+		SystemUser user = loan.getCustomer();
+		loan.setCustomer(em.merge(user));
 		em.persist(loan);
 		return loan;
 	}
