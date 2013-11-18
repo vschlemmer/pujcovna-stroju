@@ -6,5 +6,12 @@
 		</p>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function(){
+	    $('.datePicker').appendDtpicker();
+    });
+</script>
+
 </body>
 </html>

@@ -7,6 +7,10 @@
 <head>
 <link type="text/css" rel="stylesheet" href="<c:url value="/css/main.css" />" />
 <script type="text/javascript" src="<c:url value="/scripts/common.js" />"></script>
+
+<link type="text/css" rel="stylesheet" href="<c:url value="/css/jquery.simple-dtpicker.css" />" />
+<script type="text/javascript" src="<c:url value="/scripts/jquery-1.10.2.min.js" />"></script>
+<script type="text/javascript" src="<c:url value="/scripts/jquery.simple-dtpicker.js" />"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code="${pageTitle}" text="${pageTitle}"/></title>
 </head>

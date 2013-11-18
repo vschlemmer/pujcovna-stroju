@@ -32,7 +32,7 @@
                     <td><form:label path="loanTime">
                         <spring:message code="lang.loanTime" text="Loan Time" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="loanTime" value="${loan.loanTime}" /></td>
+                    <td><form:input cssClass="inputField" path="loanTime" value="${loan.loanTime}" class="datePicker" /></td>
                     <td><label id="loanFormLoanTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
@@ -42,7 +42,7 @@
                     <td><form:label path="returnTime">
                         <spring:message code="lang.returnTime" text="Return Time" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="returnTime" value="${loan.returnTime}" /></td>
+                    <td><form:input cssClass="inputField" path="returnTime" value="${loan.returnTime}" class="datePicker" /></td>
                     <td><label id="loanFormReturnTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />

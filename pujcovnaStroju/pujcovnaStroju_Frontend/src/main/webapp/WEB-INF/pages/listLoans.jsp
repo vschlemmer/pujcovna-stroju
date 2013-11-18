@@ -93,7 +93,7 @@
                     <td><form:label path="loanTime">
                         <spring:message code="lang.loanTime" text="Loan Time" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="loanTime" /></td>
+                    <td><form:input cssClass="inputField datePicker" path="loanTime" /></td>
                     <td><label id="loanFormLoanTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
@@ -103,7 +103,7 @@
                     <td><form:label path="returnTime">
                         <spring:message code="lang.returnTime" text="Return Time" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="returnTime" /></td>
+                    <td><form:input cssClass="inputField datePicker" path="returnTime" /></td>
                     <td><label id="loanFormReturnTimeWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
