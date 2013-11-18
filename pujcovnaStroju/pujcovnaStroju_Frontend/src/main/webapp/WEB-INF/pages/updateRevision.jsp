@@ -25,7 +25,7 @@
                         </form:label>
                     </td>
                     <td>
-                        <form:input cssClass="inputField" path="revDate" value="${revision.revDate}" />
+                        <form:input cssClass="inputField datePicker" path="revDate" value="${revision.revDate}" />
                     </td>
                     <td><label id="revisionFormRevDateWarning"
                                class="offscreen warningMessage">

@@ -71,7 +71,7 @@
                     <td><form:label path="revDate">
                         <spring:message code="lang.RevDate" text="Revision Date" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="revDate" /></td>
+                    <td><form:input cssClass="inputField datePicker" path="revDate" /></td>
                     <td><label id="revisionFormRevDateWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
