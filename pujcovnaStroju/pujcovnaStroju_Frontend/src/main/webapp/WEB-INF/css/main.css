@@ -4,8 +4,8 @@ div.container {
 	margin: 0px;
 	border: 1px solid gray;
 	line-height: 150%;
-        height: 720px;
-        background-image:url(../images/backgroundImg.jpg);
+        /*height: 720px;
+        background-image:url(../images/backgroundImg.jpg);*/
 }
 
 div.header,div.footer {
