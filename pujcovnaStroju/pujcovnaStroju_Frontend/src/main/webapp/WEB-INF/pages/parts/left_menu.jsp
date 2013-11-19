@@ -4,8 +4,8 @@
     pageEncoding="UTF-8"%>
 
 <div class="left">
-    <h2><spring:message code="lang.leftMenuTitle" text="Menu" /></h2>
-    <br /><br />
+    <h2 class="pageLabel"><spring:message code="lang.leftMenuTitle" text="Menu" /></h2>
+
     <a href="<c:url value="/machine/list"/>"><spring:message
                     code="lang.listMachines" text="List of machines" />
     </a><br/>

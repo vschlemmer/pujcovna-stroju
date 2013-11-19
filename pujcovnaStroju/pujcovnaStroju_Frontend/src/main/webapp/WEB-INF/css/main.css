@@ -31,7 +31,7 @@ div.content {
 	border-left: 1px solid gray;
 	padding: 1em;
 }
-
+/*
 h2 {
 	padding: 0; 
         margin-left: 10px; 
@@ -39,7 +39,7 @@ h2 {
 	color: #65a5d1;
 	float: left;
 }
-
+*/
 /*table*/
 #standardTable {
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -130,4 +130,11 @@ form {
    }
  .warningMessage {
     color: red;
+ }
+ 
+ .pageLabel {
+    
+    margin: 20px;
+    color: #65a5d1;
+    float: left;
  }
