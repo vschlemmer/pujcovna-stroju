@@ -185,6 +185,12 @@ public class UserController {
         if (type.equals("--no type--")){
             type = "";
         }
+        if (firstName.equals("")){
+            firstName = null;
+        }
+        if (lastName.equals("")){
+            lastName = null;
+        }
         model.addAttribute("users", userService.getSystemUsersByParams(firstName, 
                     lastName, converter.convert(type)));
         model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
