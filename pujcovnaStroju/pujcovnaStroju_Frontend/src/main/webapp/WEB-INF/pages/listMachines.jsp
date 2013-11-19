@@ -13,49 +13,51 @@
 		<spring:message code="lang.listMachines" text="List of machines" />
 	</h2>
 
-    <c:if test="${empty machines}">
-        <p><spring:message code="lang.noMachines" text="Actions" /></p>
-    </c:if>
-    
-    <c:if test="${not empty machines}">
-	<table id="standardTable">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th><spring:message code="lang.machineLabel" text="Label" /></th>
-				<th><spring:message code="lang.machineType" text="Type" /></th>
-				<th><spring:message code="lang.machineDescription"
-						text="Description" /></th>
-				<th><spring:message code="lang.machineActions" text="Actions" /></th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach items="${machines}" var="machine">
-				<tr>
-					<td>${machine.id}</td>
-					<td>${machine.label}</td>
-					<td>${machine.type.typeLabel}</td>
-					<td>${machine.description}</td>
-					<td><a href="<c:url value="/machine/detail/${machine.id}"/>">
-							<img alt="detail" src="<c:url value="/images/search.png"/>">
-					</a> <a href="<c:url value="/machine/delete/${machine.id}"/>"> <img
-							alt="delete" src="<c:url value="/images/delete.png" />">
-					</a></td>
-				</tr>
-			</c:forEach>
-		</tbody>
-		<tfoot>
-			<tr>
-				<th>ID</th>
-				<th><spring:message code="lang.machineLabel" text="Label" /></th>
-				<th><spring:message code="lang.machineType" text="Type" /></th>
-				<th><spring:message code="lang.machineDescription"
-						text="Description" /></th>
-				<th><spring:message code="lang.machineActions" text="Actions" /></th>
-			</tr>
-		</tfoot>
+	<c:if test="${empty machines}">
+		<p>
+			<spring:message code="lang.noMachines" text="Actions" />
+		</p>
+	</c:if>
 
-	</table>
+	<c:if test="${not empty machines}">
+		<table id="standardTable">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th><spring:message code="lang.machineLabel" text="Label" /></th>
+					<th><spring:message code="lang.machineType" text="Type" /></th>
+					<th><spring:message code="lang.machineDescription"
+							text="Description" /></th>
+					<th><spring:message code="lang.machineActions" text="Actions" /></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${machines}" var="machine">
+					<tr>
+						<td>${machine.id}</td>
+						<td>${machine.label}</td>
+						<td>${machine.type.typeLabel}</td>
+						<td>${machine.description}</td>
+						<td><a href="<c:url value="/machine/detail/${machine.id}"/>">
+								<img alt="detail" src="<c:url value="/images/search.png"/>">
+						</a> <a href="<c:url value="/machine/delete/${machine.id}"/>"> <img
+								alt="delete" src="<c:url value="/images/delete.png" />">
+						</a></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr>
+					<th>ID</th>
+					<th><spring:message code="lang.machineLabel" text="Label" /></th>
+					<th><spring:message code="lang.machineType" text="Type" /></th>
+					<th><spring:message code="lang.machineDescription"
+							text="Description" /></th>
+					<th><spring:message code="lang.machineActions" text="Actions" /></th>
+				</tr>
+			</tfoot>
+
+		</table>
 	</c:if>
 
 	<div class="buttonPosition">
@@ -76,7 +78,7 @@
 				</tr>
 				<tr>
 					<td><form:label path="type">type</form:label></td>
-					<td><form:input cssClass="inputField" path="type" /></td>
+					<td><form:select path="type" items="${types}" /></td>
 				</tr>
 				<tr>
 					<td><form:label path="description">description</form:label></td>

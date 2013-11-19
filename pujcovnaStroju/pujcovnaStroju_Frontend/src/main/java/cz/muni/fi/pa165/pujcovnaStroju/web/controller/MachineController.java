@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 
 /**
@@ -56,6 +57,7 @@ public class MachineController {
 
 		model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("list", "list of machines");
+		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
 		DefaultController.addHeaderFooterInfo(model);
 		if (storeStatus.equalsIgnoreCase("true")) {
