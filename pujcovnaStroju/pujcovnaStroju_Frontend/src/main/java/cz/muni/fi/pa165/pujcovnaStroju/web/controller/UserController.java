@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
@@ -54,8 +55,6 @@ public class UserController {
         model.addAttribute("list", "list of users");
         model.addAttribute("pageTitle", "lang.listUsersTitle");
         DefaultController.addHeaderFooterInfo(model);
-        System.out.println(storeStatus);
-        System.out.println(errorMessage);
         if (storeStatus.equalsIgnoreCase("true")) {
                 model.addAttribute("storeStatus","true");
         }
@@ -176,4 +175,26 @@ public class UserController {
         return "redirect:/user/list";
     }
     
+    @RequestMapping(value = "/filter", method = RequestMethod.GET, params="submit")
+    public ModelAndView filterUsers(ModelMap model, 
+            @RequestParam(required = false) String  firstName,
+            @RequestParam(required = false) String  lastName,
+            @RequestParam(required = false) String type){
+        DefaultController.addHeaderFooterInfo(model);
+        StringToSystemUserTypeEnumDTOConverter converter = new StringToSystemUserTypeEnumDTOConverter();
+        if (type.equals("--no type--")){
+            type = "";
+        }
+        model.addAttribute("users", userService.getSystemUsersByParams(firstName, 
+                    lastName, converter.convert(type)));
+        model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
+        model.addAttribute("list", "list of users");
+        model.addAttribute("pageTitle", "lang.listUsersTitle");
+        return new ModelAndView("listUsers", "command", new SystemUserDTO());
+    }
+    
+    @RequestMapping(value = "/filter", method = RequestMethod.GET, params="void")
+    public String voidFilter(ModelMap model){
+        return "redirect:/user/list";
+    }
 }
