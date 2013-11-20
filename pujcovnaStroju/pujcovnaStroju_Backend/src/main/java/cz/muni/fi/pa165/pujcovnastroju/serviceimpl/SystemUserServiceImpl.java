@@ -31,8 +31,8 @@ public class SystemUserServiceImpl implements SystemUserService {
 		SystemUser user = null;
 		SystemUserDTO userDTO2 = null;
 		try {
-			user = userDao.create(SystemUserDTOConverter.dtoToEntity(userDTO));
-			userDTO2 = SystemUserDTOConverter.entityToDTO(user);
+			user = userDao.create(SystemUserDTOConverter.dtoToEntity(userDTO,false));
+			userDTO2 = SystemUserDTOConverter.entityToDTO(user,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing user", e);
@@ -46,7 +46,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 		SystemUserDTO userDTO = null;
 		try {
 			user = userDao.read(id);
-			userDTO = SystemUserDTOConverter.entityToDTO(user);
+			userDTO = SystemUserDTOConverter.entityToDTO(user,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing user", e);
@@ -59,8 +59,8 @@ public class SystemUserServiceImpl implements SystemUserService {
 		SystemUser user = null;
 		SystemUserDTO userDTO2 = null;
 		try {
-			user = userDao.update(SystemUserDTOConverter.dtoToEntity(userDTO));
-			userDTO2 = SystemUserDTOConverter.entityToDTO(user);
+			user = userDao.update(SystemUserDTOConverter.dtoToEntity(userDTO,false));
+			userDTO2 = SystemUserDTOConverter.entityToDTO(user,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing user", e);
@@ -71,7 +71,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 	@Override
 	public SystemUserDTO delete(SystemUserDTO userDTO) {
 		try {
-			userDao.delete(SystemUserDTOConverter.dtoToEntity(userDTO));
+			userDao.delete(SystemUserDTOConverter.dtoToEntity(userDTO,false));
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing user", e);
@@ -82,7 +82,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 	@Override
 	public List<SystemUserDTO> findAllSystemUsers() {
 		List<SystemUser> userList = userDao.findAllSystemUsers();
-                return SystemUserDTOConverter.listToDTO(userList);
+                return SystemUserDTOConverter.listToDTO(userList,false);
 	}
 
 	@Override
@@ -90,6 +90,6 @@ public class SystemUserServiceImpl implements SystemUserService {
 			String lastName, UserTypeEnumDTO type) {
 		List<SystemUser> userList = userDao.getSystemUsersByParams(firstName,
 				lastName, UserTypeDTOConverter.dtoToEntity(type));
-		return SystemUserDTOConverter.listToDTO(userList);
+		return SystemUserDTOConverter.listToDTO(userList,false);
 	}
 }

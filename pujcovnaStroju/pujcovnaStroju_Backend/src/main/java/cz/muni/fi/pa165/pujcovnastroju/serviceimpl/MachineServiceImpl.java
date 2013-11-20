@@ -36,8 +36,8 @@ public class MachineServiceImpl implements MachineService {
 		Machine machine = null;
 		try {
 			machine = machineDao.create(MachineDTOConverter
-					.dtoToEntity(machineDTO));
-			dto = MachineDTOConverter.entityToDto(machine);
+					.dtoToEntity(machineDTO,false));
+			dto = MachineDTOConverter.entityToDto(machine,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing Machine", e);
@@ -51,8 +51,8 @@ public class MachineServiceImpl implements MachineService {
 		Machine machine = null;
 		try {
 			machine = machineDao.update(MachineDTOConverter
-					.dtoToEntity(machineDTO));
-			dto = MachineDTOConverter.entityToDto(machine);
+					.dtoToEntity(machineDTO,false));
+			dto = MachineDTOConverter.entityToDto(machine,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during updating Machine", e);
@@ -66,7 +66,7 @@ public class MachineServiceImpl implements MachineService {
 		Machine machine = null;
 		try {
 			machine = machineDao.read(id);
-			dto = MachineDTOConverter.entityToDto(machine);
+			dto = MachineDTOConverter.entityToDto(machine,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during retrieving Machine", e);
@@ -79,25 +79,25 @@ public class MachineServiceImpl implements MachineService {
 		Machine machine = null;
 		try {
 			machine = machineDao.delete(MachineDTOConverter
-					.dtoToEntity(machineDTO));
+					.dtoToEntity(machineDTO,false));
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during deleting Machine", e);
 		}
-		return MachineDTOConverter.entityToDto(machine);
+		return MachineDTOConverter.entityToDto(machine,false);
 	}
 
 	@Override
 	public List<MachineDTO> getAllMachines() {
 		List<Machine> machineList = machineDao.getAllMachines();
-		return MachineDTOConverter.listToDto(machineList);
+		return MachineDTOConverter.listToDto(machineList,false);
 	}
 
 	@Override
 	public List<MachineDTO> getMachineDTOsByType(MachineTypeEnumDTO type) {
 		List<Machine> machineList = machineDao
 				.getMachinesByType(MachineTypeDTOConverter.dtoToEntity(type));
-		return MachineDTOConverter.listToDto(machineList);
+		return MachineDTOConverter.listToDto(machineList,false);
 	}
 
 }

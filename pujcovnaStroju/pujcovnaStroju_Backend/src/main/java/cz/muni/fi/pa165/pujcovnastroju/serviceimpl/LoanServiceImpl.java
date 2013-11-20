@@ -36,8 +36,8 @@ public class LoanServiceImpl implements LoanService {
 		LoanDTO ldto = null;
 		Loan loan = null;
 		try {
-			loan = loanDAO.create(LoanDTOConverter.dtoToEntity(loanDTO));
-			ldto = LoanDTOConverter.entityToDTO(loan);
+			loan = loanDAO.create(LoanDTOConverter.dtoToEntity(loanDTO,false));
+			ldto = LoanDTOConverter.entityToDTO(loan,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing loan.", e);
@@ -51,8 +51,8 @@ public class LoanServiceImpl implements LoanService {
 		LoanDTO ldto = null;
 		Loan loan = null;
 		try {
-			loan = loanDAO.update(LoanDTOConverter.dtoToEntity(loanDTO));
-			ldto = LoanDTOConverter.entityToDTO(loan);
+			loan = loanDAO.update(LoanDTOConverter.dtoToEntity(loanDTO,false));
+			ldto = LoanDTOConverter.entityToDTO(loan,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during updating loan.", e);
@@ -67,7 +67,7 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = null;
 		try {
 			loan = loanDAO.read(id);
-			ldto = LoanDTOConverter.entityToDTO(loan);
+			ldto = LoanDTOConverter.entityToDTO(loan,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during reading loan.", e);
@@ -82,7 +82,7 @@ public class LoanServiceImpl implements LoanService {
 		Loan loan = null;
 		try {
 			loan = loanDAO.delete(id);
-			ldto = LoanDTOConverter.entityToDTO(loan);
+			ldto = LoanDTOConverter.entityToDTO(loan,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during deleting loan.", e);
@@ -97,7 +97,7 @@ public class LoanServiceImpl implements LoanService {
 		List<Loan> loans = null;
 
 		loans = loanDAO.getAllLoans();
-		ldtos = LoanDTOConverter.listToDTOs(loans);
+		ldtos = LoanDTOConverter.listToDTOs(loans,false);
 
 		return ldtos;
 	}
@@ -111,9 +111,9 @@ public class LoanServiceImpl implements LoanService {
 
 		loans = loanDAO.getLoansByParams(loanedFrom, loanedTill,
 				LoanStateEnumDTOConverter.dtoToEntity(loanStateEnumDTO),
-				SystemUserDTOConverter.dtoToEntity(loanedBy),
-				MachineDTOConverter.dtoToEntity(includedMachine));
-		ldtos = LoanDTOConverter.listToDTOs(loans);
+				SystemUserDTOConverter.dtoToEntity(loanedBy,false),
+				MachineDTOConverter.dtoToEntity(includedMachine,false));
+		ldtos = LoanDTOConverter.listToDTOs(loans,false);
 
 		return ldtos;
 	}
