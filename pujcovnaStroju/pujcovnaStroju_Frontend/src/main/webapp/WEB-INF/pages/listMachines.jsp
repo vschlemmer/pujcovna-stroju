@@ -74,7 +74,8 @@
 					<td><form:label path="label">label</form:label></td>
 					<td><form:input cssClass="inputField" path="label" /></td>
 					<td><label id="machineFormIDWarning"
-						class="offscreen warningMessage">mandatory field</label>
+						class="offscreen warningMessage"><spring:message
+                            code="lang.mandatory" text="Mandatory Field" /></label>
 				</tr>
 				<tr>
 					<td><form:label path="type">type</form:label></td>

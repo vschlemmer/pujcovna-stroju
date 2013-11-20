@@ -34,6 +34,9 @@
 					text="Description" /></td>
 			<td>${machine.description}</td>
 		</tr>
+		<tr>
+		  ${machine}
+		</tr>
 	</table>
 
 
@@ -49,6 +52,7 @@
 			ID: '${id}'
 		</div>
 	</c:if>
+	<a href="<c:url value="/loan/new/${machine.id}"/>">link</a>
 
 
 

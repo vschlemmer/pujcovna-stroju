@@ -1,13 +1,18 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
+import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -29,11 +34,14 @@ import org.springframework.web.servlet.ModelAndView;
 public class LoanController {
     private LoanService loanService;
     private SystemUserService customerService;
+    private MachineService machineService;
     
     @Autowired
-    public LoanController(LoanService loanService, SystemUserService customerService){
+    public LoanController(LoanService loanService, SystemUserService customerService, 
+    		MachineService machineService){
         this.loanService = loanService;
-	this.customerService = customerService;
+        this.customerService = customerService;
+        this.machineService = machineService;
     }
     
     @RequestMapping("")
@@ -53,12 +61,12 @@ public class LoanController {
         ) {
         model.addAttribute("loans", loanService.getAllLoans());
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-	model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
         model.addAttribute("list", "list of loans");
         model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
-        System.out.println(storeStatus);
-        System.out.println(errorMessage);
+        model.addAttribute("machines",machineService.getAllMachines());
+        
         if (storeStatus.equalsIgnoreCase("true")) {
                 model.addAttribute("storeStatus","true");
         }
@@ -76,9 +84,23 @@ public class LoanController {
         String errorMsg = null;
         try {
 	    System.out.println(loan.getCustomer().getId()+"<-id");
+	    System.out.println(loan);
 	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
 	    loan.setCustomer(customer);
+	    
+//	    MachineDTO machine = machineService.read(1L);
+//	    loan.setMachine(machine);
+//	    loan.setCustomer(customer); 
+//	    List<LoanDTO> loansList = new ArrayList<>();
+//	    loansList.add(loan);
+//	    customer.setLoans(loansList);
+//           
+//            SystemUserDTO customerUpdated = customerService.update(customer);
+//            System.out.println(customerUpdated);
+//            loan.setCustomer(customerUpdated);
+//            System.out.println(customerUpdated);
             stored = loanService.create(loan) != null;
+            System.out.println(stored);
         } catch (DataAccessException e) {
             stored = false;
             errorMsg = e.getMessage();
@@ -87,8 +109,18 @@ public class LoanController {
         if (errorMsg != null) {
             model.addAttribute("errorMessage", errorMsg);
         }
-        return "redirect:list";
+        return "redirect:/loan/list";
     }
+    
+    @RequestMapping(value = "/new/add", method = RequestMethod.POST)
+    public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, 
+    		
+                    BindingResult result, ModelMap model) {
+    	System.out.println("xxx");
+//    	System.out.println(machineID);
+    	return addLoan(loan, result, model);
+    }
+    
     
     @RequestMapping("/detail/{id}")
     public String viewLoan(@PathVariable String id, ModelMap model) {
@@ -180,5 +212,38 @@ public class LoanController {
             model.addAttribute("errorMessage", errorMsg);
         }
         return "redirect:/loan/list";
+    }
+    
+    @RequestMapping(value = "/new/{id}")
+    public ModelAndView createLoan(@PathVariable String id, ModelMap model) {
+        DefaultController.addHeaderFooterInfo(model);
+        model.addAttribute("pageTitle", "lang.updateLoanTitle");
+        LoanDTO loan = new LoanDTO();
+        MachineDTO machine = null;
+//        boolean found = false;
+//        try {
+//            Long loanID = Long.valueOf(id);
+//            loan = loanService.read(loanID);
+//            found = true;
+//        } catch (DataAccessException | NumberFormatException e) {
+//            // TODO log
+//        }
+        try {
+	        Long machineID = Long.valueOf(id);
+	        machine = machineService.read(machineID);
+    	} catch (DataAccessException | NumberFormatException e) {
+        // TODO log
+    	}
+        
+//        LinkedList<MachineDTO> machines = new LinkedList<>();
+//        machines.add(machine);
+        loan.setMachine(machine);
+        model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
+//        model.addAttribute("loan", loan);
+        model.addAttribute("machine", machine);
+        System.out.println(machine);
+
+        return new ModelAndView("newLoan", "command", loan);
     }
 }
