@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +52,12 @@ public class LoanDAOImpl implements LoanDAO {
 		if (loan == null)
 			throw new IllegalArgumentException("loan is null");
 		SystemUser user = loan.getCustomer();
-		loan.setCustomer(em.merge(user));
+		
+		user = em.merge(user);
+		ArrayList<Loan> list = new ArrayList<>();
+		list.add(loan);
+		user.setLoans(list);
+		loan.setCustomer(user);
 		em.persist(loan);
 		return loan;
 	}
