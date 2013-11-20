@@ -13,7 +13,7 @@ public class LoanDTO {
 
 	private Long id;
 	private SystemUserDTO customer;
-	private List<MachineDTO> machines;
+	private MachineDTO machines;
 	private Date loanTime;
 	private Date returnTime;
 	private LoanStateEnumDTO loanState;
@@ -50,12 +50,12 @@ public class LoanDTO {
 		this.loanTime = loanTime;
 	}
 
-	public List<MachineDTO> getMachines() {
+	public MachineDTO getMachine() {
 		return machines;
 	}
 
-	public void setMachines(List<MachineDTO> machines) {
-		this.machines = machines;
+	public void setMachine(MachineDTO machine) {
+		this.machines = machine;
 	}
 
 	public Date getReturnTime() {

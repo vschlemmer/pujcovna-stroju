@@ -76,6 +76,10 @@ public class MachineDAOImpl implements MachineDAO {
 			throw new IllegalArgumentException("unset argument 'id'");
 		}
 		Machine result = entityManager.find(Machine.class, id);
+		result.getLoans().size();
+		System.out.println("=+++++++++++++++++++++++++++++++++++++=");
+		System.out.println(result.getLoans());
+//		result.getRevisions().size();
 		return result;
 	}
 

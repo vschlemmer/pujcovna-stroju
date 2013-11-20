@@ -52,12 +52,25 @@ public class LoanDAOImpl implements LoanDAO {
 		if (loan == null)
 			throw new IllegalArgumentException("loan is null");
 		SystemUser user = loan.getCustomer();
-		
 		user = em.merge(user);
-		ArrayList<Loan> list = new ArrayList<>();
-		list.add(loan);
-		user.setLoans(list);
+		
+		List<Loan> userList = user.getLoans();
+		if (userList == null) {
+			userList = new ArrayList<>();
+		}
+		userList.add(loan);
+		user.setLoans(userList);
 		loan.setCustomer(user);
+		
+		Machine machine = loan.getMachine();
+		machine = em.merge(machine);
+		List<Loan> loanList = machine.getLoans();
+		if (loanList == null) {
+			loanList = new ArrayList<>();
+		}
+		loanList.add(loan);
+		machine.setLoans(loanList);
+		loan.setMachine(machine);
 		em.persist(loan);
 		return loan;
 	}

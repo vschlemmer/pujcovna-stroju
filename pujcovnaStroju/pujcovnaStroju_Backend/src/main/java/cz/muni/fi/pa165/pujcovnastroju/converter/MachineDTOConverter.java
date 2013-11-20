@@ -43,7 +43,7 @@ public class MachineDTOConverter {
 		dto.setType(MachineTypeDTOConverter.entityToDto(entity.getType()));
 		dto.setLabel(entity.getLabel());
 		dto.setDescription(entity.getDescription());
-		if (bounded) {
+		if (!bounded) {
 			dto.setLoans(LoanDTOConverter.listToDTOs(entity.getLoans(), true));
 			dto.setRevisions(RevisionDTOConverter.listToDto(entity.getRevisions()));
 		}
