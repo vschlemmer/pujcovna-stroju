@@ -11,7 +11,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
  * @author Matej fucek
  */
 public class RevisionDTOConverter {
-	/*
+	/**
 	 * Converts RevisionDTO to a Revision entity.
 	 * 
 	 * @param dto DTO to convert.
@@ -30,10 +30,10 @@ public class RevisionDTOConverter {
 
 		revision.setRevID(dto.getRevID());
 		revision.setRevDate(dto.getRevDate());
-		revision.setMachine(MachineDTOConverter.dtoToEntity(dto.getMachine()));
+		revision.setMachine(MachineDTOConverter.dtoToEntity(dto.getMachine(), true));
 		revision.setComment(dto.getComment());
 		revision.setSystemUser(SystemUserDTOConverter.dtoToEntity(dto
-				.getSystemUser()));
+				.getSystemUser(),true));
 
 		return revision;
 	}
@@ -53,9 +53,9 @@ public class RevisionDTOConverter {
 		}
 
 		RevisionDTO revisionDTO = new RevisionDTO(revision.getRevID(),
-				MachineDTOConverter.entityToDto(revision.getMachine()),
+				MachineDTOConverter.entityToDto(revision.getMachine(),true),
 				revision.getRevDate(), revision.getComment(),
-				SystemUserDTOConverter.entityToDTO(revision.getSystemUser()));
+				SystemUserDTOConverter.entityToDTO(revision.getSystemUser(),true));
 
 		return revisionDTO;
 	}

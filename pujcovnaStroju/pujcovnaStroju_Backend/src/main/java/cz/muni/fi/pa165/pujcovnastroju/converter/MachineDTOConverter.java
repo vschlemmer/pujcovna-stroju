@@ -16,7 +16,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
  */
 public class MachineDTOConverter {
 
-	public static Machine dtoToEntity(MachineDTO dto) {
+	public static Machine dtoToEntity(MachineDTO dto, boolean bounded) {
 		if (dto == null)
 			return null;
 
@@ -25,10 +25,16 @@ public class MachineDTOConverter {
 		entity.setType(MachineTypeDTOConverter.dtoToEntity(dto.getType()));
 		entity.setLabel(dto.getLabel());
 		entity.setDescription(dto.getDescription());
+		if (!bounded) {
+			entity.setLoans(LoanDTOConverter.listToEntities(dto.getLoans(),
+					true));
+			entity.setRevisions(RevisionDTOConverter.listToEntities(
+					dto.getRevisions()));
+		}
 		return entity;
 	}
 
-	public static MachineDTO entityToDto(Machine entity) {
+	public static MachineDTO entityToDto(Machine entity, boolean bounded) {
 		if (entity == null)
 			return null;
 
@@ -37,27 +43,32 @@ public class MachineDTOConverter {
 		dto.setType(MachineTypeDTOConverter.entityToDto(entity.getType()));
 		dto.setLabel(entity.getLabel());
 		dto.setDescription(entity.getDescription());
+		if (bounded) {
+			dto.setLoans(LoanDTOConverter.listToDTOs(entity.getLoans(), true));
+			dto.setRevisions(RevisionDTOConverter.listToDto(entity.getRevisions()));
+		}
 		return dto;
 	}
 
-	public static List<MachineDTO> listToDto(List<Machine> list) {
+	public static List<MachineDTO> listToDto(List<Machine> list, boolean bounded) {
 		if (list == null)
 			return null;
 
 		List<MachineDTO> resultList = new ArrayList<>();
 		for (Machine entity : list) {
-			resultList.add(MachineDTOConverter.entityToDto(entity));
+			resultList.add(MachineDTOConverter.entityToDto(entity, bounded));
 		}
 		return resultList;
 	}
 
-	public static List<Machine> listToEntities(List<MachineDTO> listDTO) {
+	public static List<Machine> listToEntities(List<MachineDTO> listDTO,
+			boolean bounded) {
 		if (listDTO == null)
 			return null;
 
 		List<Machine> resultList = new ArrayList<>();
 		for (MachineDTO dto : listDTO) {
-			resultList.add(MachineDTOConverter.dtoToEntity(dto));
+			resultList.add(MachineDTOConverter.dtoToEntity(dto, bounded));
 		}
 		return resultList;
 	}
