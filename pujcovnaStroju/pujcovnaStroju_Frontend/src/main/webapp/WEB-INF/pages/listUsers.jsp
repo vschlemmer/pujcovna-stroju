@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -8,8 +8,41 @@
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 
 <div class="content">
-    <h2><spring:message code="lang.listUsers" text="List of users" /></h2>
-    <br /><br /><br />
+    <h2><spring:message code="lang.listUsers" text="List of users" /></h2><br />
+    <h3>Filters</h3>
+    <form:form method="GET" id="filterUserForm" name="filterUserForm"
+               action="filter">
+        <table>
+            <tr>
+                <td><spring:message code="lang.firstName" text="First Name" /></td>
+                <td><form:input cssClass="inputField" path="firstName" /></td>
+            </tr>
+            <tr>
+                <td><spring:message code="lang.lastName" text="Last Name" /></td>
+                <td><form:input cssClass="inputField" path="lastName" /></td>
+            </tr>
+            <tr>
+                <td><spring:message code="lang.type" text="Type" /></td>
+                <td>
+                    <form:select path="type">
+                        <form:option value="--no type--" />
+                        <form:options items="${types}" />
+                    </form:select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input class="button" type="submit" name="submit"
+                           value="Filter" />
+                </td>
+                <td>
+                    <input class="button" type="submit" name="void" 
+                           value="Void filter" />
+                </td>
+            </tr>
+        </table>
+    </form:form>
+    <br /><br />
     <c:if test="${empty users}">
         <spring:message code="lang.noUsers" text="Actions" /><br />
     </c:if>
