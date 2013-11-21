@@ -51,6 +51,7 @@ public class UserController {
         @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
         ) {
         model.addAttribute("users", userService.findAllSystemUsers());
+        model.addAttribute("existingUsers", userService.findAllSystemUsers());
         model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
         model.addAttribute("list", "list of users");
         model.addAttribute("pageTitle", "lang.listUsersTitle");
@@ -136,10 +137,10 @@ public class UserController {
             Long userID = Long.valueOf(id);
             user = userService.read(userID);
             found = true;
-        } catch (DataAccessException | NumberFormatException e) {
+        } catch (DataAccessException | NumberFormatException 
+                    | NullPointerException e) {
             // TODO log
         }
-        
         // prevent the actual type of the user to show in the list twice
         List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
         for(UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()){
@@ -193,6 +194,7 @@ public class UserController {
         }
         model.addAttribute("users", userService.getSystemUsersByParams(firstName, 
                     lastName, converter.convert(type)));
+        model.addAttribute("existingUsers", userService.findAllSystemUsers());
         model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
         model.addAttribute("list", "list of users");
         model.addAttribute("pageTitle", "lang.listUsersTitle");
