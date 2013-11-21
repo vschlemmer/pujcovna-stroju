@@ -40,9 +40,10 @@
 						<td>${machine.description}</td>
 						<td><a href="<c:url value="/machine/detail/${machine.id}"/>">
 								<img alt="detail" src="<c:url value="/images/search.png"/>">
-						</a> <a href="<c:url value="/machine/delete/${machine.id}"/>"> <img
-								alt="delete" src="<c:url value="/images/delete.png" />">
-						</a></td>
+						</a><a href="<c:url value="/machine/delete/${machine.id}"/>"> <img
+								alt="delete" src="<c:url value="/images/delete.png" />"></a> <a
+							href="<c:url value="/machine/update/${machine.id}"/>"> <img
+								alt="update" src="<c:url value="/images/update.png" />"></a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -75,7 +76,7 @@
 					<td><form:input cssClass="inputField" path="label" /></td>
 					<td><label id="machineFormIDWarning"
 						class="offscreen warningMessage"><spring:message
-                            code="lang.mandatory" text="Mandatory Field" /></label>
+								code="lang.mandatory" text="Mandatory Field" /></label>
 				</tr>
 				<tr>
 					<td><form:label path="type">type</form:label></td>
@@ -132,6 +133,24 @@
 			<p>${errorMessage}</p>
 		</div>
 	</c:if>
+	<c:if test="${updateStatus}">
+        <div class="success" id="machineSuccessWindow">
+            <p>
+                <spring:message code="lang.machineUpdateSuccess"
+                    text="Machine successfully updated" />
+            </p>
+        </div>
+    </c:if>
+
+    <c:if test="${updateStatus == 'false'}">
+        <div class="error" id="machineErrorWindow">
+            <p>
+                <spring:message code="lang.machineUpdateFailure"
+                    text="Error occurred during machine editing" />
+            </p>
+            <p>${errorMessage}</p>
+        </div>
+    </c:if>
 
 
 </div>

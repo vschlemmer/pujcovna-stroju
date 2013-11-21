@@ -204,6 +204,7 @@ public class LoanController {
         }
         LoanStateEnum[] loanStates = (LoanStateEnum[]) enums.toArray(new LoanStateEnum[enums.size()]);
         
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
         model.addAttribute("loanStates", loanStates);
         model.addAttribute("loan", loan);
         if (!found) {
