@@ -187,6 +187,24 @@
             <p>${errorMessage}</p>
         </div>
     </c:if>
+    <c:if test="${deleteStatus}">
+        <div class="success" id="userSuccessWindow">
+            <p>
+                <spring:message code="lang.userDeleteSuccess"
+                                text="User successfully deleted" />
+            </p>
+        </div>
+    </c:if>
+
+    <c:if test="${deleteStatus == 'false'}">
+        <div class="error" id="userErrorWindow">
+            <p>
+                <spring:message code="lang.userDeleteeFailure"
+                                text="Error occurred during deleting user" />
+            </p>
+            <p>${errorMessage}</p>
+        </div>
+    </c:if>
         
 </div>
 
