@@ -4,10 +4,12 @@
  */
 package cz.muni.fi.pa165.pujcovnastroju.service;
 
+import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import java.util.List;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 
 /**
  * 
@@ -69,4 +71,15 @@ public interface MachineService {
 	 */
 	public List<MachineDTO> getMachineDTOsByType(MachineTypeEnumDTO type);
 
+	/**
+	 * returns all machineDTOs with given parameters
+	 * 
+	 * @param label
+	 * @param description
+	 * @param machineTypeDTO
+	 * @param loan
+	 * @param revision
+	 * @return List of all machineDTOs satisfying given parameters
+	 */
+	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision);
 }

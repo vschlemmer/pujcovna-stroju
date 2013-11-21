@@ -1,9 +1,11 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import java.util.List;
 
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 
 /**
  * 
@@ -67,4 +69,15 @@ public interface MachineDAO {
 	 */
 	public List<Machine> getMachinesByType(MachineTypeEnum type);
 
+	/**
+	 * returns all machines with given parameters
+	 * 
+	 * @param label
+	 * @param description
+	 * @param type
+	 * @param loan
+	 * @param revision
+	 * @return List of all machines satisfying given parameters
+	 */
+	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision);
 }

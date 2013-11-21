@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Repository;
 
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import java.util.Collection;
+import javax.persistence.criteria.Expression;
 
 /**
  * 
@@ -128,5 +132,40 @@ public class MachineDAOImpl implements MachineDAO {
 
 		return machineList;
 	}
+	
+	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision) {
+		if (type == null) {
+			throw new IllegalArgumentException("unset argument 'type");
+		}
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Machine> criteriaQuery = criteriaBuilder
+				.createQuery(Machine.class);
+		Root<Machine> rootMachines = criteriaQuery.from(Machine.class);
+		criteriaQuery.select(rootMachines);
+		
+		if (label != null) {
+		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("label"), label));
+		}
+		
+		if (description != null) {
+		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("description"), description));
+		}
+		
+		if (type != null) {
+		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("type"), type));
+		}
+		
+		if (loan != null) {
+		    Expression<Collection> loansExp = rootMachines.get("loans");
+		    criteriaQuery.where(criteriaBuilder.isMember(loan, loansExp));
+		}
+		
+		if (revision != null) {
+		    Expression<Collection> revisionExp = rootMachines.get("revisions");
+		    criteriaQuery.where(criteriaBuilder.isMember(revision, revisionExp));
+		}
 
+		return entityManager.createQuery(criteriaQuery).getResultList();
+	}
+	
 }

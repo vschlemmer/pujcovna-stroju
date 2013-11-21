@@ -4,6 +4,7 @@
  */
 package cz.muni.fi.pa165.pujcovnastroju.serviceimpl;
 
+import cz.muni.fi.pa165.pujcovnastroju.converter.LoanDTOConverter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineTypeDTOConverter;
+import cz.muni.fi.pa165.pujcovnastroju.converter.RevisionDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dao.MachineDAO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
+import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 
 /**
@@ -97,6 +102,14 @@ public class MachineServiceImpl implements MachineService {
 	public List<MachineDTO> getMachineDTOsByType(MachineTypeEnumDTO type) {
 		List<Machine> machineList = machineDao
 				.getMachinesByType(MachineTypeDTOConverter.dtoToEntity(type));
+		return MachineDTOConverter.listToDto(machineList,false);
+	}
+	
+	@Override
+	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision) {
+		List<Machine> machineList = machineDao
+				.getMachinesByParams(label, description, MachineTypeDTOConverter.dtoToEntity(machineTypeDTO), 
+				LoanDTOConverter.dtoToEntity(loan, true), RevisionDTOConverter.dtoToEntity(revision));
 		return MachineDTOConverter.listToDto(machineList,false);
 	}
 

@@ -39,7 +39,7 @@ public class Machine implements Serializable, Cloneable {
     @Column(nullable = false)
     private MachineTypeEnum type;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
+    @ManyToMany(mappedBy="machines", cascade = { CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH })
     private List<Loan> loans;
 
