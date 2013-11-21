@@ -1,10 +1,13 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import cz.muni.fi.pa165.pujcovnastroju.converter.UserTypeDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
@@ -61,11 +64,11 @@ public class LoanController {
         ) {
         model.addAttribute("loans", loanService.getAllLoans());
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
         model.addAttribute("list", "list of loans");
         model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("machines",machineService.getAllMachines());
+        //model.addAttribute("machines",machineService.getMachineDTOsByParams(null, null, null, null, null));
         
         if (storeStatus.equalsIgnoreCase("true")) {
                 model.addAttribute("storeStatus","true");
@@ -237,7 +240,7 @@ public class LoanController {
         
 //        LinkedList<MachineDTO> machines = new LinkedList<>();
 //        machines.add(machine);
-        loan.setMachine(machine);
+        //loan.setMachine(machine);
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
 //        model.addAttribute("loan", loan);

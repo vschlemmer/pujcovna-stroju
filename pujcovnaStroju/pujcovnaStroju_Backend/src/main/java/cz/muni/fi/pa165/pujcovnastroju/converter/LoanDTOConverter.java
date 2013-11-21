@@ -40,8 +40,8 @@ public class LoanDTOConverter {
 
 			loan.setCustomer(SystemUserDTOConverter.dtoToEntity(
 					loanDTO.getCustomer(), bounded));
-			loan.setMachine(MachineDTOConverter.dtoToEntity(
-					loanDTO.getMachine(), true));
+			loan.setMachines(MachineDTOConverter.listToEntities(
+					loanDTO.getMachines(), true));
 		}
 		return loan;
 	}
@@ -70,8 +70,8 @@ public class LoanDTOConverter {
 		if (!bounded) {
 			loanDTO.setCustomer(SystemUserDTOConverter.entityToDTO(
 					loan.getCustomer(), true));
-			loanDTO.setMachine(MachineDTOConverter.entityToDto(
-					loan.getMachine(), true));
+			loanDTO.setMachines(MachineDTOConverter.listToDto(
+					loan.getMachines(), true));
 		}
 		return loanDTO;
 	}

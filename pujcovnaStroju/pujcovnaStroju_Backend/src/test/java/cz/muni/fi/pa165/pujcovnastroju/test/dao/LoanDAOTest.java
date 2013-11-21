@@ -58,7 +58,7 @@ public class LoanDAOTest extends TestCase {
         machine2.setType(MachineTypeEnum.BULDOZER);
         machines.add(machine1);
         machines.add(machine2);
-//        loan.setMachine(machines);
+        loan.setMachines(machines);
         return loan;
     }
 
@@ -79,7 +79,7 @@ public class LoanDAOTest extends TestCase {
         assertEquals(expResult.getLoanState(), result.getLoanState());
         assertEquals(expResult.getLoanTime(), result.getLoanTime());
         assertEquals(expResult.getReturnTime(), result.getReturnTime());
-        assertEquals(expResult.getMachine(), result.getMachine());
+        assertEquals(expResult.getMachines(), result.getMachines());
         assertNotNull(expResult.getId());
         assertNotNull(result.getId());
         
@@ -101,7 +101,7 @@ public class LoanDAOTest extends TestCase {
         loan.setLoanTime(new Date(System.currentTimeMillis()+10));
         loan.setReturnTime(new Date(System.currentTimeMillis()+20));
         loan.setCustomer(new SystemUser());
-        loan.setMachine(null);
+        loan.setMachines(null);
         loan.setLoanState(LoanStateEnum.LOANED);
         Loan expResult = loan;
 	em.getTransaction().begin();
@@ -112,7 +112,7 @@ public class LoanDAOTest extends TestCase {
         assertEquals(expResult.getLoanState(), result.getLoanState());
         assertEquals(expResult.getLoanTime(), result.getLoanTime());
         assertEquals(expResult.getReturnTime(), result.getReturnTime());
-        assertEquals(expResult.getMachine(), result.getMachine());
+        assertEquals(expResult.getMachines(), result.getMachines());
     }
 
     /**
@@ -135,7 +135,7 @@ public class LoanDAOTest extends TestCase {
         assertEquals(expResult.getLoanState(), result.getLoanState());
         assertEquals(expResult.getLoanTime(), result.getLoanTime());
         assertEquals(expResult.getReturnTime(), result.getReturnTime());
-        //assertEquals(expResult.getMachines(), result.getMachines());
+        assertEquals(expResult.getMachines(), result.getMachines());
     }
 
     /**
@@ -206,7 +206,7 @@ public class LoanDAOTest extends TestCase {
 	em.getTransaction().commit();
         
         SystemUser loanedBy = loan2.getCustomer();
-        Machine includedMachine = loan2.getMachine();
+        Machine includedMachine = loan2.getMachines().get(0);
         
         List expResult = new ArrayList();
         expResult.add(loan);

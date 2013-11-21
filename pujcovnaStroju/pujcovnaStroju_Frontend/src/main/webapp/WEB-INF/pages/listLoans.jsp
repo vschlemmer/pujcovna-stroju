@@ -34,9 +34,9 @@
                         <td>${loan.customer.firstName} ${loan.customer.lastName} ${loan.customer.id}</td>
 			<td>
 			    <ul>
-				
+				<c:forEach items="${loan.machines}" var="machine">
 				    <li><a href="<c:url value="/machine/detail/${machine.id}"/>">${machine.label}</a></li>
-
+				</c:forEach>
 			    </ul>
 			</td>
                         <td>${loan.loanTime}</td>

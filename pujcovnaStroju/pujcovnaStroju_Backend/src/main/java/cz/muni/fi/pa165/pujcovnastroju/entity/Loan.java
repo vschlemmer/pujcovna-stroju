@@ -3,6 +3,7 @@ package cz.muni.fi.pa165.pujcovnastroju.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
@@ -31,10 +34,11 @@ public class Loan implements Serializable {
 	@JoinColumn(name = "SYSTEMUSER_ID")
 	private SystemUser customer;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH })
-	@JoinColumn(name = "MACHINE_ID")
-	private Machine machine;
+	@JoinTable(name="LOAN_MACHINES", joinColumns={@JoinColumn(name="LOAN_ID", referencedColumnName="id")},
+			inverseJoinColumns={@JoinColumn(name="MACHINE_ID", referencedColumnName="id")})
+	private List<Machine> machines;
 
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
 	private Date loanTime;
@@ -69,12 +73,12 @@ public class Loan implements Serializable {
 		this.loanTime = loanTime;
 	}
 
-	public Machine getMachine() {
-		return machine;
+	public List<Machine> getMachines() {
+		return machines;
 	}
 
-	public void setMachine(Machine machines) {
-		this.machine = machines;
+	public void setMachines(List<Machine> machines) {
+		this.machines = machines;
 	}
 
 	public Date getReturnTime() {
@@ -118,7 +122,7 @@ public class Loan implements Serializable {
 	@Override
 	public String toString() {
 		return "Loan [id=" + id + ", customer=" + customer + ", machines="
-				+ machine + ", loanTime=" + loanTime + ", returnTime="
+				+ machines + ", loanTime=" + loanTime + ", returnTime="
 				+ returnTime + ", loanState=" + loanState + "]";
 	}
 

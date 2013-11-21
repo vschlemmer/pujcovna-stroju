@@ -67,7 +67,7 @@ public class SystemUserDAOTest extends TestCase {
         Loan loan1 = new Loan();
         loan1.setLoanState(LoanStateEnum.BOOKED);
         loan1.setLoanTime(new Timestamp(System.currentTimeMillis()));
-        loan1.setMachine(null);
+        loan1.setMachines(null);
         loan1.setReturnTime(new Timestamp(System.currentTimeMillis()+36000000));
         return loan1;
     }
