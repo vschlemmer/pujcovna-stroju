@@ -16,11 +16,14 @@ import org.springframework.stereotype.Repository;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Query;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Subquery;
 import org.hibernate.criterion.Subqueries;
 
@@ -145,53 +148,52 @@ public class MachineDAOImpl implements MachineDAO {
 		Root<Machine> rootMachines = criteriaQuery.from(Machine.class);
 		criteriaQuery.select(rootMachines);
 		
+		List<Predicate> predicates = new ArrayList<>();
+		
 		if (label != null) {
-		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("label"), label));
+		    predicates.add(criteriaBuilder.equal(rootMachines.get("label"), label));
 		}
 		
 		if (description != null) {
-		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("description"), description));
+		    predicates.add(criteriaBuilder.equal(rootMachines.get("description"), description));
 		}
 		
 		if (type != null) {
-		    criteriaQuery.where(criteriaBuilder.equal(rootMachines.get("type"), type));
+		    predicates.add(criteriaBuilder.equal(rootMachines.get("type"), type));
 		}
 		
 		if (loan != null) {
 		    Expression<Collection> loansExp = rootMachines.get("loans");
-		    criteriaQuery.where(criteriaBuilder.isMember(loan, loansExp));
+		    predicates.add(criteriaBuilder.isMember(loan, loansExp));
 		}
 		
 		if (revision != null) {
 		    Expression<Collection> revisionExp = rootMachines.get("revisions");
-		    criteriaQuery.where(criteriaBuilder.isMember(revision, revisionExp));
+		    predicates.add(criteriaBuilder.isMember(revision, revisionExp));
 		}
 
 		if (freeFrom != null || freeTill != null) {
-		    Query query = entityManager.createQuery(
-			"select machine from Machine machine "+
-			" where machine.id not in" +
-			" (select machine.id from Machine machine join machine.loans loan where loan.loanTime <= :lTime AND loan.returnTime >= :rTime)")
-			    .setParameter("lTime", freeFrom).setParameter("rTime", freeTill);
- 
-			return query.getResultList();
-			
-			
-			
-		    /*Subquery<Machine> subquery = criteriaQuery.subquery(Machine.class);
+		    Subquery<Machine> subquery = criteriaQuery.subquery(Machine.class);
 		    Root<Machine> machineRoot = subquery.from(Machine.class);
 		    Join<Machine, Loan> join = machineRoot.join("loans");
 		    subquery.select(machineRoot);
-		    if (freeFrom != null)  {
-			Expression<Date> loanTime = join.get("loanTime");
-			criteriaQuery.where(criteriaBuilder.greaterThanOrEqualTo(loanTime, freeFrom));
+		    List<Predicate> subPredicates = new ArrayList<>();
+		    
+		    if (freeFrom != null) {
+			Expression<Date> returnTime = join.get("returnTime");
+			subPredicates.add(criteriaBuilder.greaterThan(returnTime, freeFrom));
 		    }
 		    if (freeTill != null) {
-			Expression<Date> returnTime = join.get("returnTime");
-			criteriaQuery.where(criteriaBuilder.lessThanOrEqualTo(returnTime, freeTill));
+			Expression<Date> loanTime = join.get("loanTime");
+			subPredicates.add(criteriaBuilder.lessThan(loanTime, freeTill));
 		    }
-		    criteriaQuery.where(criteriaBuilder.in(subquery));*/
+		    
+		    subquery.where(subPredicates.toArray(new Predicate[]{}));
+		    
+		    predicates.add(criteriaBuilder.not(criteriaBuilder.in(rootMachines.get("id")).value(subquery)));
 		}
+		
+		criteriaQuery.where(predicates.toArray(new Predicate[]{}));
 		
 		return entityManager.createQuery(criteriaQuery).getResultList();
 	}

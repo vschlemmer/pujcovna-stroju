@@ -19,6 +19,8 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+import java.lang.reflect.Array;
+import javax.persistence.criteria.Predicate;
 
 /**
  * 
@@ -139,23 +141,27 @@ public class LoanDAOImpl implements LoanDAO {
 
 		Root<Loan> loanRoot = cq.from(Loan.class);
 		cq.select(loanRoot);
+		
+		List<Predicate> predicates = new ArrayList<>();
 
 		if (loanedFrom != null) {
 			Expression<Date> loanedFromExp = loanRoot.get("loanTime");
-			cq.where(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
+			predicates.add(cb.greaterThanOrEqualTo(loanedFromExp, loanedFrom));
 		}
 		if (loanedTill != null) {
 			Expression<Date> loanedTillExp = loanRoot.get("returnTime");
-			cq.where(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
+			predicates.add(cb.greaterThanOrEqualTo(loanedTillExp, loanedTill));
 		}
 		if (loanState != null)
-			cq.where(cb.equal(loanRoot.get("loanState"), loanState));
+			predicates.add(cb.equal(loanRoot.get("loanState"), loanState));
 		if (loanedBy != null)
-			cq.where(cb.equal(loanRoot.get("customer"), loanedBy));
+			predicates.add(cb.equal(loanRoot.get("customer"), loanedBy));
 		if (includedMachine != null) {
 			Expression<Collection> machinesExp = loanRoot.get("machines");
-			cq.where(cb.isMember(includedMachine, machinesExp));
+			predicates.add(cb.isMember(includedMachine, machinesExp));
 		}
+		
+		cq.where(predicates.toArray(new Predicate[]{}));
 
 		return em.createQuery(cq).getResultList();
 	}

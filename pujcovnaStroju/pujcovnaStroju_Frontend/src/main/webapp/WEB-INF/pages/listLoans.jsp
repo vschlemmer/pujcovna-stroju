@@ -31,11 +31,11 @@
                 <c:forEach items="${loans}" var="loan">
                     <tr>
                         <td>${loan.id}</td>
-                        <td>${loan.customer.firstName} ${loan.customer.lastName} ${loan.customer.id}</td>
+                        <td><a href="<c:url value="/user/detail/${loan.customer.id}"/>">${loan.customer.lastName} ${loan.customer.firstName} (${loan.customer.id})</a></td>
 			<td>
 			    <ul>
 				<c:forEach items="${loan.machines}" var="machine">
-				    <li><a href="<c:url value="/machine/detail/${machine.id}"/>">${machine.label}</a></li>
+				    <li><a href="<c:url value="/machine/detail/${machine.id}"/>">${machine.label} (${machine.id})</a></li>
 				</c:forEach>
 			    </ul>
 			</td>
@@ -81,7 +81,9 @@
                         <spring:message code="lang.customer" text="Customer" />
                         </form:label></td>
                     <td><form:select path="customer">
-			    <form:options items="${customers}" itemLabel="firstName" itemValue="id" />
+			    <c:forEach var="customer" items="${customers}">
+				<form:option value="${customer.id}"><c:out value="${customer.lastName} ${customer.firstName} (${customer.id})"/></form:option>
+			    </c:forEach>
 			</form:select>
 		    </td>
                     <td><label id="loanFormCustomerWarning"
