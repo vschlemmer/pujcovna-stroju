@@ -10,7 +10,7 @@
 <div class="content">
     <h2><spring:message code="lang.listUsers" text="List of users" /></h2><br />
 <c:if test="${not empty existingUsers}">
-        <h3>Filters</h3>
+        <h3><spring:message code="lang.filters" text="Filters" /></h3>
         <form:form method="GET" id="filterUserForm" name="filterUserForm"
                    action="filter">
             <table>
@@ -33,12 +33,16 @@
                 </tr>
                 <tr>
                     <td>
-                        <input class="button" type="submit" name="submit"
-                               value="Filter" />
+                        <button class="button" type="submit" name="submit"
+                                value="Filter">
+                            <spring:message code="lang.filter" text="Filter" />
+                        </button>
                     </td>
                     <td>
-                        <input class="button" type="submit" name="void" 
-                               value="Void filter" />
+                        <button class="button" type="submit" name="void" 
+                                value="Void filter">
+                            <spring:message code="lang.voidFilter" text="Void filter" />
+                        </button>
                     </td>
                 </tr>
             </table>
@@ -133,9 +137,13 @@
                 
                 
                 <tr>
-                    <td colspan="2"><input class="button" type="button"
+                    <td colspan="2">
+                        <button class="button" type="button"
                             value="Add user"
-                            onclick="javascript:validateAndSubmitAddUserForm()" /></td>
+                            onclick="javascript:validateAndSubmitAddUserForm()">
+                            <spring:message code="lang.addUser" text="Add User" />
+                        </button>
+                    </td>
                 </tr>
             </table>
 
@@ -175,6 +183,24 @@
             <p>
                 <spring:message code="lang.userUpdateFailure"
                                 text="Error occurred during updating user" />
+            </p>
+            <p>${errorMessage}</p>
+        </div>
+    </c:if>
+    <c:if test="${deleteStatus}">
+        <div class="success" id="userSuccessWindow">
+            <p>
+                <spring:message code="lang.userDeleteSuccess"
+                                text="User successfully deleted" />
+            </p>
+        </div>
+    </c:if>
+
+    <c:if test="${deleteStatus == 'false'}">
+        <div class="error" id="userErrorWindow">
+            <p>
+                <spring:message code="lang.userDeleteeFailure"
+                                text="Error occurred during deleting user" />
             </p>
             <p>${errorMessage}</p>
         </div>

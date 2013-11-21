@@ -55,9 +55,13 @@
 				</tr>
 
 				<tr>
-					<td colspan="2"><input class="button" type="button"
+					<td colspan="2">
+                                            <button class="button" type="button"
 						value="Update machine"
-						onclick="javascript:validateAndSubmitUpdateMachineForm()" /></td>
+						onclick="javascript:validateAndSubmitUpdateMachineForm()">
+                                                <spring:message code="lang.updateMachine" text="Update machine" />
+                                            </button>
+                                        </td>
 				</tr>
 			</table>
 		</form:form>
