@@ -46,9 +46,9 @@
                                 <img alt="detail" src="<c:url value="/images/search.png"/>"></a>
                             <a href="<c:url value="/loan/delete/${loan.id}"/>">
                                 <img alt="delete" src="<c:url value="/images/delete.png" />"></a>
-                            <a href="<c:url value="/loan/update/${loan.id}"/>">
-                                <img alt="update" src="<c:url value="/images/update.png" />"></a>
-                        </td>
+                            <a
+							href="<c:url value="/loan/update/${loan.id}"/>"> <img
+								alt="update" src="<c:url value="/images/update.png" />"></a></td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -99,17 +99,18 @@
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
                 </tr>
-		<tr>
-                    <td><form:label path="returnTime">
-                        <spring:message code="lang.returnTime" text="Return Time" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField datePicker" path="returnTime" /></td>
-                    <td><label id="loanFormReturnTimeWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
+				<tr>
+					<td><form:label path="returnTime">
+							<spring:message code="lang.returnTime" text="Return Time" />
+						</form:label></td>
+					<td><form:input cssClass="inputField datePicker"
+							path="returnTime" /></td>
+					<td><label id="loanFormReturnTimeWarning"
+						class="offscreen warningMessage"> <spring:message
+								code="lang.mandatory" text="Mandatory Field" />
+					</label></td>
+				</tr>
+				<tr>
                     <td><form:label path="loanState">
                         <spring:message code="lang.loanState" text="Loan State" />
                         </form:label></td>

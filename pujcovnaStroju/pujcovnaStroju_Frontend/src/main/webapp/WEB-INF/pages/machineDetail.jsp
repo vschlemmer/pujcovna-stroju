@@ -34,18 +34,8 @@
 					text="Description" /></td>
 			<td>${machine.description}</td>
 		</tr>
-		<tr>
-		  ${machine}
-		</tr>
+
 	</table>
-
-
-
-
-
-
-
-
 	<c:if test="${empty machine}">
 		<div class="error">
 			<spring:message code="lang.machineNotFound" text="Machine not found" />
@@ -53,9 +43,51 @@
 		</div>
 	</c:if>
 	<a href="<c:url value="/loan/new/${machine.id}"/>">link</a>
+	<c:if test="${not empty loans}">
+		<table id="standardTable">
+			<thead>
+				<tr>
+					<th><spring:message code="lang.id" text="ID" /></th>
+					<th><spring:message code="lang.customer" text="Customer" /></th>
+					<th><spring:message code="lang.loanTime" text="Loan Time" /></th>
+					<th><spring:message code="lang.returnTime" text="Return Time" /></th>
+					<th><spring:message code="lang.loanState" text="Loan State" /></th>
+				</tr>
+			</thead>
+			<tbody>
 
+				<c:forEach items="${loans}" var="loan">
+					<tr>
+						<td><a href="<c:url value="/loan/detail/${loan.id}"/>">${loan.id}</a></td>
+						<td><a
+							href="<c:url value="/user/detail/${loan.customer.id}"/>">${loan.customer.firstName}
+								${loan.customer.lastName}</a></td>
 
+						<td>${loan.loanTime}</td>
+						<td>${loan.returnTime}</td>
+						<td>${loan.loanState.typeLabel}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr>
+					<th><spring:message code="lang.id" text="ID" /></th>
+					<th><spring:message code="lang.customer" text="Customer" /></th>
+					<th><spring:message code="lang.loanTime" text="Loan Time" /></th>
+					<th><spring:message code="lang.returnTime" text="Return Time" /></th>
+					<th><spring:message code="lang.loanState" text="Loan State" /></th>
+				</tr>
+			</tfoot>
 
+		</table>
+	</c:if>
+	<c:if test="${empty loan}">
+		<div class="info">
+			<p>
+				<spring:message code="lang.machineNoLoans" text="No loans" />
+			</p>
 
+		</div>
+	</c:if>
 </div>
 <jsp:include page="parts/footer.jsp"></jsp:include>

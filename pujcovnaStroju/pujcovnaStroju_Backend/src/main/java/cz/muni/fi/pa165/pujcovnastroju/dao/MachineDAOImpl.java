@@ -1,28 +1,25 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
-import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Query;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Subquery;
-import org.hibernate.criterion.Subqueries;
 
 /**
  * 
@@ -85,10 +82,12 @@ public class MachineDAOImpl implements MachineDAO {
 			throw new IllegalArgumentException("unset argument 'id'");
 		}
 		Machine result = entityManager.find(Machine.class, id);
-		result.getLoans().size();
-		System.out.println("=+++++++++++++++++++++++++++++++++++++=");
-		System.out.println(result.getLoans());
-//		result.getRevisions().size();
+		if (result != null) {
+		
+			result.getLoans().size();
+			System.out.println(result.getLoans());
+//			result.getRevisions().size();
+		}
 		return result;
 	}
 

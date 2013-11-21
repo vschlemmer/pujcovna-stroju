@@ -20,7 +20,30 @@ function validateAndSubmitMachineForm() {
 		document.getElementById('addMachineForm').submit();
 	}
 }
-
+function validateAndSubmitUpdateMachineForm() {
+    hidePart('machineSuccessWindow');
+    hidePart('machineErrorWindow');
+    var label = document.forms['updateMachineForm'].label.value;
+    var description = document.forms['updateMachineForm'].description.value;
+    var type = document.forms['updateMachineForm'].type.value;
+    if(label == "") {
+        showPart('userFormFirstNameWarning');
+    }
+    if(description == "") {
+        showPart('userFormLastNameWarning');
+    } 
+    if(type == "") {
+        showPart('userFormTypeWarning');
+    }
+    if(id == "") {
+        showPart('userFormTypeWarning');
+    }
+    if (label != "" && description != "" && type != "" && id != "") {
+        document.getElementById('updateMachineForm').submit();
+    }
+}
+    
+    
 function validateAndSubmitAddUserForm() {
     hidePart('userSuccessWindow');
     hidePart('userErrorWindow');
@@ -121,7 +144,7 @@ function validateAndSubmitAddLoanForm() {
     }
 }
 
-function validateAndSubmitUpdateUserForm() {
+function validateAndSubmitLoanUserForm() {
     hidePart('loanSuccessWindow');
     hidePart('loanErrorWindow');
     var loanTime = document.forms['updateLoanForm'].loanTime.value;
