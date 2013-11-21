@@ -68,7 +68,6 @@ public class LoanController {
         model.addAttribute("list", "list of loans");
         model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
-        //model.addAttribute("machines",machineService.getMachineDTOsByParams(null, null, null, null, null));
         
         if (storeStatus.equalsIgnoreCase("true")) {
                 model.addAttribute("storeStatus","true");
@@ -104,17 +103,6 @@ public class LoanController {
 		System.out.println("empty list");
 	    }
 	    
-//	    MachineDTO machine = machineService.read(1L);
-//	    loan.setMachine(machine);
-//	    loan.setCustomer(customer); 
-//	    List<LoanDTO> loansList = new ArrayList<>();
-//	    loansList.add(loan);
-//	    customer.setLoans(loansList);
-//           
-//            SystemUserDTO customerUpdated = customerService.update(customer);
-//            System.out.println(customerUpdated);
-//            loan.setCustomer(customerUpdated);
-//            System.out.println(customerUpdated);
             stored = loanService.create(loan) != null;
             System.out.println(stored);
         } catch (DataAccessException e) {
@@ -129,11 +117,8 @@ public class LoanController {
     }
     
     @RequestMapping(value = "/new/add", method = RequestMethod.POST)
-    public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, 
-    		
-                    BindingResult result, ModelMap model, @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
-    	System.out.println("xxx");
-//    	System.out.println(machineID);
+    public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, BindingResult result, ModelMap model, @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
+
     	return addLoan(loan, result, model, machineList);
     }
     

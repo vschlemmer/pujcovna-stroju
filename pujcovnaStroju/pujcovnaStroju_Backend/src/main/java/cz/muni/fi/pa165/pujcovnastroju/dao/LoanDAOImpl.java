@@ -19,7 +19,6 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
-import java.lang.reflect.Array;
 import javax.persistence.criteria.Predicate;
 
 /**
@@ -49,18 +48,10 @@ public class LoanDAOImpl implements LoanDAO {
 	public void setEm(EntityManager em) {
 		this.em = em;
 	}
-
-	public Loan create(Loan loan) throws IllegalArgumentException {
-		if (loan == null)
-			throw new IllegalArgumentException("loan is null");
+	
+	private Loan mergeParams(Loan loan) {
 		SystemUser user = loan.getCustomer();
 		user = em.merge(user);
-		/*List<Loan> userList = user.getLoans();
-		if (userList == null) {
-			userList = new ArrayList<>();
-		}
-		userList.add(loan);
-		user.setLoans(userList);*/
 		loan.setCustomer(user);
 		
 		List<Machine> machines = loan.getMachines();
@@ -72,13 +63,14 @@ public class LoanDAOImpl implements LoanDAO {
 		    }
 		    loan.setMachines(machinesToMerge);
 		}
-		/*List<Loan> loanList = machine.getLoans();
-		if (loanList == null) {
-			loanList = new ArrayList<>();
-		}
-		loanList.add(loan);
-		machine.setLoans(loanList);
-		loan.setMachines(machines);*/
+		return loan;
+	}
+
+	public Loan create(Loan loan) throws IllegalArgumentException {
+		if (loan == null)
+			throw new IllegalArgumentException("loan is null");
+		
+		loan = this.mergeParams(loan);
 		
 		em.persist(loan);
 		return loan;
@@ -91,10 +83,11 @@ public class LoanDAOImpl implements LoanDAO {
 			throw new IllegalArgumentException("loan.id is null");
 
 		Loan loanStored = em.find(Loan.class, loan.getId());
-		if (loanStored != null)
-			em.merge(loan);
-		else
-			em.persist(loan);
+		
+		loan = this.mergeParams(loan);
+		
+		if (loanStored != null) em.merge(loan);
+		else em.persist(loan);
 
 		return loan;
 	}
