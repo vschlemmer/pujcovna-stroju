@@ -72,25 +72,34 @@
 			action="add">
 			<table>
 				<tr>
-					<td><form:label path="label">label</form:label></td>
+					<td><form:label path="label">
+                                                <spring:message code="lang.machineLabel" text="Label" />
+                                            </form:label></td>
 					<td><form:input cssClass="inputField" path="label" /></td>
 					<td><label id="machineFormIDWarning"
 						class="offscreen warningMessage"><spring:message
 								code="lang.mandatory" text="Mandatory Field" /></label>
 				</tr>
 				<tr>
-					<td><form:label path="type">type</form:label></td>
+					<td><form:label path="type">
+                                                <spring:message code="lang.machineType" text="Type" />
+                                            </form:label></td>
 					<td><form:select path="type" items="${types}" /></td>
 				</tr>
 				<tr>
-					<td><form:label path="description">description</form:label></td>
+					<td><form:label path="description">
+                                                <spring:message code="lang.machineDescription"
+							text="Description" />
+                                            </form:label></td>
 					<td><form:input cssClass="inputField" path="description"
 							id="machineFormLabel" /></td>
 				</tr>
 				<tr>
-					<td colspan="2"><input class="button" type="button"
-						value="Add machine"
-						onclick="javascript:validateAndSubmitMachineForm()" /></td>
+					<td colspan="2">
+                                            <button class="button" type="button"
+						onclick="javascript:validateAndSubmitMachineForm()">
+                                                <spring:message code="lang.addMachine" text="Add machine" />
+                                            </button></td>
 				</tr>
 			</table>
 

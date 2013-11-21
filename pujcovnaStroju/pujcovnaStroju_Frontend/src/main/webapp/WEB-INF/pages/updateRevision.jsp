@@ -51,8 +51,10 @@
                 
                 <tr>
                     <td colspan="2">
-                        <input class="button" type="button" value="Update revision"
-                            onclick="javascript:validateAndSubmitUpdateRevisionForm()" />
+                        <button class="button" type="button" value="Update revision"
+                                onclick="javascript:validateAndSubmitUpdateRevisionForm()">
+                            <spring:message code="lang.updateRevision" text="Update revision" />
+                        </button>
                     </td>
                 </tr>
             </table>

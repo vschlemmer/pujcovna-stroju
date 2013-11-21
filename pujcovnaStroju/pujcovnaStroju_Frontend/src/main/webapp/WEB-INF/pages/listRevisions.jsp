@@ -98,9 +98,14 @@
                         </label></td>
                 </tr>--%>
                 <tr>
-                    <td colspan="2"><input class="button" type="button"
+                    <td colspan="2">
+                        <button class="button" type="button"
                             value="Add revision"
-                            onclick="javascript:validateAndSubmitAddRevisionForm()" /></td>
+                            onclick="javascript:validateAndSubmitAddRevisionForm()">
+                            <spring:message code="lang.addRevision" text="Add Revision" />
+                        </button>
+                    
+                    </td>
                 </tr>
             </table>
 

@@ -124,7 +124,9 @@
                 </tr>
                 <tr>
                 <td>
-		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">Reload machines</a>
+		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">
+                        <spring:message code="lang.reloadMachines" text="Reload machines" />
+                    </a>
                 </td>
 		<td>
 		    <div id="machines"></div>
@@ -132,9 +134,13 @@
                 </tr>
                 
                 <tr>
-                    <td colspan="2"><input class="button" type="button"
+                    <td colspan="2">
+                        <button class="button" type="button"
                             value="Add loan"
-                            onclick="javascript:validateAndSubmitAddLoanForm()" /></td>
+                            onclick="javascript:validateAndSubmitAddLoanForm()">
+                            <spring:message code="lang.addLoan" text="Add Loan" />
+                        </button>
+                    </td>
                 </tr>
             </table>
 

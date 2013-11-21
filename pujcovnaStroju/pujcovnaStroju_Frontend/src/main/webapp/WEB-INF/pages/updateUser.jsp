@@ -48,22 +48,6 @@
                         </label>
                     </td>
                 </tr>
-                <%--<tr>
-                    <td>
-                        <form:label path="type">
-                        <spring:message code="lang.type" text="Type" />
-                        </form:label>
-                    </td>
-                    <td>
-                        <form:input cssClass="inputField" path="type" value="${user.type.typeLabel}" />
-                    </td>
-                    <td><label id="userFormTypeWarning"
-                               class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label>
-                    </td>
-                </tr>--%>
-                
                 <tr>
                     <td><form:label path="type">
                         <spring:message code="lang.type" text="Type" />
@@ -84,8 +68,11 @@
                 
                 <tr>
                     <td colspan="2">
-                        <input class="button" type="button" value="Update user"
-                            onclick="javascript:validateAndSubmitUpdateUserForm()" />
+                        <button class="button" type="button" value="Update user"
+                                onclick="javascript:validateAndSubmitUpdateUserForm()">
+                            <spring:message code="lang.updateUser" text="Update User" />
+                        </button>
+                            
                     </td>
                 </tr>
             </table>

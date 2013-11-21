@@ -65,9 +65,13 @@
                 
                 
                 <tr>
-                    <td colspan="2"><input class="button" type="button"
+                    <td colspan="2">
+                        <button class="button" type="button"
                             value="Update loan"
-                            onclick="javascript:validateAndSubmitUpdateLoanForm()" /></td>
+                            onclick="javascript:validateAndSubmitUpdateLoanForm()">
+                            <spring:message code="lang.updateLoan" text="Update loan" />
+                        </button>
+                    </td>
                 </tr>
 	    </table>
         </form:form>
