@@ -22,7 +22,10 @@
                     <td><form:label path="customer">
                         <spring:message code="lang.customer" text="Customer" />
                         </form:label></td>
-                    <td><form:input cssClass="inputField" path="customer" value="${loan.customer.firstName} ${loan.customer.lastName} (${loan.customer.id})" /></td>
+                    <td><form:select path="customer">
+                            <form:options items="${customers}" itemLabel="firstName"
+                                          itemValue="id" />
+                        </form:select></td>
                     <td><label id="loanFormCustomerWarning"
                             class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />

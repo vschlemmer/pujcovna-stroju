@@ -144,7 +144,7 @@ function validateAndSubmitAddLoanForm() {
     }
 }
 
-function validateAndSubmitLoanUserForm() {
+function validateAndSubmitUpdateLoanForm() {
     hidePart('loanSuccessWindow');
     hidePart('loanErrorWindow');
     var loanTime = document.forms['updateLoanForm'].loanTime.value;
