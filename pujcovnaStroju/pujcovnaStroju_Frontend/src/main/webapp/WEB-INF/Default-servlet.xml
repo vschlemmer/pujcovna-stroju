@@ -47,6 +47,7 @@
                     <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter" />
 		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToLoanStateEnumDTOConverter" />
 		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserDTOConverter" />
+		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToDateConverter" />
                 </list>
             </property>
 	</bean>
