@@ -11,6 +11,20 @@
 <link type="text/css" rel="stylesheet" href="<c:url value="/css/jquery.simple-dtpicker.css" />" />
 <script type="text/javascript" src="<c:url value="/scripts/jquery-1.10.2.min.js" />"></script>
 <script type="text/javascript" src="<c:url value="/scripts/jquery.simple-dtpicker.js" />"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+	$(".loadMachines").click(function () {
+	$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "formUse=true&from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
+	    success: function(response){
+	        $('#machines').html(response);
+	    },
+	    error: function(e){
+	        alert('Error: ' + e);
+	    }
+	});
+	});
+    });
+</script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code="${pageTitle}" text="${pageTitle}"/></title>
 </head>

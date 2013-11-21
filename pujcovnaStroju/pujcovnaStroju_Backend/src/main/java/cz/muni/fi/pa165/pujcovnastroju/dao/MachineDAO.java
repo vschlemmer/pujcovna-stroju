@@ -6,6 +6,7 @@ import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import java.util.Date;
 
 /**
  * 
@@ -77,7 +78,9 @@ public interface MachineDAO {
 	 * @param type
 	 * @param loan
 	 * @param revision
+	 * @param freeFrom 
+	 * @param freeTill 
 	 * @return List of all machines satisfying given parameters
 	 */
-	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision);
+	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision, Date freeFrom, Date freeTill);
 }

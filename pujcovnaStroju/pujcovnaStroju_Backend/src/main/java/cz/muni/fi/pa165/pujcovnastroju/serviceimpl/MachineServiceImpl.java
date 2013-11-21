@@ -23,6 +23,7 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
+import java.util.Date;
 
 /**
  * 
@@ -106,10 +107,11 @@ public class MachineServiceImpl implements MachineService {
 	}
 	
 	@Override
-	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision) {
+	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision, Date freeFrom, Date freeTill) {
 		List<Machine> machineList = machineDao
 				.getMachinesByParams(label, description, MachineTypeDTOConverter.dtoToEntity(machineTypeDTO), 
-				LoanDTOConverter.dtoToEntity(loan, true), RevisionDTOConverter.dtoToEntity(revision));
+				LoanDTOConverter.dtoToEntity(loan, true), RevisionDTOConverter.dtoToEntity(revision),
+				freeFrom, freeTill);
 		return MachineDTOConverter.listToDto(machineList,false);
 	}
 

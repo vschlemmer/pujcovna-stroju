@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpRequest;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
+import java.util.Date;
 
 /**
  * Machine controller implementation
@@ -79,6 +82,18 @@ public class MachineController {
 		}
 
 		return new ModelAndView("listMachines", "command", new MachineDTO());
+	}
+	
+	@RequestMapping(value = "/listByParams", method = RequestMethod.GET)
+	public ModelAndView listMachinesByParams(
+			ModelMap model,
+			@RequestParam(value="formUse", required = false) String formUse,
+			@RequestParam(value="from", required = false) Date from,
+			@RequestParam(value="till", required = false) Date till) {
+
+		model.addAttribute("machines", machineService.getMachineDTOsByParams(null, null, null, null, null, from, till));
+		
+		return new ModelAndView("listMachinesByParams");
 	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)

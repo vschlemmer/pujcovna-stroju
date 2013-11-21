@@ -17,7 +17,12 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import java.util.Collection;
+import java.util.Date;
+import javax.persistence.Query;
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Subquery;
+import org.hibernate.criterion.Subqueries;
 
 /**
  * 
@@ -133,10 +138,7 @@ public class MachineDAOImpl implements MachineDAO {
 		return machineList;
 	}
 	
-	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision) {
-		if (type == null) {
-			throw new IllegalArgumentException("unset argument 'type");
-		}
+	public List<Machine> getMachinesByParams(String label, String description, MachineTypeEnum type, Loan loan, Revision revision, Date freeFrom, Date freeTill) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Machine> criteriaQuery = criteriaBuilder
 				.createQuery(Machine.class);
@@ -165,6 +167,32 @@ public class MachineDAOImpl implements MachineDAO {
 		    criteriaQuery.where(criteriaBuilder.isMember(revision, revisionExp));
 		}
 
+		if (freeFrom != null || freeTill != null) {
+		    Query query = entityManager.createQuery(
+			"select machine from Machine machine "+
+			" where machine.id not in" +
+			" (select machine.id from Machine machine join machine.loans loan where loan.loanTime <= :lTime AND loan.returnTime >= :rTime)")
+			    .setParameter("lTime", freeFrom).setParameter("rTime", freeTill);
+ 
+			return query.getResultList();
+			
+			
+			
+		    /*Subquery<Machine> subquery = criteriaQuery.subquery(Machine.class);
+		    Root<Machine> machineRoot = subquery.from(Machine.class);
+		    Join<Machine, Loan> join = machineRoot.join("loans");
+		    subquery.select(machineRoot);
+		    if (freeFrom != null)  {
+			Expression<Date> loanTime = join.get("loanTime");
+			criteriaQuery.where(criteriaBuilder.greaterThanOrEqualTo(loanTime, freeFrom));
+		    }
+		    if (freeTill != null) {
+			Expression<Date> returnTime = join.get("returnTime");
+			criteriaQuery.where(criteriaBuilder.lessThanOrEqualTo(returnTime, freeTill));
+		    }
+		    criteriaQuery.where(criteriaBuilder.in(subquery));*/
+		}
+		
 		return entityManager.createQuery(criteriaQuery).getResultList();
 	}
 	

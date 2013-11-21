@@ -10,6 +10,7 @@ import java.util.List;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+import java.util.Date;
 
 /**
  * 
@@ -79,7 +80,9 @@ public interface MachineService {
 	 * @param machineTypeDTO
 	 * @param loan
 	 * @param revision
+	 * @param freeFrom 
+	 * @param freeTill 
 	 * @return List of all machineDTOs satisfying given parameters
 	 */
-	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision);
+	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision, Date freeFrom, Date freeTill);
 }

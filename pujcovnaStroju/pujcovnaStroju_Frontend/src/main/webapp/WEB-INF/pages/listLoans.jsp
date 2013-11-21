@@ -121,11 +121,12 @@
                 </tr>
                 <tr>
                 <td>
-               
+		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">Reload machines</a>
                 </td>
+		<td>
+		    <div id="machines"></div>
+		</td>
                 </tr>
-                
-                
                 
                 <tr>
                     <td colspan="2"><input class="button" type="button"

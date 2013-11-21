@@ -82,14 +82,27 @@ public class LoanController {
     
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String addLoan(@ModelAttribute("loan") LoanDTO loan,
-                    BindingResult result, ModelMap model) {
+                    BindingResult result, ModelMap model,
+		    @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
         boolean stored = false;
         String errorMsg = null;
         try {
-	    System.out.println(loan.getCustomer().getId()+"<-id");
-	    System.out.println(loan);
 	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
 	    loan.setCustomer(customer);
+	    if (machineList != null) {
+		System.out.println("non-empty list");
+		List<MachineDTO> machines = new ArrayList<>();
+		MachineDTO currentMachine = null;
+		for (String machineStr : machineList) {
+		    System.out.println(machineStr);
+		    currentMachine = machineService.read(Long.parseLong(machineStr));
+		    machines.add(currentMachine);
+		}
+		loan.setMachines(machines);
+	    }
+	    else {
+		System.out.println("empty list");
+	    }
 	    
 //	    MachineDTO machine = machineService.read(1L);
 //	    loan.setMachine(machine);
@@ -118,10 +131,10 @@ public class LoanController {
     @RequestMapping(value = "/new/add", method = RequestMethod.POST)
     public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, 
     		
-                    BindingResult result, ModelMap model) {
+                    BindingResult result, ModelMap model, @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
     	System.out.println("xxx");
 //    	System.out.println(machineID);
-    	return addLoan(loan, result, model);
+    	return addLoan(loan, result, model, machineList);
     }
     
     
