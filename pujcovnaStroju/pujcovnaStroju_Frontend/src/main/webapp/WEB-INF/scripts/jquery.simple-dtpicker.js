@@ -191,7 +191,7 @@
 				var format_before_c = '';
 				var df = opt_date_format;
 				while (df != null && 0 < df.length) {
-					var format_c = df.substring(0, 1); df = df.substring(1, df.length);
+					var format_c = df.substring(0, 1);df = df.substring(1, df.length);
 					if (format_before_c != format_c) {
 						if(/(YYYY|YY|MM|DD|mm|dd|M|D|h|m)/.test(format_buf)){
 							formats.push( format_buf );

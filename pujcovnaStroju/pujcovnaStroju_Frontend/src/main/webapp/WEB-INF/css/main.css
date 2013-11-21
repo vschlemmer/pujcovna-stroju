@@ -78,6 +78,19 @@ h2 {
 	overflow: hidden;
 	display: inline;
 }
+.loanWrapper table {
+    width: 700px;
+}
+.loanWrapper table table {
+    width: auto;
+}
+.loanWrapper table tr td:first-of-type {
+    width: 20%;
+}
+
+.loanWrapper table table tr td:first-of-type {
+    width: auto;
+}
 
 /*information boxes*/
 .info,.success,.warning,.error,.validation {

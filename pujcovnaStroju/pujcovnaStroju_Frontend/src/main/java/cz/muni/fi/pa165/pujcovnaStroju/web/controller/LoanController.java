@@ -5,6 +5,7 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
@@ -79,8 +80,28 @@ public class LoanController {
         return new ModelAndView("listLoans", "command", new LoanDTO());
     }
     
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addLoan(@ModelAttribute("loan") LoanDTO loan,
+    @RequestMapping(value = "/updateForm")
+    public ModelAndView printLoanAddForm(ModelMap model) {
+        model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
+	
+        return new ModelAndView("updateLoan", "command", new LoanDTO());
+    }
+    
+    @RequestMapping(value = "/updateForm/{id}")
+    public ModelAndView printLoanUpdateForm(ModelMap model, @PathVariable String id) {
+        model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
+	
+	LoanDTO loan = null;
+	if (id != null) loan = loanService.read(Long.parseLong(id));
+	model.addAttribute("loan", loan);
+	
+        return new ModelAndView("updateLoan", "command", new LoanDTO());
+    }
+    
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String updateLoan(@ModelAttribute("loan") LoanDTO loan,
                     BindingResult result, ModelMap model,
 		    @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
         boolean stored = false;
@@ -89,21 +110,17 @@ public class LoanController {
 	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
 	    loan.setCustomer(customer);
 	    if (machineList != null) {
-		System.out.println("non-empty list");
 		List<MachineDTO> machines = new ArrayList<>();
 		MachineDTO currentMachine = null;
 		for (String machineStr : machineList) {
-		    System.out.println(machineStr);
 		    currentMachine = machineService.read(Long.parseLong(machineStr));
 		    machines.add(currentMachine);
 		}
 		loan.setMachines(machines);
 	    }
-	    else {
-		System.out.println("empty list");
-	    }
 	    
-            stored = loanService.create(loan) != null;
+            if (loan.getId() != null) stored = loanService.update(loan) != null;
+	    else stored = loanService.create(loan) != null;
             System.out.println(stored);
         } catch (DataAccessException e) {
             stored = false;
@@ -116,11 +133,11 @@ public class LoanController {
         return "redirect:/loan/list";
     }
     
-    @RequestMapping(value = "/new/add", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/new/add", method = RequestMethod.POST)
     public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, BindingResult result, ModelMap model, @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
 
     	return addLoan(loan, result, model, machineList);
-    }
+    }*/
     
     
     @RequestMapping("/detail/{id}")
@@ -165,7 +182,7 @@ public class LoanController {
         }
         return "redirect:/loan/list";
     }
-    
+    /*
     @RequestMapping(value = "/update/{id}")
     public ModelAndView updateLoan(@PathVariable String id, ModelMap model) {
         DefaultController.addHeaderFooterInfo(model);
@@ -247,5 +264,5 @@ public class LoanController {
         System.out.println(machine);
 
         return new ModelAndView("newLoan", "command", loan);
-    }
+    }*/
 }

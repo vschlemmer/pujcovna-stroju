@@ -3,82 +3,136 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+	 pageEncoding="UTF-8"%>
 
-
-<jsp:include page="parts/header.jsp"></jsp:include>
-<jsp:include page="parts/left_menu.jsp"></jsp:include>
-<div class="content">
     <h2>
         <spring:message code="lang.updateLoanTitle" text="Update loan" />
     </h2>
-    <br /><br /><br />
-    <c:if test="${not empty loan}">
-        <form:form method="post" id="updateLoanForm" name="updateLoanForm"
-                action="update">
-	    <form:hidden path="id" value="${loan.id}" />
-            <table>
-                <tr>
-                    <td><form:label path="customer">
+    <form:form method="post" id="updateLoanForm" name="updateLoanForm" action="update">
+	<c:if test="${not empty loan}"><form:hidden path="id" value="${loan.id}" /></c:if>
+	<table>
+	    <c:if test="${not empty loan}">
+	    <tr>
+		<td><spring:message code="lang.loanId" text="ID" /></td>
+		<td>${loan.id}
+		</td>
+		<td>
+		</td>
+	    </tr>
+	    </c:if>
+	    <tr>
+		<td><form:label path="customer">
                         <spring:message code="lang.customer" text="Customer" />
-                        </form:label></td>
-                    <td><form:select path="customer">
-                            <form:options items="${customers}" itemLabel="firstName"
-                                          itemValue="id" />
-                        </form:select></td>
-                    <td><label id="loanFormCustomerWarning"
-                            class="offscreen warningMessage">
+		    </form:label></td>
+		<td><form:select path="customer">
+			<c:forEach var="customer" items="${customers}">
+			    <form:option value="${customer.id}"><c:out value="${customer.lastName} ${customer.firstName} (${customer.id})"/></form:option>
+			</c:forEach>
+		    </form:select>
+		</td>
+		<td><label id="loanFormCustomerWarning"
+			   class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
-                    <td><form:label path="loanTime">
-                        <spring:message code="lang.loanTime" text="Loan Time" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField" path="loanTime" value="${loan.loanTime}" class="datePicker" /></td>
-                    <td><label id="loanFormLoanTimeWarning"
-                            class="offscreen warningMessage">
+		    </label></td>
+	    </tr>
+	    <tr>
+		<td><form:label path="loanTime">
+			<spring:message code="lang.loanTime" text="Loan Time" />
+		    </form:label></td>
+		<td>
+		    <c:if test="${not empty loan}"><form:input cssClass="inputField datePicker" path="loanTime" value="${loan.loanTime}"/></c:if>
+		    <c:if test="${empty loan}"><form:input cssClass="inputField datePicker" path="loanTime" /></c:if>
+		</td>
+		<td><label id="loanFormLoanTimeWarning" class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-		<tr>
-                    <td><form:label path="returnTime">
-                        <spring:message code="lang.returnTime" text="Return Time" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField" path="returnTime" value="${loan.returnTime}" class="datePicker" /></td>
-                    <td><label id="loanFormReturnTimeWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
-                    <td><form:label path="loanState">
+		    </label></td>
+	    </tr>
+	    <tr>
+		<td><form:label path="returnTime">
+			<spring:message code="lang.returnTime" text="Return Time" />
+		    </form:label></td>
+		<td><c:if test="${not empty loan}"><form:input cssClass="inputField datePicker" path="returnTime" value="${loan.returnTime}"/></c:if>
+		    <c:if test="${empty loan}"><form:input cssClass="inputField datePicker" path="returnTime" /></c:if></td>
+		<td>
+		    <label id="loanFormReturnTimeWarning" class="offscreen warningMessage"> 
+			<spring:message code="lang.mandatory" text="Mandatory Field" />
+		    </label>
+		</td>
+	    </tr>
+	    <tr>
+		<td><form:label path="loanState">
                         <spring:message code="lang.loanState" text="Loan State" />
-                        </form:label></td>
-                    <td><form:select path="loanState" items="${loanStates}" /></td>
-                    <td><label id="loanFormLoanWarning"
-                            class="offscreen warningMessage">
+		    </form:label></td>
+		<td><form:select path="loanState" items="${loanStates}" /></td>
+		<td><label id="loanFormLoanWarning"
+			   class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                
-                
-                
-                <tr>
-                    <td colspan="2"><input class="button" type="button"
-                            value="Update loan"
-                            onclick="javascript:validateAndSubmitUpdateLoanForm()" /></td>
-                </tr>
-	    </table>
-        </form:form>
-    </c:if>
+		    </label></td>
+	    </tr>
+	    <tr>
+		<td colspan="3">
+		    
+		    <c:if test="${not empty loan.machines}">
+			    <table id="standardTable">
+				    <thead>
+					    <tr>
+						    <th>ID</th>
+						    <th><spring:message code="lang.machineLabel" text="Label" /></th>
+						    <th><spring:message code="lang.machineType" text="Type" /></th>
+						    <th><spring:message code="lang.machineDescription" text="Description" /></th>
+						    <th><spring:message code="lang.machineActions" text="Actions" /></th>
+					    </tr>
+				    </thead>
+				    <tbody>
+					    <c:forEach items="${loan.machines}" var="machine">
+						    <tr>
+							    <td>${machine.id}</td>
+							    <td><a href="<c:url value="/machine/detail/${machine.id}"/>">${machine.label}</a></td>
+							    <td>${machine.type.typeLabel}</td>
+							    <td>${machine.description}</td>
+							    <td><input type="checkbox" name="machineList" id="machineList" value="${machine.id}" checked="checked" /></td>
+						    </tr>
+					    </c:forEach>
+				    </tbody>
+				    <tfoot>
+					    <tr>
+						    <th>ID</th>
+						    <th><spring:message code="lang.machineLabel" text="Label" /></th>
+						    <th><spring:message code="lang.machineType" text="Type" /></th>
+						    <th><spring:message code="lang.machineDescription" text="Description" /></th>
+						    <th><spring:message code="lang.machineActions" text="Actions" /></th>
+					    </tr>
+				    </tfoot>
 
-    <c:if test="${empty loan}">
-        <div class="error">
-            <spring:message code="lang.loanNotFound" text="Loan not found" />
-            ID: '${id}'
-        </div>
-    </c:if>
+			    </table>
+		    </c:if>
+		    <c:if test="${empty loan.machines}">
+			    <div class="info">
+				    <p>
+					    <spring:message code="lang.loanNoMachines" text="No Machines" />
+				    </p>
 
-</div>
-<jsp:include page="parts/footer.jsp"></jsp:include>
+			    </div>
+		    </c:if>
+		    
+		</td>
+	    </tr>
+	    <tr>
+                <td>
+		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">Reload machines</a>
+                </td>
+		<td colspan="2">
+		    <div id="machines"></div>
+		</td>
+	    </tr>
+
+	    <tr>
+		<td colspan="2">
+		    <c:if test="${not empty loan}"><input class="button" type="button" value="Update loan" onclick="javascript:validateAndSubmitUpdateLoanForm()" /></c:if>
+		    <c:if test="${empty loan}"><input class="button" type="button" value="Add loan" onclick="javascript:validateAndSubmitAddLoanForm()" /></c:if>
+		    
+		</td>
+	    </tr>
+	</table>
+
+    </form:form>

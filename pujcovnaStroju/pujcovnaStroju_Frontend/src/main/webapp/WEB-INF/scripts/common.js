@@ -127,9 +127,9 @@ function validateAndSubmitUpdateRevisionForm() {
 function validateAndSubmitAddLoanForm() {
     hidePart('loanSuccessWindow');
     hidePart('loanErrorWindow');
-    var loanTime = document.forms['addLoanForm'].loanTime.value;
-    var returnTime = document.forms['addLoanForm'].returnTime.value;
-    var loanState = document.forms['addLoanForm'].loanState.value;
+    var loanTime = document.forms['updateLoanForm'].loanTime.value;
+    var returnTime = document.forms['updateLoanForm'].returnTime.value;
+    var loanState = document.forms['updateLoanForm'].loanState.value;
     if(loanTime == "") {
         showPart('loanFormLoanTimeWarning');
     }
@@ -140,7 +140,7 @@ function validateAndSubmitAddLoanForm() {
         showPart('loanFormLoanStateWarning');
     }
     if (loanTime != "" && returnTime != "" && loanState != "") {
-        document.getElementById('addLoanForm').submit();
+        document.getElementById('updateLoanForm').submit();
     }
 }
 

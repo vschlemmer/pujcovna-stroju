@@ -13,15 +13,31 @@
 <script type="text/javascript" src="<c:url value="/scripts/jquery.simple-dtpicker.js" />"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-	$(".loadMachines").click(function () {
-	$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "formUse=true&from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
-	    success: function(response){
-	        $('#machines').html(response);
-	    },
-	    error: function(e){
-	        alert('Error: ' + e);
-	    }
-	});
+	$(".updateLoanButton").click(function (event) {
+	    event.preventDefault();
+	    var currentUrl = "<c:url value="/loan/updateForm" />";
+	    if ($(this).attr("href") != null) currentUrl += "/"+$(this).attr("href");
+	    $.ajax({type: "POST", url: currentUrl,
+		success: function(response){
+		    $('.loanWrapper').html(response);
+		},
+		error: function(e){
+		    alert('Error: ' + e);
+		},
+		complete: function () {
+		    $(".loadMachines").click(function () {
+			$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "formUse=true&from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
+			    success: function(response){
+				$('#machines').html(response);
+			    },
+			    error: function(e){
+				alert('Error: ' + e);
+			    }
+			});
+		    });
+		    $(".datePicker").appendDtpicker();
+		}
+	    });
 	});
     });
 </script>

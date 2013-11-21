@@ -9,7 +9,10 @@
 
 <div class="content">
     <h2><spring:message code="lang.listLoans" text="List of Loans" /></h2>
-    <br /><br /><br />
+
+    <div class="loanWrapper">
+    </div>
+    <br />
     <c:if test="${empty loans}">
         <spring:message code="lang.noLoans" text="Actions" /><br />
     </c:if>
@@ -46,7 +49,7 @@
                                 <img alt="detail" src="<c:url value="/images/search.png"/>"></a>
                             <a href="<c:url value="/loan/delete/${loan.id}"/>">
                                 <img alt="delete" src="<c:url value="/images/delete.png" />"></a>
-                            <a href="<c:url value="/loan/update/${loan.id}"/>"> 
+                            <a href="${loan.id}" class="updateLoanButton"> 
 				<img alt="update" src="<c:url value="/images/update.png" />"></a></td>
                     </tr>
                 </c:forEach>
@@ -65,80 +68,10 @@
         </table>            
     </c:if>    
     <div class="buttonPosition">
-        <button type="button" id="newLoanButton" class="button"
-                onclick="javascript:showPart('addLoanWrapper');hidePart('newLoanButton')">
+        <button type="button" class="updateLoanButton button">
                 <spring:message code="lang.buttonAddLoan" text="New Loan" />
         </button>
     </div>
-        
-    <ul id="addLoanWrapper" class="offscreen">
-        <form:form method="post" id="addLoanForm" name="addLoanForm"
-                action="add">
-            <table>
-                <tr>
-                    <td><form:label path="customer">
-                        <spring:message code="lang.customer" text="Customer" />
-                        </form:label></td>
-                    <td><form:select path="customer">
-			    <c:forEach var="customer" items="${customers}">
-				<form:option value="${customer.id}"><c:out value="${customer.lastName} ${customer.firstName} (${customer.id})"/></form:option>
-			    </c:forEach>
-			</form:select>
-		    </td>
-                    <td><label id="loanFormCustomerWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
-                    <td><form:label path="loanTime">
-                        <spring:message code="lang.loanTime" text="Loan Time" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField datePicker" path="loanTime" /></td>
-                    <td><label id="loanFormLoanTimeWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-				<tr>
-					<td><form:label path="returnTime">
-							<spring:message code="lang.returnTime" text="Return Time" />
-						</form:label></td>
-					<td><form:input cssClass="inputField datePicker"
-							path="returnTime" /></td>
-					<td><label id="loanFormReturnTimeWarning"
-						class="offscreen warningMessage"> <spring:message
-								code="lang.mandatory" text="Mandatory Field" />
-					</label></td>
-				</tr>
-				<tr>
-                    <td><form:label path="loanState">
-                        <spring:message code="lang.loanState" text="Loan State" />
-                        </form:label></td>
-                    <td><form:select path="loanState" items="${loanStates}" /></td>
-                    <td><label id="loanFormLoanWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
-                <td>
-		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">Reload machines</a>
-                </td>
-		<td>
-		    <div id="machines"></div>
-		</td>
-                </tr>
-                
-                <tr>
-                    <td colspan="2"><input class="button" type="button"
-                            value="Add loan"
-                            onclick="javascript:validateAndSubmitAddLoanForm()" /></td>
-                </tr>
-            </table>
-
-        </form:form>
-    </ul>
         
     <c:if test="${storeStatus}">
         <div class="success" id="loanSuccessWindow">
