@@ -1,5 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,23 +14,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cz.muni.fi.pa165.pujcovnastroju.dao.MachineDAOImpl;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
+import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 
 public class MachineDAOTest extends TestCase {
-	
-	
+
 	private MachineDAOImpl testedObject;
 	EntityManager em;
-	
+
 	@Before
 	@Override
 	public void setUp() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("TestPU");
-	    em = emf.createEntityManager();
+		EntityManagerFactory emf = Persistence
+				.createEntityManagerFactory("TestPU");
+		em = emf.createEntityManager();
 		testedObject = new MachineDAOImpl(em);
 	}
-	
+
 	public Machine getSampleMachine() {
 		Machine m1 = new Machine();
 		m1.setLabel("Buldozer b1");
@@ -36,7 +40,7 @@ public class MachineDAOTest extends TestCase {
 		m1.setType(MachineTypeEnum.BULDOZER);
 		return m1;
 	}
-	
+
 	public void createSampleMachines() {
 		em.getTransaction().begin();
 		testedObject.create(getSampleMachine());
@@ -57,7 +61,7 @@ public class MachineDAOTest extends TestCase {
 		testedObject.create(m4);
 		em.getTransaction().commit();
 	}
-	
+
 	@Test
 	public void testConstruct() {
 		try {
@@ -68,7 +72,7 @@ public class MachineDAOTest extends TestCase {
 		}
 		fail();
 	}
-	
+
 	@Test
 	public void testCreateMachine() {
 		Machine m1 = getSampleMachine();
@@ -77,8 +81,6 @@ public class MachineDAOTest extends TestCase {
 		em.getTransaction().commit();
 		assertTrue(m1.equals(m2));
 	}
-	
-	
 
 	@Test
 	public void testCreateMachineWrongArg() {
@@ -101,8 +103,7 @@ public class MachineDAOTest extends TestCase {
 		}
 		assertTrue(thrown);
 	}
-	
-	
+
 	@Test
 	public void testGetAllMaChines() {
 		List<Machine> result;
@@ -114,33 +115,37 @@ public class MachineDAOTest extends TestCase {
 		assertNotNull(result);
 		assertEquals(4, result.size());
 	}
-	
+
 	@Test
 	public void testGetMachineByType() {
 		createSampleMachines();
-		assertTrue(testedObject.getMachinesByType(MachineTypeEnum.CRANE).isEmpty());
-		assertEquals(1, testedObject.getMachinesByType(MachineTypeEnum.DRILL).size());
-		assertEquals(3, testedObject.getMachinesByType(MachineTypeEnum.BULDOZER).size());
+		assertTrue(testedObject.getMachinesByType(MachineTypeEnum.CRANE)
+				.isEmpty());
+		assertEquals(1, testedObject.getMachinesByType(MachineTypeEnum.DRILL)
+				.size());
+		assertEquals(3, testedObject
+				.getMachinesByType(MachineTypeEnum.BULDOZER).size());
 	}
-	
+
 	@Test
 	public void testUpdateMachine() {
 		createSampleMachines();
-		List<Machine> list = testedObject.getMachinesByType(MachineTypeEnum.DRILL);
+		List<Machine> list = testedObject
+				.getMachinesByType(MachineTypeEnum.DRILL);
 		assertNotNull(list);
 		assertEquals(1, list.size());
-		
+
 		Machine toBeUpdated = list.get(0);
 		Machine dummyMachine = (Machine) toBeUpdated.clone();
-		
+
 		dummyMachine.setType(MachineTypeEnum.CRANE);
-		
+
 		toBeUpdated.setType(MachineTypeEnum.CRANE);
 		Machine updated = testedObject.update(toBeUpdated);
 		assertEquals(dummyMachine, updated);
 	}
-	
-	@Test 
+
+	@Test
 	public void testUpdateMachineWrongArgs() {
 		boolean thrown = false;
 		try {
@@ -161,34 +166,34 @@ public class MachineDAOTest extends TestCase {
 		}
 		assertTrue(thrown);
 	}
-	
+
 	@Test
 	public void testDeleteMachine() {
 		createSampleMachines();
 		List<Machine> list = testedObject.getAllMachines();
 		assertEquals(4, list.size());
-		
+
 		Machine toBeDeleted = list.get(2);
 		Machine dummyMachine = (Machine) toBeDeleted.clone();
-		
+
 		em.getTransaction().begin();
 		testedObject.delete(toBeDeleted);
 		em.getTransaction().commit();
 		list = testedObject.getAllMachines();
 		assertEquals(3, list.size());
-		for (Machine m: list) {
+		for (Machine m : list) {
 			if (m.equals(dummyMachine)) {
 				fail("machine wasn't deleted");
 			}
 		}
 	}
-	
+
 	@Test
 	public void testDeleteMachineWrongArgs() {
 		boolean thrown = false;
 		try {
 			testedObject.update(null);
-		} catch ( Exception e) {
+		} catch (Exception e) {
 			assertTrue(e instanceof IllegalArgumentException);
 			thrown = true;
 		}
@@ -204,7 +209,7 @@ public class MachineDAOTest extends TestCase {
 		}
 		assertTrue(thrown);
 	}
-		
+
 	@Test
 	public void testReadMachineWrongArgs() {
 		try {
@@ -215,5 +220,69 @@ public class MachineDAOTest extends TestCase {
 		}
 		fail();
 	}
-	
+
+	@Test
+	public void testGetMachinesByParams() {
+		Machine machine = getSampleMachine();
+		List<Machine> found = null;
+		List<Machine> expected = new ArrayList<>();
+		expected.add(machine);
+		Loan loan = new Loan();
+		loan.setLoanState(LoanStateEnum.LOANED);
+		loan.setLoanTime(new Date(10_000));
+		loan.setReturnTime(new Date(100_000));
+		List<Loan> loans = new ArrayList<>();
+		loans.add(loan);
+		machine.setLoans(loans);
+		
+		Machine machine2 = new Machine();
+		machine2.setLabel("aaa");
+		machine2.setDescription("bbb");
+		machine2.setType(MachineTypeEnum.DRILL);
+		Loan loan2 = new Loan();
+		loan2.setLoanState(LoanStateEnum.LOANED);
+		loan2.setLoanTime(new Date(1_000_000));
+		loan2.setReturnTime(new Date(2_000_000));
+		List<Loan> loans2 = new ArrayList<>();
+		loans2.add(loan2);
+		machine2.setLoans(loans2);
+		
+		em.getTransaction().begin();
+		testedObject.create(machine);
+		testedObject.create(machine2);
+		em.getTransaction().commit();
+
+		em.getTransaction().begin();
+		found = testedObject.getMachinesByParams("Buldozer b1", null, null,
+				null, null, null, null);
+		em.getTransaction().commit();
+
+		assertEquals(expected, found);
+
+		em.getTransaction().begin();
+		found = testedObject.getMachinesByParams(null,
+				"Red buldozer with yellow stripes", null, null, null, null,
+				null);
+		em.getTransaction().commit();
+
+		assertEquals(expected, found);
+		
+		em.getTransaction().begin();
+		found = testedObject.getMachinesByParams(null,
+				null, MachineTypeEnum.BULDOZER, null, null, null,
+				null);
+		em.getTransaction().commit();
+		
+		assertEquals(expected, found);
+		
+		
+		em.getTransaction().begin();
+		found = testedObject.getMachinesByParams(null,
+				null, MachineTypeEnum.BULDOZER, null, null, null,
+				null);
+		em.getTransaction().commit();
+		assertEquals(expected, found);
+		
+	}
+
 }

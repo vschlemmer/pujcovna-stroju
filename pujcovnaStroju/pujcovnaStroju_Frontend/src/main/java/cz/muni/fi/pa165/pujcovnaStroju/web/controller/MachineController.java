@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOConverter;
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
@@ -69,7 +71,10 @@ public class MachineController {
 			@RequestParam(value = "updateStatus", required = false, defaultValue = "") String updateStatus,
 			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage) {
 
-		model.addAttribute("machines", machineService.getAllMachines());
+		List<MachineDTO> list = machineService.getAllMachines();
+		model.addAttribute("machines", list);
+		model.addAttribute("existingMachines", list);
+		
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
@@ -91,7 +96,7 @@ public class MachineController {
 			model.addAttribute("deleteStatus", "false");
 			model.addAttribute("errorMessage", errorMessage);
 		}
-		
+
 		if (updateStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("updateStatus", "true");
 		}
@@ -235,4 +240,33 @@ public class MachineController {
 		return "redirect:/machine/list";
 	}
 
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "submit")
+	public ModelAndView filterMachines(ModelMap model,
+			@RequestParam(required = false) String label,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String type) {
+		DefaultController.addHeaderFooterInfo(model);
+		StringToMachineTypeEnumDTOConverter converter = new StringToMachineTypeEnumDTOConverter();
+		if (type.equals("--no type--")) {
+			type = null;
+		}
+		if (label.equals("")) {
+			label = null;
+		}
+		if (description.equals("")) {
+			description = null;
+		}
+		model.addAttribute("machines", machineService.getMachineDTOsByParams(
+				label, description, converter.convert(type), null, null, null,
+				null));
+		model.addAttribute("existingMachines", machineService.getAllMachines());
+		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
+		model.addAttribute("list", "list of machines");
+		return new ModelAndView("listMachines", "command", new MachineDTO());
+	}
+	
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
+	public String voidFilter(ModelMap model) {
+		return "redirect:/machine/list";
+	}
 }

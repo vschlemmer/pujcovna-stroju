@@ -13,6 +13,48 @@
 		<spring:message code="lang.listMachines" text="List of machines" />
 	</h2>
 
+	<c:if test="${not empty existingMachines}">
+		<h3>
+			<spring:message code="lang.filters" text="Filters" />
+		</h3>
+		<form:form method="GET" id="filterMachineForm"
+			name="filterMachineForm" action="filter">
+			<table>
+				<tr>
+					<td><spring:message code="lang.machineLabel" text="Label" /></td>
+					<td><form:input cssClass="inputField" path="label" /></td>
+				</tr>
+				<tr>
+					<td><spring:message code="lang.machineDescription"
+							text="Description" /></td>
+					<td><form:input cssClass="inputField" path="description" /></td>
+				</tr>
+				<tr>
+					<td><spring:message code="lang.type" text="Type" /></td>
+					<td><form:select path="type">
+							<form:option value="--no type--" />
+							<form:options items="${types}" />
+						</form:select></td>
+				</tr>
+				<tr>
+					<td>
+						<button class="button" type="submit" name="submit" value="Filter">
+							<spring:message code="lang.filter" text="Filter" />
+						</button>
+					</td>
+					<td>
+						<button class="button" type="submit" name="void"
+							value="Void filter">
+							<spring:message code="lang.voidFilter" text="Void filter" />
+						</button>
+					</td>
+				</tr>
+			</table>
+		</form:form>
+		<br />
+		<br />
+	</c:if>
+
 	<c:if test="${empty machines}">
 		<p>
 			<spring:message code="lang.noMachines" text="Actions" />
@@ -73,8 +115,8 @@
 			<table>
 				<tr>
 					<td><form:label path="label">
-                                                <spring:message code="lang.machineLabel" text="Label" />
-                                            </form:label></td>
+							<spring:message code="lang.machineLabel" text="Label" />
+						</form:label></td>
 					<td><form:input cssClass="inputField" path="label" /></td>
 					<td><label id="machineFormIDWarning"
 						class="offscreen warningMessage"><spring:message
@@ -82,24 +124,24 @@
 				</tr>
 				<tr>
 					<td><form:label path="type">
-                                                <spring:message code="lang.machineType" text="Type" />
-                                            </form:label></td>
+							<spring:message code="lang.machineType" text="Type" />
+						</form:label></td>
 					<td><form:select path="type" items="${types}" /></td>
 				</tr>
 				<tr>
 					<td><form:label path="description">
-                                                <spring:message code="lang.machineDescription"
-							text="Description" />
-                                            </form:label></td>
+							<spring:message code="lang.machineDescription" text="Description" />
+						</form:label></td>
 					<td><form:input cssClass="inputField" path="description"
 							id="machineFormLabel" /></td>
 				</tr>
 				<tr>
 					<td colspan="2">
-                                            <button class="button" type="button"
-						onclick="javascript:validateAndSubmitMachineForm()">
-                                                <spring:message code="lang.addMachine" text="Add machine" />
-                                            </button></td>
+						<button class="button" type="button"
+							onclick="javascript:validateAndSubmitMachineForm()">
+							<spring:message code="lang.addMachine" text="Add machine" />
+						</button>
+					</td>
 				</tr>
 			</table>
 
@@ -143,23 +185,23 @@
 		</div>
 	</c:if>
 	<c:if test="${updateStatus}">
-        <div class="success" id="machineSuccessWindow">
-            <p>
-                <spring:message code="lang.machineUpdateSuccess"
-                    text="Machine successfully updated" />
-            </p>
-        </div>
-    </c:if>
+		<div class="success" id="machineSuccessWindow">
+			<p>
+				<spring:message code="lang.machineUpdateSuccess"
+					text="Machine successfully updated" />
+			</p>
+		</div>
+	</c:if>
 
-    <c:if test="${updateStatus == 'false'}">
-        <div class="error" id="machineErrorWindow">
-            <p>
-                <spring:message code="lang.machineUpdateFailure"
-                    text="Error occurred during machine editing" />
-            </p>
-            <p>${errorMessage}</p>
-        </div>
-    </c:if>
+	<c:if test="${updateStatus == 'false'}">
+		<div class="error" id="machineErrorWindow">
+			<p>
+				<spring:message code="lang.machineUpdateFailure"
+					text="Error occurred during machine editing" />
+			</p>
+			<p>${errorMessage}</p>
+		</div>
+	</c:if>
 
 
 </div>
