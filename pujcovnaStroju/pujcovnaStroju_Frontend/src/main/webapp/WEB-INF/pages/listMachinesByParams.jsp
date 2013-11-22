@@ -9,13 +9,13 @@
 		<spring:message code="lang.listMachines" text="List of machines" />
 	</h2>
 
-	<c:if test="${empty machines}">
+	<c:if test="${empty machinesNew}">
 		<p>
 			<spring:message code="lang.noMachines" text="Actions" />
 		</p>
 	</c:if>
-
-	<c:if test="${not empty machines}">
+		
+	<c:if test="${not empty machinesNew}">
 		<table id="standardTable">
 			<thead>
 				<tr>
@@ -28,7 +28,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${machines}" var="machine">
+				<c:forEach items="${machinesNew}" var="machine">
 					<tr>
 						<td>${machine.id}</td>
 						<td>${machine.label}</td>

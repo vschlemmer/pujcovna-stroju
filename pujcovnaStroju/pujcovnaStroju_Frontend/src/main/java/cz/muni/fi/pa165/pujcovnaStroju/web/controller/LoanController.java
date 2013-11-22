@@ -89,15 +89,14 @@ public class LoanController {
     }
     
     @RequestMapping(value = "/updateForm/{id}")
-    public ModelAndView printLoanUpdateForm(ModelMap model, @PathVariable String id) {
+    public ModelAndView printLoanUpdateForm(@ModelAttribute("loan") LoanDTO loan, ModelMap model, @PathVariable String id) {
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
 	
-	LoanDTO loan = null;
 	if (id != null) loan = loanService.read(Long.parseLong(id));
 	model.addAttribute("loan", loan);
 	
-        return new ModelAndView("updateLoan", "command", new LoanDTO());
+        return new ModelAndView("updateLoan", "command", loan);
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
