@@ -97,6 +97,7 @@
 					</label></td>
 				</tr>
 				<tr>
+				<td><spring:message code="lang.revisionMachineLabel" text="Machine" /></td>
 					<td><form:select path="machine">
 							<c:forEach items="${machines}" var="currentMachine">
 								<form:option value="${currentMachine.id}"
@@ -105,6 +106,7 @@
 						</form:select></td>
 				</tr>
 				<tr>
+				<td><spring:message code="lang.customer" text="Customer" /></td>
 					<td><form:select path="systemUser">
 							<c:forEach items="${users}" var="currentUser">
 								<form:option value="${currentUser.id}"

@@ -114,7 +114,11 @@ public class UserController {
 			// TODO log
 		}
 		model.addAttribute("user", user);
-		if (!found) {
+		if (found) {
+			System.out.println(user.getLoans());
+			model.addAttribute("loans", user.getLoans());
+			model.addAttribute("revisions", user.getRevisions());
+		} else {
 			model.addAttribute("id", id);
 		}
 		return "userDetail";

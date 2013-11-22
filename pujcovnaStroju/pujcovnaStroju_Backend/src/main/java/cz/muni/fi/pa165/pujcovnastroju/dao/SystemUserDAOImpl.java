@@ -52,8 +52,9 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 			throw new IllegalArgumentException("Argument id must be set");
 		}
 		SystemUser user = em.find(SystemUser.class, id);
-		//lazy fetching
+
 		user.getLoans().size();
+		user.getRevisions().size();
 		return user;
 	}
 

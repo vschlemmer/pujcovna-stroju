@@ -99,14 +99,11 @@ public class RevisionController {
 			BindingResult result, ModelMap model) {
 		boolean stored = false;
 		String errorMsg = null;
-		System.out.println(revision);
-		System.out.println(revision.getMachine());
-		System.out.println(revision.getSystemUser());
-		
-		//empty objects with id only
+
+		// empty objects with id only
 		MachineDTO machine = revision.getMachine();
 		SystemUserDTO user = revision.getSystemUser();
-		
+
 		try {
 			machine = machineService.read(machine.getId());
 			if (machine == null) {
@@ -115,9 +112,10 @@ public class RevisionController {
 			if (user == null) {
 				errorMsg = "User not found";
 			}
+			user = userService.read(user.getId());
 			revision.setMachine(machine);
 			revision.setSystemUser(user);
-			user = userService.read(user.getId());
+
 			stored = revisionService.createBizRevision(revision) != null;
 		} catch (DataAccessException e) {
 			stored = false;
@@ -189,7 +187,11 @@ public class RevisionController {
 			// TODO log
 		}
 		model.addAttribute("revision", revision);
-		if (!found) {
+		if (found) {
+			model.addAttribute("machine", revision.getMachine());
+			model.addAttribute("user", revision.getSystemUser());
+			model.addAttribute("revision", revision);
+		} else {
 			model.addAttribute("id", id);
 		}
 		return new ModelAndView("updateRevision", "command", new RevisionDTO());
@@ -201,8 +203,21 @@ public class RevisionController {
 			BindingResult result, ModelMap model) {
 		boolean updated = false;
 		String errorMsg = null;
+		MachineDTO machine = revision.getMachine();
+		SystemUserDTO user = revision.getSystemUser();
 		try {
 			System.err.println("blabla2");
+
+			machine = machineService.read(machine.getId());
+			if (machine == null) {
+				errorMsg = "Machine not found";
+			}
+			if (user == null) {
+				errorMsg = "User not found";
+			}
+			user = userService.read(user.getId());
+			revision.setMachine(machine);
+			revision.setSystemUser(user);
 			updated = revisionService.updateBizRevision(revision) != null;
 		} catch (DataAccessException e) {
 			updated = false;

@@ -25,7 +25,7 @@
 		</tr>
 		<tr>
 		<tr>
-			<td><spring:message code="lang.machineType" text="Type" /></td>
+			<td><spring:message code="lang.RevDate" text="Date" /></td>
 			<td>${revision.revDate}</td>
 		</tr>
 		<tr>
