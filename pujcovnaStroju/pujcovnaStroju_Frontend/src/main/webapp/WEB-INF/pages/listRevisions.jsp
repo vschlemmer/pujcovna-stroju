@@ -11,9 +11,7 @@
 	<h2>
 		<spring:message code="lang.listRevisions" text="List of Revisions" />
 	</h2>
-	<br />
-	<br />
-	<br />
+	<br /> <br /> <br />
 	<c:if test="${empty revisions}">
 		<spring:message code="lang.noRevisions" text="Actions" />
 		<br />
@@ -24,10 +22,10 @@
 			<thead>
 				<tr>
 					<th><spring:message code="lang.id" text="RevisionID" /></th>
-					<%--<th><spring:message code="lang.machine" text="Machine" /></th>--%>
+					<th><spring:message code="lang.machine" text="Machine" /></th>
 					<th><spring:message code="lang.revDate" text="RevDate" /></th>
 					<th><spring:message code="lang.comment" text="Comment" /></th>
-					<%--<th><spring:message code="lang.systemUser" text="systemUser" /></th>--%>
+					<th><spring:message code="lang.systemUser" text="systemUser" /></th>
 					<th><spring:message code="lang.actions" text="Actions" /></th>
 				</tr>
 			</thead>
@@ -35,10 +33,15 @@
 				<c:forEach items="${revisions}" var="revision">
 					<tr>
 						<td>${revision.revID}</td>
-						<%--<td>${revision.machine}</td>--%>
+						<td><a
+							href="<c:url value="/machine/detail/${revision.machine.id}"/>">
+								${revision.machine.label}</a></td>
+
 						<td>${revision.revDate}</td>
 						<td>${revision.comment}</td>
-						<%-- <td>${revision.systemUser}</td>--%>
+						<td><a
+							href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.firstName}
+								${revision.systemUser.lastName}</a></td>
 						<td><a
 							href="<c:url value="/revision/detail/${revision.revID}"/>"> <img
 								alt="detail" src="<c:url value="/images/search.png"/>"></a> <a
@@ -51,12 +54,12 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<th><spring:message code="lang.id" text="ID" /></th>
-					<%-- <th><spring:message code="lang.machine" text="machine" /></th>--%>
+					<th><spring:message code="lang.id" text="RevisionID" /></th>
+					<th><spring:message code="lang.machine" text="Machine" /></th>
 					<th><spring:message code="lang.revDate" text="RevDate" /></th>
 					<th><spring:message code="lang.comment" text="Comment" /></th>
+					<th><spring:message code="lang.systemUser" text="systemUser" /></th>
 					<th><spring:message code="lang.actions" text="Actions" /></th>
-					<%--<th><spring:message code="lang.systemUser" text="SystemUser" /></th>--%>
 				</tr>
 			</tfoot>
 		</table>
@@ -92,6 +95,22 @@
 						class="offscreen warningMessage"> <spring:message
 								code="lang.mandatory" text="Mandatory Field" />
 					</label></td>
+				</tr>
+				<tr>
+					<td><form:select path="machine">
+							<c:forEach items="${machines}" var="currentMachine">
+								<form:option value="${currentMachine.id}"
+									label="${currentMachine.label}"></form:option>
+							</c:forEach>
+						</form:select></td>
+				</tr>
+				<tr>
+					<td><form:select path="systemUser">
+							<c:forEach items="${users}" var="currentUser">
+								<form:option value="${currentUser.id}"
+									label="${currentUser.firstName} ${currentUser.lastName}"></form:option>
+							</c:forEach>
+						</form:select></td>
 				</tr>
 				<%--<tr>
                     <td><form:label path="type">

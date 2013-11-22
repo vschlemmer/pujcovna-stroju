@@ -81,10 +81,59 @@
 
 		</table>
 	</c:if>
-	<c:if test="${empty loan}">
+	<c:if test="${empty revisions}">
 		<div class="info">
 			<p>
-				<spring:message code="lang.machineNoLoans" text="No loans" />
+				<spring:message code="lang.machineNoRevisions" text="No revisions" />
+			</p>
+
+		</div>
+	</c:if>
+	<c:if test="${not empty revisions}">
+	
+		<table id="standardTable">
+			<thead>
+				<tr>
+					<th><spring:message code="lang.id" text="ID" /></th>
+					<th><spring:message code="lang.systemUser" text="User" /></th>
+					
+					<th><spring:message code="lang.revisionTime"
+							text="Return date" /></th>
+					<th><spring:message code="lang.comment" text="Loan State" /></th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<c:forEach items="${revisions}" var="revision">
+					<tr>
+						<td><a
+							href="<c:url value="/revision/detail/${revision.revID}"/>">${revision.revID}</a></td>
+						<td><a
+							href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.firstName}
+								${revision.systemUser.lastName}</a></td>
+						
+						<td>${revision.revDate}</td>
+						<td>${revision.comment}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr>
+					<th><spring:message code="lang.id" text="ID" /></th>
+                    <th><spring:message code="lang.systemUser" text="User" /></th>
+                    
+                    <th><spring:message code="lang.revisionTime"
+                            text="Return date" /></th>
+                    <th><spring:message code="lang.comment" text="Loan State" /></th>
+				</tr>
+			</tfoot>
+
+		</table>
+	</c:if>
+	<c:if test="${empty revisions}">
+		<div class="info">
+			<p>
+				<spring:message code="lang.machineNoRevisions" text="No Revisions" />
 			</p>
 
 		</div>

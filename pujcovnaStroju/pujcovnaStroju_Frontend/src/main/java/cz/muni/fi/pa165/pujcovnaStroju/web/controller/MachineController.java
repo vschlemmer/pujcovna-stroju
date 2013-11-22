@@ -21,6 +21,7 @@ import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOC
 import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
@@ -161,7 +162,13 @@ public class MachineController {
 			for (LoanDTO loan : machine.getLoans()) {
 				loans.add(loanService.read(loan.getId()));
 			}
+			System.out.println(machine.getRevisions());
 			model.addAttribute("loans", loans.size() == 0 ? null : loans);
+			List<RevisionDTO> revisions = new ArrayList<>();
+			for (RevisionDTO revision : machine.getRevisions()) {
+				revisions.add(revisionService.readBizRevision(revision.getRevID()));
+			}
+			model.addAttribute("revisions", revisions);
 		} else {
 			model.addAttribute("id", id);
 		}

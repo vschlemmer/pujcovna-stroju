@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,9 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 
 /**
  * 
@@ -48,9 +51,25 @@ public class RevisionDAOImpl implements RevisionDAO {
 		if (revision == null) {
 			throw new IllegalArgumentException("revision is null");
 		}
-		// em.getTransaction().begin();
+		Machine machine = revision.getMachine();
+		machine = em.merge(machine);
+		List<Revision> machineRevisions = machine.getRevisions();
+		if (machineRevisions == null) {
+			machineRevisions = new ArrayList<>();
+		}
+		machineRevisions.add(revision);
+		revision.setMachine(machine);
+		
+		SystemUser user = revision.getSystemUser();
+		user = em.merge(user);
+		List<Revision> userRevisions = user.getRevisions();
+		if (userRevisions == null) {
+			userRevisions = new ArrayList<>();
+		}
+		userRevisions.add(revision);
+		revision.setSystemUser(user);
 		em.persist(revision);
-		// em.getTransaction().commit()
+
 		return em.find(Revision.class, revision.getRevID());
 
 	}

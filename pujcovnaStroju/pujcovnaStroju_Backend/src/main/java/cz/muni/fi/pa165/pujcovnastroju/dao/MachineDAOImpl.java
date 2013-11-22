@@ -90,8 +90,8 @@ public class MachineDAOImpl implements MachineDAO {
 		if (result != null) {
 		
 			result.getLoans().size();
-			System.out.println(result.getLoans());
-//			result.getRevisions().size();
+			result.getRevisions().size();
+			System.out.println(result.getRevisions());
 		}
 		return result;
 	}

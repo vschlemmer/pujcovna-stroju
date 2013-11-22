@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
    http://www.springframework.org/schema/beans     
@@ -33,22 +32,29 @@
 			</list>
 		</property>
 	</bean>
-	
-    <mvc:resources mapping="/css/**" location="/WEB-INF/css/*" />
-    <mvc:resources mapping="/scripts/**" location="/WEB-INF/scripts/*" />
-    <mvc:resources mapping="/images/**" location="/WEB-INF/images/*" />
+
+	<mvc:resources mapping="/css/**" location="/WEB-INF/css/*" />
+	<mvc:resources mapping="/scripts/**" location="/WEB-INF/scripts/*" />
+	<mvc:resources mapping="/images/**" location="/WEB-INF/images/*" />
 	<mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven>
 	<bean id="conversionService"
-            class="org.springframework.context.support.ConversionServiceFactoryBean">
-            <property name="converters">
-                <list>
-                    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOConverter" />
-                    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter" />
-		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToLoanStateEnumDTOConverter" />
-		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserDTOConverter" />
-		    <bean class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToDateConverter" />
-                </list>
-            </property>
+		class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineTypeEnumDTOConverter" />
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter" />
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToLoanStateEnumDTOConverter" />
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserDTOConverter" />
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToDateConverter" />
+					<bean
+                    class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineDTOConverter" />
+			</list>
+		</property>
 	</bean>
 
 
