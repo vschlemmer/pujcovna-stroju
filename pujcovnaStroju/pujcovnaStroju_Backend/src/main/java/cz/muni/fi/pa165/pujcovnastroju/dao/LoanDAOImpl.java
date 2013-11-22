@@ -19,6 +19,8 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Predicate;
 
 /**
@@ -57,17 +59,25 @@ public class LoanDAOImpl implements LoanDAO {
 		List<Machine> machines = loan.getMachines();
 		if (machines != null) {
 		    List<Machine> machinesToMerge = new ArrayList<>();
+		    
 		    for (Machine machine : machines) {
-			machine = em.merge(machine);
-			machinesToMerge.add(machine);
+			/*Query availableMachine = em.createQuery(
+			    "SELECT machine FROM Machine machine JOIN machine.loans loan WHERE machine.id = :machineId AND loan.loanTime<:rTime AND loan.returnTime>:lTime AND loan.id!=:loanId")
+			    .setParameter("rTime", loan.getReturnTime()).setParameter("lTime", loan.getLoanTime()).setParameter("loanId", loan.getId()).setParameter("machineId", machine.getId());
+			machine = (Machine) availableMachine.getSingleResult();*/
+			if (!machinesToMerge.contains(machine)) {
+				machine = em.merge(machine);
+				machinesToMerge.add(machine);
+			}
+			
 		    }
 		    loan.setMachines(machinesToMerge);
 		    
-		    //availability checking
 		}
 		return loan;
 	}
 
+	@Override
 	public Loan create(Loan loan) throws IllegalArgumentException {
 		if (loan == null)
 			throw new IllegalArgumentException("loan is null");
@@ -78,6 +88,7 @@ public class LoanDAOImpl implements LoanDAO {
 		return loan;
 	}
 
+	@Override
 	public Loan update(Loan loan) throws IllegalArgumentException {
 		if (loan == null)
 			throw new IllegalArgumentException("loan is null");
@@ -94,6 +105,7 @@ public class LoanDAOImpl implements LoanDAO {
 		return loan;
 	}
 
+	@Override
 	public Loan read(Long id) throws IllegalArgumentException {
 		if (id == null)
 			throw new IllegalArgumentException("id is null");
@@ -102,6 +114,7 @@ public class LoanDAOImpl implements LoanDAO {
 		return loan;
 	}
 
+	@Override
 	public Loan delete(Long id) throws IllegalArgumentException {
 		if (id == null)
 			throw new IllegalArgumentException("id is null");
@@ -117,6 +130,7 @@ public class LoanDAOImpl implements LoanDAO {
 		return loan;
 	}
 
+	@Override
 	public List<Loan> getAllLoans() {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<Loan> cq = cb.createQuery(Loan.class);
@@ -127,6 +141,7 @@ public class LoanDAOImpl implements LoanDAO {
 		return em.createQuery(cq).getResultList();
 	}
 
+	@Override
 	public List<Loan> getLoansByParams(Date loanedFrom, Date loanedTill,
 			LoanStateEnum loanState, SystemUser loanedBy,
 			Machine includedMachine) {

@@ -1,7 +1,9 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToLoanStateEnumDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.converter.UserTypeDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.LoanStateEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
@@ -14,6 +16,7 @@ import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,7 +66,9 @@ public class LoanController {
         @RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,
         @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage
         ) {
-        model.addAttribute("loans", loanService.getAllLoans());
+	   List<LoanDTO> list = loanService.getAllLoans(); 
+        model.addAttribute("loans", list);
+	model.addAttribute("existingLoans", list);
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
         model.addAttribute("list", "list of loans");
@@ -89,15 +94,14 @@ public class LoanController {
     }
     
     @RequestMapping(value = "/updateForm/{id}")
-    public ModelAndView printLoanUpdateForm(ModelMap model, @PathVariable String id) {
+    public ModelAndView printLoanUpdateForm(@ModelAttribute("loan") LoanDTO loan, ModelMap model, @PathVariable String id) {
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
 	
-	LoanDTO loan = null;
 	if (id != null) loan = loanService.read(Long.parseLong(id));
 	model.addAttribute("loan", loan);
 	
-        return new ModelAndView("updateLoan", "command", new LoanDTO());
+        return new ModelAndView("updateLoan", "command", loan);
     }
     
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -134,13 +138,6 @@ public class LoanController {
         }
         return "redirect:/loan/list";
     }
-    
-    /*@RequestMapping(value = "/new/add", method = RequestMethod.POST)
-    public String addNewLoan(@ModelAttribute("loan") LoanDTO loan, BindingResult result, ModelMap model, @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
-
-    	return addLoan(loan, result, model, machineList);
-    }*/
-    
     
     @RequestMapping("/detail/{id}")
     public String viewLoan(@PathVariable String id, ModelMap model) {
@@ -184,87 +181,42 @@ public class LoanController {
         }
         return "redirect:/loan/list";
     }
-    /*
-    @RequestMapping(value = "/update/{id}")
-    public ModelAndView updateLoan(@PathVariable String id, ModelMap model) {
-        DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.updateLoanTitle");
-        LoanDTO loan = null;
-        boolean found = false;
-        try {
-            Long loanID = Long.valueOf(id);
-            loan = loanService.read(loanID);
-            found = true;
-        } catch (DataAccessException | NumberFormatException e) {
-            // TODO log
-        }
-        
-        // prevent the actual type of the user to show in the list twice
-        List<LoanStateEnum> enums = new LinkedList<>();
-        for(LoanStateEnum enum1 : LoanStateEnum.class.getEnumConstants()){
-            if (!enum1.toString().equals(loan.getLoanState().getTypeLabel())){
-                enums.add(enum1);
-            }
-        }
-        LoanStateEnum[] loanStates = (LoanStateEnum[]) enums.toArray(new LoanStateEnum[enums.size()]);
-        
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
-        model.addAttribute("loanStates", loanStates);
-        model.addAttribute("loan", loan);
-        if (!found) {
-            model.addAttribute("id", id);
-        }
-        return new ModelAndView("updateLoan", "command", new LoanDTO());
-    }
     
-    @RequestMapping(value = "/update/update", method = RequestMethod.POST)
-    public String editLoan(@ModelAttribute("loan") LoanDTO loan,
-                    BindingResult result, ModelMap model) {
-        boolean updated = false;
-        String errorMsg = null;
-        try {
-            updated = loanService.update(loan) != null;
-        } catch (DataAccessException e) {
-            updated = false;
-            errorMsg = e.getMessage();
-        }
-        model.addAttribute("updateStatus", updated);
-        if (errorMsg != null) {
-            model.addAttribute("errorMessage", errorMsg);
-        }
-        return "redirect:/loan/list";
-    }
-    
-    @RequestMapping(value = "/new/{id}")
-    public ModelAndView createLoan(@PathVariable String id, ModelMap model) {
-        DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.updateLoanTitle");
-        LoanDTO loan = new LoanDTO();
-        MachineDTO machine = null;
-//        boolean found = false;
-//        try {
-//            Long loanID = Long.valueOf(id);
-//            loan = loanService.read(loanID);
-//            found = true;
-//        } catch (DataAccessException | NumberFormatException e) {
-//            // TODO log
-//        }
-        try {
-	        Long machineID = Long.valueOf(id);
-	        machine = machineService.read(machineID);
-    	} catch (DataAccessException | NumberFormatException e) {
-        // TODO log
-    	}
-        
-//        LinkedList<MachineDTO> machines = new LinkedList<>();
-//        machines.add(machine);
-        //loan.setMachine(machine);
-        model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, null));
-//        model.addAttribute("loan", loan);
-        model.addAttribute("machine", machine);
-        System.out.println(machine);
-
-        return new ModelAndView("newLoan", "command", loan);
-    }*/
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "submit")
+	public ModelAndView filterLoans(ModelMap model,
+			@RequestParam(value = "loanTime", required = false) Date from,
+			@RequestParam(value = "returnTime", required = false) Date till,
+			@RequestParam(value = "loanState", required = false) String loanStateStr,
+			@RequestParam(value = "customer", required = false) String customerId,
+			@RequestParam(required = false) String label,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String type) {
+		StringToLoanStateEnumDTOConverter converter = new StringToLoanStateEnumDTOConverter();
+		
+		DefaultController.addHeaderFooterInfo(model);
+		
+		SystemUserDTO customer = null;
+		if (customerId != null) {
+			try {
+				customer = customerService.read(Long.parseLong(customerId));
+			} catch (NumberFormatException e) {
+				customer = null;
+			}
+		}
+		LoanStateEnumDTO loanState = null;
+		if (loanStateStr.equals("--no type--")) loanState = null;
+		else loanState = converter.convert(loanStateStr);
+		
+		model.addAttribute("loans", loanService.getLoansByParams(from, till, loanState, customer, null));
+		model.addAttribute("existingLoans", loanService.getAllLoans());
+		model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
+		model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
+		model.addAttribute("list", "list of loans");
+		return new ModelAndView("listLoans", "command", new LoanDTO());
+	}
+	
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
+	public String voidFilter(ModelMap model) {
+		return "redirect:/machine/list";
+	}
 }

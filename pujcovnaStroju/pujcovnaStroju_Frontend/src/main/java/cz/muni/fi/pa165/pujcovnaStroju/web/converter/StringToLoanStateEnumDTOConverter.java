@@ -11,8 +11,12 @@ public class StringToLoanStateEnumDTOConverter implements
 		Converter<String, LoanStateEnumDTO> {
 	public LoanStateEnumDTO convert(String source) {
 		LoanStateEnumDTO type = new LoanStateEnumDTO();
-		System.out.println("convert state");
-		type.setTypeLabel(source);
-		return type;
+		try {
+			type.setTypeLabel(source);
+			return type;
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+		
 	}
 }

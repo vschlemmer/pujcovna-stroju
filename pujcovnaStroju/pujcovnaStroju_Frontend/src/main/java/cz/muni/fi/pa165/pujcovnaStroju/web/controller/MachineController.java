@@ -23,6 +23,7 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
@@ -114,10 +115,9 @@ public class MachineController {
 			@RequestParam(value = "from", required = false) Date from,
 			@RequestParam(value = "till", required = false) Date till) {
 
-		List<MachineDTO> machines = machineService.getMachineDTOsByParams(null,
-				null, null, null, null, from, till);
-
-		model.addAttribute("machines", machines);
+		List<MachineDTO> machinesNew = machineService.getMachineDTOsByParams(
+				null, null, null, null, null, from, till);
+		model.addAttribute("machinesNew", machinesNew);
 
 		return new ModelAndView("listMachinesByParams");
 	}

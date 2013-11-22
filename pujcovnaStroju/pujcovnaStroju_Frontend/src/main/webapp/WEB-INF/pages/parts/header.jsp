@@ -27,7 +27,7 @@
 		complete: function () {
 		    $("td").click(function () {
 			if ($(this).children("input.datePicker").length==0) return;
-			$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "formUse=true&from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
+			$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
 			    success: function(response){
 				$('#machines').html(response);
 			    },
@@ -36,6 +36,14 @@
 			    }
 			});
 		    });
+		    $.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
+			    success: function(response){
+				$('#machines').html(response);
+			    },
+			    error: function(e){
+				alert('Error: ' + e);
+			    }
+			});
 		    $(".datePicker").appendDtpicker();
 		}
 	    });

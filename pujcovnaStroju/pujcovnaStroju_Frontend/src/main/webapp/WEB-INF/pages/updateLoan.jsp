@@ -8,7 +8,7 @@
     <h2>
         <spring:message code="lang.updateLoanTitle" text="Update loan" />
     </h2>
-    <form:form method="post" id="updateLoanForm" name="updateLoanForm" action="update">
+	<form:form commandName="command" method="post" id="updateLoanForm" name="updateLoanForm" action="update">
 	<c:if test="${not empty loan}"><form:hidden path="id" value="${loan.id}" /></c:if>
 	<table>
 	    <c:if test="${not empty loan}">
@@ -26,7 +26,7 @@
 		    </form:label></td>
 		<td><form:select path="customer">
 			<c:forEach var="customer" items="${customers}">
-			    <form:option value="${customer.id}"><c:out value="${customer.lastName} ${customer.firstName} (${customer.id})"/></form:option>
+				<option value="${customer.id}" <c:if test="${customer.id eq loan.customer.id}">selected="selected"</c:if>><c:out value="${customer.lastName} ${customer.firstName} (${customer.id})"/></option>
 			</c:forEach>
 		    </form:select>
 		</td>
@@ -40,8 +40,7 @@
 			<spring:message code="lang.loanTime" text="Loan Time" />
 		    </form:label></td>
 		<td>
-		    <c:if test="${not empty loan}"><form:input cssClass="inputField datePicker" path="loanTime" value="${loan.loanTime}"/></c:if>
-		    <c:if test="${empty loan}"><form:input cssClass="inputField datePicker" path="loanTime" /></c:if>
+		    <form:input cssClass="inputField datePicker" path="loanTime" />
 		</td>
 		<td><label id="loanFormLoanTimeWarning" class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
@@ -51,8 +50,7 @@
 		<td><form:label path="returnTime">
 			<spring:message code="lang.returnTime" text="Return Time" />
 		    </form:label></td>
-		<td><c:if test="${not empty loan}"><form:input cssClass="inputField datePicker" path="returnTime" value="${loan.returnTime}"/></c:if>
-		    <c:if test="${empty loan}"><form:input cssClass="inputField datePicker" path="returnTime" /></c:if></td>
+		<td><form:input cssClass="inputField datePicker" path="returnTime" /></td>
 		<td>
 		    <label id="loanFormReturnTimeWarning" class="offscreen warningMessage"> 
 			<spring:message code="lang.mandatory" text="Mandatory Field" />
@@ -63,7 +61,11 @@
 		<td><form:label path="loanState">
                         <spring:message code="lang.loanState" text="Loan State" />
 		    </form:label></td>
-		<td><form:select path="loanState" items="${loanStates}" /></td>
+		<td><form:select path="loanState">
+			<c:forEach var="state" items="${loanStates}">
+				<option value="${state}" <c:if test="${state eq loan.loanState.typeLabel}">selected="selected"</c:if>><c:out value="${state}"/></option>
+			</c:forEach>
+		    </form:select></td>
 		<td><label id="loanFormLoanWarning"
 			   class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />
