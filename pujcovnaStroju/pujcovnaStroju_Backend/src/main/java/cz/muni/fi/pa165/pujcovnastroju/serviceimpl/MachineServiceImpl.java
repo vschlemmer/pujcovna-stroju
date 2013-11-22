@@ -41,9 +41,9 @@ public class MachineServiceImpl implements MachineService {
 		MachineDTO dto = null;
 		Machine machine = null;
 		try {
-			machine = machineDao.create(MachineDTOConverter
-					.dtoToEntity(machineDTO,false));
-			dto = MachineDTOConverter.entityToDto(machine,false);
+			machine = machineDao.create(MachineDTOConverter.dtoToEntity(
+					machineDTO, false));
+			dto = MachineDTOConverter.entityToDto(machine, false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during storing Machine", e);
@@ -56,9 +56,9 @@ public class MachineServiceImpl implements MachineService {
 		MachineDTO dto = null;
 		Machine machine = null;
 		try {
-			machine = machineDao.update(MachineDTOConverter
-					.dtoToEntity(machineDTO,false));
-			dto = MachineDTOConverter.entityToDto(machine,false);
+			machine = machineDao.update(MachineDTOConverter.dtoToEntity(
+					machineDTO, false));
+			dto = MachineDTOConverter.entityToDto(machine, false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during updating Machine", e);
@@ -72,7 +72,7 @@ public class MachineServiceImpl implements MachineService {
 		Machine machine = null;
 		try {
 			machine = machineDao.read(id);
-			dto = MachineDTOConverter.entityToDto(machine,false);
+			dto = MachineDTOConverter.entityToDto(machine, false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during retrieving Machine", e);
@@ -84,35 +84,39 @@ public class MachineServiceImpl implements MachineService {
 	public MachineDTO delete(MachineDTO machineDTO) {
 		Machine machine = null;
 		try {
-			machine = machineDao.delete(MachineDTOConverter
-					.dtoToEntity(machineDTO,false));
+			machine = machineDao.delete(MachineDTOConverter.dtoToEntity(
+					machineDTO, false));
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(
 					"Error occured during deleting Machine", e);
 		}
-		return MachineDTOConverter.entityToDto(machine,false);
+		return MachineDTOConverter.entityToDto(machine, false);
 	}
 
 	@Override
 	public List<MachineDTO> getAllMachines() {
 		List<Machine> machineList = machineDao.getAllMachines();
-		return MachineDTOConverter.listToDto(machineList,false);
+		return MachineDTOConverter.listToDto(machineList, false);
 	}
 
 	@Override
 	public List<MachineDTO> getMachineDTOsByType(MachineTypeEnumDTO type) {
 		List<Machine> machineList = machineDao
 				.getMachinesByType(MachineTypeDTOConverter.dtoToEntity(type));
-		return MachineDTOConverter.listToDto(machineList,false);
+		return MachineDTOConverter.listToDto(machineList, false);
 	}
-	
+
 	@Override
-	public List<MachineDTO> getMachineDTOsByParams(String label, String description, MachineTypeEnumDTO machineTypeDTO, LoanDTO loan, RevisionDTO revision, Date freeFrom, Date freeTill) {
-		List<Machine> machineList = machineDao
-				.getMachinesByParams(label, description, MachineTypeDTOConverter.dtoToEntity(machineTypeDTO), 
-				LoanDTOConverter.dtoToEntity(loan, true), RevisionDTOConverter.dtoToEntity(revision),
-				freeFrom, freeTill);
-		return MachineDTOConverter.listToDto(machineList,false);
+	public List<MachineDTO> getMachineDTOsByParams(String label,
+			String description, MachineTypeEnumDTO machineTypeDTO,
+			LoanDTO loan, RevisionDTO revision, Date freeFrom, Date freeTill) {
+		MachineTypeEnum type = (machineTypeDTO == null
+				|| machineTypeDTO.typeLabel == null ? null
+				: MachineTypeDTOConverter.dtoToEntity(machineTypeDTO));
+		List<Machine> machineList = machineDao.getMachinesByParams(label,
+				description, type, LoanDTOConverter.dtoToEntity(loan, true),
+				RevisionDTOConverter.dtoToEntity(revision), freeFrom, freeTill);
+		return MachineDTOConverter.listToDto(machineList, false);
 	}
 
 }
