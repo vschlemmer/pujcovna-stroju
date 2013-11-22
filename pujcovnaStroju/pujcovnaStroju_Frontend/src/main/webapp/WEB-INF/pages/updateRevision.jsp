@@ -9,10 +9,10 @@
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 <div class="content">
-    <h2>
+    <h2 class="pageLabel">
         <spring:message code="lang.updateRevisionTitle" text="Update revision" />
     </h2>
-    <br /><br /><br />
+    <br>
     <c:if test="${not empty revision}">
         <form:form method="post" id="updateRevisionForm" name="updateRevisionForm"
                 action="update">
@@ -58,6 +58,8 @@
                     </td>
                 </tr>
             </table>
+            <input type="hidden" id="machine" name="machine" value="${machine.id}"/>
+            <input type="hidden" id="systemUser" name="systemUser" value="${user.id}"/>
         </form:form>
     </c:if>
 

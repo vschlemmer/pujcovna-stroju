@@ -12,6 +12,7 @@
 	<h2>
 		<spring:message code="lang.listMachines" text="List of machines" />
 	</h2>
+	
 
 	<c:if test="${not empty existingMachines}">
 		<h3>

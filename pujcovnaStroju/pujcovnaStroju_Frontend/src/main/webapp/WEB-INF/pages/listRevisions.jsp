@@ -8,7 +8,7 @@
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 
 <div class="content">
-	<h2>
+	<h2 class="pageLabel">
 		<spring:message code="lang.listRevisions" text="List of Revisions" />
 	</h2>
 	<br /> <br /> <br />

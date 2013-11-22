@@ -10,7 +10,7 @@
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 <div class="content">
 
-	<h2 class="pageLabel">
+	<h2>
 		<spring:message code="lang.detailMachineTitle"
 			text="Details of machine" />
 	</h2>
@@ -44,6 +44,9 @@
 	</c:if>
 	<!--<a href="<c:url value="/loan/new/${machine.id}"/>">link</a>-->
 	<c:if test="${not empty loans}">
+		<h3>
+			<spring:message code="lang.listLoansTitle" text="List of loans" />
+		</h3>
 		<table id="standardTable">
 			<thead>
 				<tr>
@@ -81,25 +84,28 @@
 
 		</table>
 	</c:if>
-	<c:if test="${empty revisions}">
+	<c:if test="${empty loans}">
 		<div class="info">
 			<p>
-				<spring:message code="lang.machineNoRevisions" text="No revisions" />
+				<spring:message code="lang.machineNoLoans" text="No loans" />
 			</p>
 
 		</div>
 	</c:if>
 	<c:if test="${not empty revisions}">
-	
+		<h3>
+			<spring:message code="lang.listRevisionsTitle"
+				text="List of revisions" />
+		</h3>
 		<table id="standardTable">
 			<thead>
 				<tr>
 					<th><spring:message code="lang.id" text="ID" /></th>
 					<th><spring:message code="lang.systemUser" text="User" /></th>
-					
+
 					<th><spring:message code="lang.revisionTime"
 							text="Return date" /></th>
-					<th><spring:message code="lang.comment" text="Loan State" /></th>
+					<th><spring:message code="lang.comment" text="Revisons State" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -111,7 +117,7 @@
 						<td><a
 							href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.firstName}
 								${revision.systemUser.lastName}</a></td>
-						
+
 						<td>${revision.revDate}</td>
 						<td>${revision.comment}</td>
 					</tr>
@@ -119,13 +125,18 @@
 			</tbody>
 			<tfoot>
 				<tr>
+
+				<tr>
 					<th><spring:message code="lang.id" text="ID" /></th>
-                    <th><spring:message code="lang.systemUser" text="User" /></th>
+                    <th><spring:message code="lang.systemUser"
+							text="User" /></th>
                     
                     <th><spring:message code="lang.revisionTime"
-                            text="Return date" /></th>
-                    <th><spring:message code="lang.comment" text="Loan State" /></th>
-				</tr>
+							text="Return date" /></th>
+                    <th><spring:message code="lang.comment"
+							text="Revisons State" /></th>
+                </tr></tr>
+				
 			</tfoot>
 
 		</table>
