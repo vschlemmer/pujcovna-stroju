@@ -110,12 +110,14 @@ public class LoanController {
 	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
 	    loan.setCustomer(customer);
 	    if (machineList != null) {
+		
 		List<MachineDTO> machines = new ArrayList<>();
 		MachineDTO currentMachine = null;
 		for (String machineStr : machineList) {
 		    currentMachine = machineService.read(Long.parseLong(machineStr));
 		    machines.add(currentMachine);
 		}
+		
 		loan.setMachines(machines);
 	    }
 	    
@@ -142,20 +144,20 @@ public class LoanController {
     
     @RequestMapping("/detail/{id}")
     public String viewLoan(@PathVariable String id, ModelMap model) {
-        DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.detailLoanTitle");
         LoanDTO loan = null;
         boolean found = false;
+	String errorMsg = null;
         try {
             Long loanID = Long.valueOf(id);
             loan = loanService.read(loanID);
             found = true;
         } catch (DataAccessException | NumberFormatException e) {
-            // TODO log
-        }
+	    errorMsg = e.getMessage();
+	}
         model.addAttribute("loan", loan);
         if (!found) {
             model.addAttribute("id", id);
+	    model.addAttribute("errorMessage", errorMsg);
         }
         return "loanDetail";
     }

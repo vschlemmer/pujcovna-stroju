@@ -119,7 +119,7 @@
 	    </tr>
 	    <tr>
                 <td>
-		    <a class="loadMachines" style="font-weight: bold; cursor: pointer; color: #0044aa;">Reload machines</a>
+		    <spring:message code="lang.machines" text="Machines" />
                 </td>
 		<td colspan="2">
 		    <div id="machines"></div>

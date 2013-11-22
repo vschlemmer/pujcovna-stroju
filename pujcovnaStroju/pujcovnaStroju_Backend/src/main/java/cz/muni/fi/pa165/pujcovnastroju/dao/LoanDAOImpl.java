@@ -62,6 +62,8 @@ public class LoanDAOImpl implements LoanDAO {
 			machinesToMerge.add(machine);
 		    }
 		    loan.setMachines(machinesToMerge);
+		    
+		    //availability checking
 		}
 		return loan;
 	}

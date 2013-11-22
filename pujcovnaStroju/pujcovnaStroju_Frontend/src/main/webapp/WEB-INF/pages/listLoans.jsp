@@ -45,7 +45,7 @@
                         <td>${loan.loanTime}</td>
                         <td>${loan.returnTime}</td>
 			<td>${loan.loanState.typeLabel}</td>
-                        <td><a href="<c:url value="/loan/detail/${loan.id}"/>">
+                        <td><a href="${loan.id}" class="viewLoanButton"> 
                                 <img alt="detail" src="<c:url value="/images/search.png"/>"></a>
                             <a href="<c:url value="/loan/delete/${loan.id}"/>">
                                 <img alt="delete" src="<c:url value="/images/delete.png" />"></a>

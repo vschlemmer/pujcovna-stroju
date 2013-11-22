@@ -182,11 +182,11 @@ public class MachineDAOImpl implements MachineDAO {
 		    
 		    if (freeFrom != null) {
 			Expression<Date> returnTime = join.get("returnTime");
-			subPredicates.add(criteriaBuilder.greaterThan(returnTime, freeFrom));
+			subPredicates.add(criteriaBuilder.greaterThanOrEqualTo(returnTime, freeFrom));
 		    }
 		    if (freeTill != null) {
 			Expression<Date> loanTime = join.get("loanTime");
-			subPredicates.add(criteriaBuilder.lessThan(loanTime, freeTill));
+			subPredicates.add(criteriaBuilder.lessThanOrEqualTo(loanTime, freeTill));
 		    }
 		    
 		    subquery.where(subPredicates.toArray(new Predicate[]{}));

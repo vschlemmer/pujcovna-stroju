@@ -25,7 +25,8 @@
 		    alert('Error: ' + e);
 		},
 		complete: function () {
-		    $(".loadMachines").click(function () {
+		    $("td").click(function () {
+			if ($(this).children("input.datePicker").length==0) return;
 			$.ajax({type: "GET", url: "<c:url value="/machine/listByParams" />", data: "formUse=true&from="+$("input[name='loanTime']").val()+"&till="+$("input[name='returnTime']").val(),
 			    success: function(response){
 				$('#machines').html(response);
@@ -36,6 +37,17 @@
 			});
 		    });
 		    $(".datePicker").appendDtpicker();
+		}
+	    });
+	});
+	$(".viewLoanButton").click(function (event) {
+	    event.preventDefault();
+	    $.ajax({type: "POST", url: "<c:url value="/loan/detail" />/"+$(this).attr("href"),
+		success: function(response){
+		    $('.loanWrapper').html(response);
+		},
+		error: function(e){
+		    alert('Error: ' + e);
 		}
 	    });
 	});

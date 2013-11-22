@@ -42,7 +42,7 @@
 			ID: '${id}'
 		</div>
 	</c:if>
-	<a href="<c:url value="/loan/new/${machine.id}"/>">link</a>
+	<!--<a href="<c:url value="/loan/new/${machine.id}"/>">link</a>-->
 	<c:if test="${not empty loans}">
 		<table id="standardTable">
 			<thead>

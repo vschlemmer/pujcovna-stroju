@@ -105,12 +105,13 @@ public class MachineController {
 
 	@RequestMapping(value = "/listByParams", method = RequestMethod.GET)
 	public ModelAndView listMachinesByParams(ModelMap model,
-			@RequestParam(value = "formUse", required = false) String formUse,
 			@RequestParam(value = "from", required = false) Date from,
 			@RequestParam(value = "till", required = false) Date till) {
 
-		model.addAttribute("machines", machineService.getMachineDTOsByParams(
-				null, null, null, null, null, from, till));
+		List<MachineDTO> machines = machineService.getMachineDTOsByParams(
+				null, null, null, null, null, from, till);
+	    
+		model.addAttribute("machines", machines);
 
 		return new ModelAndView("listMachinesByParams");
 	}
