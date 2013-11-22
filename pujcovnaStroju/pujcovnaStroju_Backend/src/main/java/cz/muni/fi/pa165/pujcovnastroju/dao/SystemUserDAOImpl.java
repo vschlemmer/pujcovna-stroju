@@ -70,7 +70,7 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 		if (user == null) {
 			throw new IllegalArgumentException("Argument user must be set");
 		}
-		SystemUser user1 = em.merge(user);
+		SystemUser user1 = em.find(SystemUser.class, user.getId());
 		em.remove(user1);
 		return em.find(SystemUser.class, user.getId());
 	}

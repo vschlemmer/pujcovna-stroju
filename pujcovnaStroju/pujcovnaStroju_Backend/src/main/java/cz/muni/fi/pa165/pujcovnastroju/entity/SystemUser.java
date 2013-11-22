@@ -24,15 +24,15 @@ public class SystemUser implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String firstName;
+	private String firstName; 
 	private String lastName;
 	private UserTypeEnum type;
 
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH, CascadeType.REMOVE })
 	private List<Loan> loans;
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH, CascadeType.REMOVE }, mappedBy="systemUser")
 	private List<Revision> revisions;
 
 	public Long getId() {

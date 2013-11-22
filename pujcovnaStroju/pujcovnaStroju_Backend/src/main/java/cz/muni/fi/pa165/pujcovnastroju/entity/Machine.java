@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -45,7 +44,7 @@ public class Machine implements Serializable, Cloneable {
     private List<Loan> loans;
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.REFRESH }, mappedBy = "machine")
+            CascadeType.REFRESH, CascadeType.REMOVE }, mappedBy = "machine")
     private List<Revision> revisions;
 
     public Long getId() {
