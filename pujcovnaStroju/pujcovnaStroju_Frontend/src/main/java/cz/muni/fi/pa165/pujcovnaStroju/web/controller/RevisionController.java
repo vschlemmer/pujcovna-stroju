@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
@@ -58,6 +60,7 @@ public class RevisionController {
 			@RequestParam(value = "updateStatus", required = false, defaultValue = "") String updateStatus,
 			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage) {
 
+                StringToSystemUserTypeEnumDTOConverter converter = new StringToSystemUserTypeEnumDTOConverter();
 		model.addAttribute("revisions",
 				revisionService.findAllrevisionsBizRevision());
 		model.addAttribute("list", "list of revisions");
@@ -65,7 +68,7 @@ public class RevisionController {
 		DefaultController.addHeaderFooterInfo(model);
 
 		model.addAttribute("machines", machineService.getAllMachines());
-		model.addAttribute("users", userService.findAllSystemUsers());
+		model.addAttribute("users", userService.getSystemUsersByParams(null, null, converter.convert("REVISIONER")));
 
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus", "true");
