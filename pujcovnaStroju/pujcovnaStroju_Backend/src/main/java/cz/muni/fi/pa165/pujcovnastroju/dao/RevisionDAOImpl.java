@@ -1,6 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.dao;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,4 +135,29 @@ public class RevisionDAOImpl implements RevisionDAO {
 		}
 		return em.createQuery(cq).getResultList();
 	}
+        
+        public List<Revision> findRevisionsByParams(String comment, Date revDate,
+                            Machine machine, SystemUser systemUser){
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Revision> cq = cb.createQuery(Revision.class);
+            Root<Revision> revisionRoot = cq.from(Revision.class);
+            cq.select(revisionRoot);
+            if (comment != null) {
+                Expression<String> commentExp = revisionRoot.get("comment");
+                cq.where(cb.equal(commentExp, comment));
+            }
+            if (revDate != null) {
+                Expression<Date> revDateExp = revisionRoot.get("revDate");
+                cq.where(cb.greaterThanOrEqualTo(revDateExp, revDate));
+            }
+            if (machine != null) {
+                Expression<Machine> machineExp = revisionRoot.get("machine");
+                cq.where(cb.equal(machineExp, machine));
+            }
+            if (systemUser != null) {
+                Expression<SystemUser> systemUserExp = revisionRoot.get("systemUser");
+                cq.where(cb.equal(systemUserExp, systemUser));
+            }
+            return em.createQuery(cq).getResultList();
+        }
 }

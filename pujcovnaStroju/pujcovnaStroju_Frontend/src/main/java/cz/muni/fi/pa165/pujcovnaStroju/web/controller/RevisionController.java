@@ -22,6 +22,7 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+import java.util.Date;
 
 /**
  * revision Controller implementation
@@ -64,7 +65,9 @@ public class RevisionController {
 
 		model.addAttribute("revisions",
 				revisionService.findAllrevisionsBizRevision());
-		model.addAttribute("list", "list of revisions");
+                model.addAttribute("existingRevisions", 
+                                revisionService.findAllrevisionsBizRevision());
+                model.addAttribute("list", "list of revisions");
 		model.addAttribute("pageTitle", "lang.listRevisionsTitle");
 		DefaultController.addHeaderFooterInfo(model);
 
@@ -232,6 +235,48 @@ public class RevisionController {
 		if (errorMsg != null) {
 			model.addAttribute("errorMessage", errorMsg);
 		}
+		return "redirect:/revision/list";
+	}
+        
+        @RequestMapping(value = "/filter", method = RequestMethod.GET, params = "submit")
+	public ModelAndView filterRevisions(ModelMap model,
+			@RequestParam(value = "revDate", required = false) Date revDate,
+			@RequestParam(value = "comment", required = false) String comment,
+			@RequestParam(value = "machine", required = false) String machineId,
+                        @RequestParam(value = "systemUser", required = false) String systemUserId) {
+		DefaultController.addHeaderFooterInfo(model);
+                MachineDTO machine = null;
+                if (machineId != null) {
+                    try {
+                        machine = machineService.read(Long.parseLong(machineId));
+                    } catch (NumberFormatException e) {
+                        machine = null;
+                    }
+		}
+                SystemUserDTO user = null;
+                if (systemUserId != null) {
+                    try {
+                        user = userService.read(Long.parseLong(systemUserId));
+                    } catch (NumberFormatException e) {
+                        user = null;
+                    }
+		}
+                model.addAttribute("revisions", 
+                        revisionService.findRevisionsByParams(comment, 
+                                revDate, machine, user));
+                model.addAttribute("existingRevisions", 
+                        revisionService.findAllrevisionsBizRevision());
+                model.addAttribute("machines", machineService.getAllMachines());
+		model.addAttribute("users", userService.getSystemUsersByParams(null, null, 
+                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER)));
+                model.addAttribute("list", "list of revisions");
+		model.addAttribute("pageTitle", "lang.listRevisionsTitle");
+		DefaultController.addHeaderFooterInfo(model);
+                return new ModelAndView("listRevisions", "command", new RevisionDTO());
+	}
+        
+        @RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
+	public String voidFilter(ModelMap model) {
 		return "redirect:/revision/list";
 	}
 

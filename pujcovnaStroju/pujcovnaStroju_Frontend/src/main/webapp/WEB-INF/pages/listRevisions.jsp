@@ -11,6 +11,63 @@
 	<h2>
 		<spring:message code="lang.listRevisions" text="List of Revisions" />
 	</h2>
+        
+    <c:if test="${not empty existingRevisions}">
+        <h3><spring:message code="lang.filters" text="Filters" /></h3>
+        <form:form method="GET" id="filterRevisionForm" name="filterRevisionForm"
+                   action="filter">
+            <table>
+                <tr>
+                    <td><spring:message code="lang.RevDate" text="Revision Date" /> > </td>
+                    <td><form:input cssClass="inputField datePicker" path="revDate" /></td>
+                </tr>
+                <tr>
+                    <td><spring:message code="lang.comment" text="Comment" /></td>
+                    <td><form:input cssClass="inputField" path="comment" /></td>
+                </tr>
+                <tr>
+                    <td><spring:message code="lang.revisionMachineLabel" text="Machine" /></td>
+                    <td><form:select path="machine">
+                            <form:option value="--no machine--" />
+                            <c:forEach items="${machines}" var="machine">
+                                <form:option value="${machine.id}"
+                                            label="${machine.label}"></form:option>
+                            </c:forEach>
+                        </form:select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><spring:message code="lang.customer" text="Customer" /></td>
+                    <td>
+                        <form:select path="systemUser">
+                            <form:option value="--no revisioner--" />
+                            <c:forEach items="${users}" var="currentUser">
+                                <form:option value="${currentUser.id}"
+                                            label="${currentUser.firstName} ${currentUser.lastName}">
+                                </form:option>
+                            </c:forEach>
+                        </form:select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="button" type="submit" name="submit"
+                                value="Filter">
+                            <spring:message code="lang.filter" text="Filter" />
+                        </button>
+                    </td>
+                    <td>
+                        <button class="button" type="submit" name="void" 
+                                value="Void filter">
+                            <spring:message code="lang.voidFilter" text="Void filter" />
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </form:form>
+        <br /><br />
+    </c:if>
+        
 	<c:if test="${empty revisions}">
 		<spring:message code="lang.noRevisions" text="Actions" />
 		<br />

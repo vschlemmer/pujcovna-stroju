@@ -4,10 +4,12 @@
  */
 package cz.muni.fi.pa165.pujcovnastroju.service;
 
-import java.sql.Date;
+import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import java.util.Date;
 import java.util.List;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 
 /**
  *
@@ -82,4 +84,16 @@ public interface RevisionService {
 	 */
 	public List<RevisionDTO> findRevisionsByDateBizRevision(Date dateFrom,
 			Date dateTo);
+        
+        /**
+	 * Retrieves revisions by the given parameters
+	 * 
+	 * @param comment revision's comment
+	 * @param revDate when was the revision created
+	 * @param machine revisioned machine
+	 * @param systemUser the revisioner
+	 * @return list of the revisions satisfying the parameters
+	 */
+        public List<RevisionDTO> findRevisionsByParams(String comment, Date revDate,
+                            MachineDTO machine, SystemUserDTO systemUser);
 }

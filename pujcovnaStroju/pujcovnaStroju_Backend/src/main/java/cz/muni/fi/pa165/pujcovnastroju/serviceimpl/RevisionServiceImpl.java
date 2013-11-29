@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju.serviceimpl;
 
-import java.sql.Date;
+import cz.muni.fi.pa165.pujcovnastroju.converter.MachineDTOConverter;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cz.muni.fi.pa165.pujcovnastroju.converter.RevisionDTOConverter;
+import cz.muni.fi.pa165.pujcovnastroju.converter.SystemUserDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 
@@ -106,5 +110,15 @@ public class RevisionServiceImpl implements RevisionService {
 
 		return RevisionDTOConverter.listToDto(revisionList);
 
+	}
+        
+        @Override
+	public List<RevisionDTO> findRevisionsByParams(String comment, Date revDate,
+                            MachineDTO machine, SystemUserDTO systemUser) {
+            List<Revision> revisions = null;
+            revisions = rDAO.findRevisionsByParams(comment, revDate, 
+                    MachineDTOConverter.dtoToEntity(machine, false), 
+                    SystemUserDTOConverter.dtoToEntity(systemUser, false));
+            return RevisionDTOConverter.listToDto(revisions);
 	}
 }
