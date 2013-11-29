@@ -8,10 +8,9 @@
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 
 <div class="content">
-	<h2 class="pageLabel">
+	<h2>
 		<spring:message code="lang.listRevisions" text="List of Revisions" />
 	</h2>
-	<br /> <br /> <br />
 	<c:if test="${empty revisions}">
 		<spring:message code="lang.noRevisions" text="Actions" />
 		<br />

@@ -8,7 +8,7 @@
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 
 <div class="content">
-    <h2><spring:message code="lang.listUsers" text="List of users" /></h2><br />
+    <h2><spring:message code="lang.listUsers" text="List of users" /></h2>
 <c:if test="${not empty existingUsers}">
         <h3><spring:message code="lang.filters" text="Filters" /></h3>
         <form:form method="GET" id="filterUserForm" name="filterUserForm"
