@@ -29,7 +29,7 @@ public class SystemUser implements Serializable {
 	private UserTypeEnum type;
 
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
-			CascadeType.REFRESH, CascadeType.REMOVE })
+			CascadeType.REFRESH, CascadeType.REMOVE }, mappedBy="customer")
 	private List<Loan> loans;
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH, CascadeType.REMOVE }, mappedBy="systemUser")
