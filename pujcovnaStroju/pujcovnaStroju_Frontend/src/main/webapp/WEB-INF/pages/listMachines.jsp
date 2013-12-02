@@ -135,6 +135,9 @@
 						</form:label></td>
 					<td><form:input cssClass="inputField" path="description"
 							id="machineFormLabel" /></td>
+					<td><label id="machineFormDescriptionWarning"
+                        class="offscreen warningMessage"><spring:message
+                                code="lang.mandatory" text="Mandatory Field" /></label>
 				</tr>
 				<tr>
 					<td colspan="2">

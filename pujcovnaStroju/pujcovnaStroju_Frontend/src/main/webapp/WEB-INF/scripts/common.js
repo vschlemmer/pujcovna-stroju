@@ -14,9 +14,14 @@ function validateAndSubmitMachineForm() {
 	hidePart('machineSuccessWindow');
 	hidePart('machineErrorWindow');
 	var label = document.forms['addMachineForm'].label.value;
+	var description = document.forms['addMachineForm'].description.value;
 	if(label == "") {
-		showPart('machineFormIDWarning');
-	} else {
+		showPart('machineFormLabelWarning');
+	} 
+	if(description == "") {
+		showPart('machineFormDescriptionWarning');
+	} 
+	if (label != "" && description != "") {
 		document.getElementById('addMachineForm').submit();
 	}
 }
@@ -25,20 +30,13 @@ function validateAndSubmitUpdateMachineForm() {
     hidePart('machineErrorWindow');
     var label = document.forms['updateMachineForm'].label.value;
     var description = document.forms['updateMachineForm'].description.value;
-    var type = document.forms['updateMachineForm'].type.value;
     if(label == "") {
-        showPart('userFormFirstNameWarning');
+        showPart('machineFormLabelWarning');
     }
     if(description == "") {
-        showPart('userFormLastNameWarning');
+        showPart('machineFormDescriptionWarning');
     } 
-    if(type == "") {
-        showPart('userFormTypeWarning');
-    }
-    if(id == "") {
-        showPart('userFormTypeWarning');
-    }
-    if (label != "" && description != "" && type != "" && id != "") {
+    if (label != "" && description != "") {
         document.getElementById('updateMachineForm').submit();
     }
 }

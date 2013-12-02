@@ -23,7 +23,7 @@
 						</form:label></td>
 					<td><form:input cssClass="inputField" path="label"
 							value="${machine.label}" /></td>
-					<td><label id="userFormFirstNameWarning"
+					<td><label id="machineFormLabelWarning"
 						class="offscreen warningMessage"> <spring:message
 								code="lang.mandatory" text="Mandatory Field" />
 					</label></td>
@@ -34,7 +34,7 @@
 						</form:label></td>
 					<td><form:input cssClass="inputField" path="description"
 							value="${machine.description}" /></td>
-					<td><label id="userFormLastNameWarning"
+					<td><label id=machineFormDescriptionWarning
 						class="offscreen warningMessage"> <spring:message
 								code="lang.mandatory" text="Mandatory Field" />
 					</label></td>
