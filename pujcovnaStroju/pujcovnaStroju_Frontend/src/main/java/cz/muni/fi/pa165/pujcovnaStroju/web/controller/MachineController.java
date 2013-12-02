@@ -114,7 +114,7 @@ public class MachineController {
 	public ModelAndView listMachinesByParams(ModelMap model,
 			@RequestParam(value = "from", required = false) Date from,
 			@RequestParam(value = "till", required = false) Date till) {
-
+		
 		List<MachineDTO> machinesNew = machineService.getMachineDTOsByParams(
 				null, null, null, null, null, from, till);
 		model.addAttribute("machinesNew", machinesNew);

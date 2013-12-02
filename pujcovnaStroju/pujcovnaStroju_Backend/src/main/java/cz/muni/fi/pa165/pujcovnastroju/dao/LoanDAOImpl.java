@@ -63,13 +63,23 @@ public class LoanDAOImpl implements LoanDAO {
 		    List<Machine> machinesToMerge = new ArrayList<>();
 		    
 		    for (Machine machine : machines) {
-			/*Query availableMachine = em.createQuery(
-			    "SELECT machine FROM Machine machine JOIN machine.loans loan WHERE machine.id = :machineId AND loan.loanTime<:rTime AND loan.returnTime>:lTime AND loan.id!=:loanId")
-			    .setParameter("rTime", loan.getReturnTime()).setParameter("lTime", loan.getLoanTime()).setParameter("loanId", loan.getId()).setParameter("machineId", machine.getId());
-			machine = (Machine) availableMachine.getSingleResult();*/
-			if (!machinesToMerge.contains(machine)) {
-				machine = em.merge(machine);
-				machinesToMerge.add(machine);
+			Query availableMachine = null;
+			if (loan.getId() != null) {
+				availableMachine = em.createQuery(
+					"SELECT machine FROM Machine machine JOIN machine.loans loan WHERE machine.id = :machineId AND loan.loanTime < :rTime AND loan.returnTime > :lTime AND loan.id <> :loanId")
+					.setParameter("machineId", machine.getId()).setParameter("rTime", loan.getReturnTime()).setParameter("lTime", loan.getLoanTime()).setParameter("loanId", loan.getId());
+			}
+			else {
+				availableMachine = em.createQuery(
+					"SELECT machine FROM Machine machine JOIN machine.loans loan WHERE machine.id = :machineId AND loan.loanTime < :rTime AND loan.returnTime > :lTime")
+					.setParameter("machineId", machine.getId()).setParameter("rTime", loan.getReturnTime()).setParameter("lTime", loan.getLoanTime());
+			}
+			if (availableMachine.getResultList().isEmpty()) {
+				//machine = (Machine) availableMachine.getSingleResult();
+				if (!machinesToMerge.contains(machine)) {
+					machine = em.merge(machine);
+					machinesToMerge.add(machine);
+				}
 			}
 			
 		    }
