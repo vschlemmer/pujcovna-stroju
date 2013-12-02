@@ -217,6 +217,6 @@ public class LoanController {
 	
 	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
 	public String voidFilter(ModelMap model) {
-		return "redirect:/machine/list";
+		return "redirect:/loan/list";
 	}
 }
