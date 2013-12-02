@@ -53,8 +53,10 @@ public class LoanDAOImpl implements LoanDAO {
 	
 	private Loan mergeParams(Loan loan) {
 		SystemUser user = loan.getCustomer();
-		user = em.merge(user);
-		loan.setCustomer(user);
+		if (user != null && user.getId() != null) {
+			user = em.find(SystemUser.class, user.getId());
+			loan.setCustomer(user);
+		}
 		
 		List<Machine> machines = loan.getMachines();
 		if (machines != null) {
