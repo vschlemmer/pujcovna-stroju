@@ -218,5 +218,40 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.delete(user2);
         userDAO.delete(user3);
         em.getTransaction().commit();
-    }    
+    }
+    
+    /**
+     * Test retrieving users by given types
+     */
+    public void testGetSystemUsersByTypeList(){
+        SystemUser user1 = createSampleUser();
+        user1.setLastName("Customerindividual");
+        SystemUser user2 = createSampleUser();
+        user2.setType(UserTypeEnum.CUSTOMERLEGAL);
+        user2.setLastName("Customerlegal");
+        SystemUser user3 = createSampleUser();
+        user3.setType(UserTypeEnum.EMPLOYEE);
+        user3.setLastName("Employee");
+        em.getTransaction().begin();
+        userDAO.create(user1);
+        userDAO.create(user2);
+        userDAO.create(user3);
+        em.getTransaction().commit();
+        em.getTransaction().begin();
+        List<UserTypeEnum> types = new ArrayList<>();
+        types.add(UserTypeEnum.CUSTOMERINDIVIDUAL);
+        types.add(UserTypeEnum.EMPLOYEE);
+        List<SystemUser> userList1 = userDAO.getSystemUsersByTypeList(types);
+        em.getTransaction().commit();
+        assertEquals(2, userList1.size());
+        assertTrue(userList1.get(0).getType().equals(UserTypeEnum.CUSTOMERINDIVIDUAL) ||
+                   userList1.get(0).getType().equals(UserTypeEnum.EMPLOYEE));
+        assertTrue(userList1.get(1).getType().equals(UserTypeEnum.CUSTOMERINDIVIDUAL) ||
+                   userList1.get(1).getType().equals(UserTypeEnum.EMPLOYEE));
+        em.getTransaction().begin();
+        userDAO.delete(user1);
+        userDAO.delete(user2);
+        userDAO.delete(user3);
+        em.getTransaction().commit();
+    }
 }

@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnastroju.test.service;
 
+import cz.muni.fi.pa165.pujcovnastroju.converter.UserTypeDTOConverter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -18,10 +19,9 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DataAccessResourceFailureException;
-
 import cz.muni.fi.pa165.pujcovnastroju.dao.SystemUserDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
@@ -60,6 +60,18 @@ public class SystemUserServiceTest extends AbstractTest {
 		    return (SystemUser)args[0];
 		}
 	    });
+        
+        List<SystemUser> allUsers = new ArrayList<>();
+        allUsers.add(new SystemUser());
+        allUsers.add(new SystemUser());
+        Mockito.when(mockUserDao.findAllSystemUsers()).thenReturn(allUsers);
+
+        List<SystemUser> typedUsers = new ArrayList<>();
+        List<UserTypeEnum> types = new ArrayList<>();
+        types.add(UserTypeEnum.EMPLOYEE);
+        typedUsers.add(new SystemUser());
+		Mockito.when(mockUserDao.getSystemUsersByTypeList(types))
+				.thenReturn(typedUsers);
 	Mockito.when(mockUserDao.update(null)).thenThrow(
                 new IllegalArgumentException("Error occured during updating user."));
 	
@@ -170,7 +182,7 @@ public class SystemUserServiceTest extends AbstractTest {
     }
     
     @Test
-    public void testGetLoansByParams() {
+    public void testGetSystemUsersByParams() {
 	List<SystemUser> userList = new ArrayList<>();
 	userList.add(new SystemUser());
 	userList.add(new SystemUser());
@@ -184,6 +196,24 @@ public class SystemUserServiceTest extends AbstractTest {
                 Matchers.any(String.class), 
                 Matchers.any(String.class), 
                 Matchers.any(UserTypeEnum.class))).thenReturn(userList);
+    }
+    
+    @Test
+    public void testGetSystemUsersByTypeList(){
+        SystemUserDTO user1 = new SystemUserDTO();
+        SystemUserDTO user2 = new SystemUserDTO();
+        user1.setType(UserTypeDTOConverter.entityToDto(
+                UserTypeEnum.CUSTOMERINDIVIDUAL));
+        userService.create(user1);
+        user2.setType(UserTypeDTOConverter.entityToDto(
+                UserTypeEnum.EMPLOYEE));
+        userService.create(user2);
+        assertEquals(2, userService.findAllSystemUsers().size());
+        List<UserTypeEnumDTO> types = new ArrayList<>();
+        types.add(UserTypeDTOConverter.entityToDto(UserTypeEnum.EMPLOYEE));
+        List<SystemUserDTO> users = userService.getSystemUsersByTypeList(types);
+        assertNotNull(users);
+        assertEquals(1, users.size());
     }
     
 }
