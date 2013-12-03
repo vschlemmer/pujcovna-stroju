@@ -92,4 +92,11 @@ public class SystemUserServiceImpl implements SystemUserService {
 				lastName, UserTypeDTOConverter.dtoToEntity(type));
 		return SystemUserDTOConverter.listToDTO(userList,false);
 	}
+        
+        @Override
+        public List<SystemUserDTO> getSystemUsersByTypeList(List<UserTypeEnumDTO> types) {
+            List<SystemUser> userList = userDao.getSystemUsersByTypeList(
+                    UserTypeDTOConverter.listToEntities(types));
+            return SystemUserDTOConverter.listToDTO(userList,false);
+	}
 }

@@ -4,7 +4,6 @@ import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumD
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class UserController {
 			@RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage) {
 		model.addAttribute("users", userService.findAllSystemUsers());
 		model.addAttribute("existingUsers", userService.findAllSystemUsers());
-		model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
+                model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
 		model.addAttribute("list", "list of users");
 		model.addAttribute("pageTitle", "lang.listUsersTitle");
 		DefaultController.addHeaderFooterInfo(model);

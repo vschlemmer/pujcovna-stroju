@@ -75,4 +75,11 @@ public interface SystemUserService {
 	public List<SystemUserDTO> getSystemUsersByParams(String firstName,
 			String lastName, UserTypeEnumDTO type);
 
+        /**
+         * Retrieves users of given types
+         * 
+         * @param types list of types
+         * @return list of users of given types
+         */
+        public List<SystemUserDTO> getSystemUsersByTypeList(List<UserTypeEnumDTO> types);
 }

@@ -16,8 +16,6 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 
-import java.sql.Timestamp;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -74,7 +72,7 @@ public class RevisionDAOTest extends TestCase {
         SystemUser user = new SystemUser();
         user.setFirstName("Tomas");
         user.setLastName("Jedno");
-        user.setType(UserTypeEnum.CUSTOMER);
+        user.setType(UserTypeEnum.CUSTOMERINDIVIDUAL);
         return user;
     }
 
@@ -82,13 +80,12 @@ public class RevisionDAOTest extends TestCase {
      * Test revision creation
      */
     public void testCreate() {
-        //System.out.println("create");
         Revision revision1 = createSampleRevision();
         assertNull(revision1.getRevID());
-        em.getTransaction().begin();//priadne
+        em.getTransaction().begin();
         Revision revision2 = revDAO.create(revision1);
 
-        em.getTransaction().commit();//priadne
+        em.getTransaction().commit();
         assertNotNull(revision1.getRevID());
         assertNotNull(revision2.getRevID());
         assertEquals(revision1, revision2);
@@ -110,10 +107,10 @@ public class RevisionDAOTest extends TestCase {
      */
     public void testRead() {
         Revision revision1 = createSampleRevision();
-        em.getTransaction().begin();//pridane
+        em.getTransaction().begin();
         revDAO.create(revision1);
         Revision revision2 = revDAO.read(revision1.getRevID());
-        em.getTransaction().commit();//pridane
+        em.getTransaction().commit();
         assertEquals(revision1, revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
         assertEquals(revision1.getMachine(), revision2.getMachine());
@@ -128,12 +125,12 @@ public class RevisionDAOTest extends TestCase {
      */
     public void testUpdate() {
         Revision revision1 = createSampleRevision();
-        em.getTransaction().begin();//pridane
+        em.getTransaction().begin();
         revDAO.create(revision1);
-        em.getTransaction().commit();//pridane
-        em.getTransaction().begin();//pridane
+        em.getTransaction().commit();
+        em.getTransaction().begin();
         revDAO.update(revision1);
-        em.getTransaction().commit();//pridane
+        em.getTransaction().commit();
         Revision revision2 = revDAO.read(revision1.getRevID());
         assertEquals(revision1, revision2);
         assertEquals(revision1.getRevID(), revision2.getRevID());
@@ -149,9 +146,9 @@ public class RevisionDAOTest extends TestCase {
      */
     public void testDelete() {
         Revision revision1 = createSampleRevision();
-        em.getTransaction().begin();//pridane
+        em.getTransaction().begin();
         revDAO.create(revision1);
-        em.getTransaction().commit();//pridane
+        em.getTransaction().commit();
         revDAO.delete(revision1);
         assertNull(revDAO.read(revision1.getRevID()));
     }
@@ -184,10 +181,10 @@ public class RevisionDAOTest extends TestCase {
         Revision revision2 = createSampleRevision();
         em.getTransaction().begin();
         revDAO.create(revision1);
-        em.getTransaction().commit();//pridane
+        em.getTransaction().commit();
         em.getTransaction().begin();
         revDAO.create(revision2);
-        em.getTransaction().commit();//pridane
+        em.getTransaction().commit();
         List<Revision> revisions1 = new ArrayList<>();
         revisions1.add(revision1);
         revisions1.add(revision2);

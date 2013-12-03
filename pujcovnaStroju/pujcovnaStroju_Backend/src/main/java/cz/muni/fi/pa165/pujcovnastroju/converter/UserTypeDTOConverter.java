@@ -2,6 +2,8 @@ package cz.muni.fi.pa165.pujcovnastroju.converter;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * UserType enumeration DTO converter
@@ -23,5 +25,25 @@ public class UserTypeDTOConverter {
 		dto.setId(Long.valueOf(type.ordinal()));
 		dto.setTypeLabel(type.name());
 		return dto;
+	}
+        
+        public static List<UserTypeEnum> listToEntities(List<UserTypeEnumDTO> dtoTypes) {
+		if (dtoTypes == null)
+			return null;
+		List<UserTypeEnum> types = new ArrayList<>();
+		for (UserTypeEnumDTO dtoType : dtoTypes) {
+			types.add(dtoToEntity(dtoType));
+		}
+		return types;
+	}
+        
+        public static List<UserTypeEnumDTO> listToDTO(List<UserTypeEnum> types) {
+		if (types == null)
+			return null;
+		List<UserTypeEnumDTO> dtoTypes = new ArrayList<>();
+		for (UserTypeEnum type : types) {
+			dtoTypes.add(entityToDto(type));
+		}
+		return dtoTypes;
 	}
 }

@@ -7,5 +7,5 @@ package cz.muni.fi.pa165.pujcovnastroju.entity;
  * 
  */
 public enum UserTypeEnum {
-	CUSTOMER, EMPLOYEE, REVISIONER, ADMINISTRATOR;
+	CUSTOMERINDIVIDUAL, CUSTOMERLEGAL, EMPLOYEE, REVISIONER, ADMINISTRATOR;
 }

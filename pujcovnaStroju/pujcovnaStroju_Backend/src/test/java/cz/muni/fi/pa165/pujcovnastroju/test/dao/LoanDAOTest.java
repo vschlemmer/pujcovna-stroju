@@ -46,7 +46,7 @@ public class LoanDAOTest extends TestCase {
         SystemUser su = new SystemUser();
         su.setLastName("Smith");
         su.setFirstName("Paul");
-        su.setType(UserTypeEnum.CUSTOMER);
+        su.setType(UserTypeEnum.CUSTOMERINDIVIDUAL);
         loan.setCustomer(su);
         loan.setLoanState(LoanStateEnum.BOOKED);
         List<Machine> machines = new ArrayList<Machine>();

@@ -48,7 +48,7 @@ public class SystemUserDAOTest extends TestCase {
         SystemUser user = new SystemUser();
         user.setFirstName("Tomas");
         user.setLastName("Jedno");
-        user.setType(UserTypeEnum.CUSTOMER);
+        user.setType(UserTypeEnum.CUSTOMERINDIVIDUAL);
         List<Loan> loans = new ArrayList<>();
         loans.add(createSampleLoan());
         user.setLoans(loans);
@@ -209,7 +209,7 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.create(user3);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMER);
+        List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMERINDIVIDUAL);
         em.getTransaction().commit();
         assertEquals(userList1, userDAO.findAllSystemUsers());
         assertEquals(3, userList1.size());

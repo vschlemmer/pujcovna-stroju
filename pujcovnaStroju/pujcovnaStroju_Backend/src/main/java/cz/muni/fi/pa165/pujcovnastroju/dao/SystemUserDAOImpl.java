@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import java.util.ArrayList;
+import javax.persistence.criteria.Predicate;
 
 /**
  * 
@@ -97,4 +99,19 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 			cq.where(cb.equal(userRoot.get("type"), type));
 		return em.createQuery(cq).getResultList();
 	}
+        
+        public List<SystemUser> getSystemUsersByTypeList(List<UserTypeEnum> types){
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<SystemUser> cq = cb.createQuery(SystemUser.class);
+            Root<SystemUser> userRoot = cq.from(SystemUser.class);
+            cq.select(userRoot);
+            List<Predicate> predicates = new ArrayList<>();
+            List<Predicate> disjunction = new ArrayList<>();
+            for (UserTypeEnum type : types) {
+                disjunction.add(cb.equal(userRoot.get("type"), cb.literal(type)));
+            }
+            predicates.add(cb.or(disjunction.toArray(new Predicate[disjunction.size()])));
+            cq.where(predicates.toArray(new Predicate[predicates.size()]));
+            return em.createQuery(cq).getResultList();
+        }
 }

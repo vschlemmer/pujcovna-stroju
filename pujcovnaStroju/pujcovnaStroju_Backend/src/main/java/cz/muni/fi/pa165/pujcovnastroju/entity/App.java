@@ -12,7 +12,7 @@ public class App {
 		SystemUser user1 = new SystemUser();
 		user1.setFirstName("Pepa");
 		user1.setLastName("Prvni");
-		user1.setType(UserTypeEnum.CUSTOMER);
+		user1.setType(UserTypeEnum.CUSTOMERINDIVIDUAL);
 		user1.setRevisions(null);
 		user1.setLoans(null);
 

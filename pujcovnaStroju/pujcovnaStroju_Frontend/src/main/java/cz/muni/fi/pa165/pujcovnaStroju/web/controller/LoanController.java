@@ -6,18 +6,15 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.LoanDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.LoanStateEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
-import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.LoanStateEnum;
-import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +67,10 @@ public class LoanController {
         model.addAttribute("loans", list);
 	model.addAttribute("existingLoans", list);
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
+        model.addAttribute("customers", customerService.getSystemUsersByTypeList(
+                UserTypeDTOConverter.listToDTO(Arrays.asList(
+                        UserTypeEnum.CUSTOMERINDIVIDUAL, 
+                        UserTypeEnum.CUSTOMERLEGAL))));
         model.addAttribute("list", "list of loans");
         model.addAttribute("pageTitle", "lang.listLoansTitle");
         DefaultController.addHeaderFooterInfo(model);
@@ -88,16 +88,20 @@ public class LoanController {
     @RequestMapping(value = "/updateForm")
     public ModelAndView printLoanAddForm(ModelMap model) {
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
-	
+        model.addAttribute("customers", customerService.getSystemUsersByTypeList(
+                UserTypeDTOConverter.listToDTO(Arrays.asList(
+                        UserTypeEnum.CUSTOMERINDIVIDUAL, 
+                        UserTypeEnum.CUSTOMERLEGAL))));
         return new ModelAndView("updateLoan", "command", new LoanDTO());
     }
     
     @RequestMapping(value = "/updateForm/{id}")
     public ModelAndView printLoanUpdateForm(@ModelAttribute("loan") LoanDTO loan, ModelMap model, @PathVariable String id) {
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-        model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
-	
+        model.addAttribute("customers", customerService.getSystemUsersByTypeList(
+                UserTypeDTOConverter.listToDTO(Arrays.asList(
+                        UserTypeEnum.CUSTOMERINDIVIDUAL, 
+                        UserTypeEnum.CUSTOMERLEGAL))));	
 	if (id != null) loan = loanService.read(Long.parseLong(id));
 	model.addAttribute("loan", loan);
 	
@@ -210,7 +214,10 @@ public class LoanController {
 		model.addAttribute("loans", loanService.getLoansByParams(from, till, loanState, customer, null));
 		model.addAttribute("existingLoans", loanService.getAllLoans());
 		model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
-		model.addAttribute("customers", customerService.getSystemUsersByParams(null, null, UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMER)));
+		model.addAttribute("customers", customerService.getSystemUsersByTypeList(
+                UserTypeDTOConverter.listToDTO(Arrays.asList(
+                        UserTypeEnum.CUSTOMERINDIVIDUAL, 
+                        UserTypeEnum.CUSTOMERLEGAL))));
 		model.addAttribute("list", "list of loans");
 		return new ModelAndView("listLoans", "command", new LoanDTO());
 	}
