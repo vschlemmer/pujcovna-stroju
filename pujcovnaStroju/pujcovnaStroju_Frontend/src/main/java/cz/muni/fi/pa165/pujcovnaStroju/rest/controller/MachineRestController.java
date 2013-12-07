@@ -30,6 +30,8 @@ import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 @RequestMapping("/rest/machine")
 public class MachineRestController {
 
+	private static StringToMachineTypeEnumDTOConverter converter = new StringToMachineTypeEnumDTOConverter();
+
 	MachineService machineService;
 
 	@Autowired
@@ -38,16 +40,12 @@ public class MachineRestController {
 	}
 
 	@RequestMapping(value = "/list")
-	public HttpEntity<byte[]> getXml(ModelMap map,
+	public HttpEntity<byte[]> listMachines(ModelMap map,
 			HttpServletResponse response,
 			@RequestParam(required = false) String type) {
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("<response>");
-
-		StringToMachineTypeEnumDTOConverter converter = new StringToMachineTypeEnumDTOConverter();
 		MachineTypeEnumDTO typeDTO = converter.convert(type);
-		
+
 		List<MachineDTO> listMachines = null;
 		try {
 			listMachines = machineService.getMachineDTOsByParams(null, null,
@@ -56,14 +54,16 @@ public class MachineRestController {
 				listMachines = new ArrayList<>();
 			}
 		} catch (UnsupportedTypeException e) {
-			return GenericController.returnErrorXML("Unknown machine type: " + type);
+			return GenericController.returnErrorXML("Unknown machine type: "
+					+ type);
 		} catch (DataAccessException e) {
 			return GenericController
-					.returnErrorXML("Error occured during request processing");
+					.returnErrorXML("Error occured during processing request");
 		}
-		
-		builder.append("<machines>");
-		System.out.println(listMachines);
+
+		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		builder.append("<response status=\"success\">");
+		builder.append("<machines numFound=\"" + listMachines.size() + "\">");
 		for (MachineDTO machine : listMachines) {
 			builder.append(DTOtoXMLConverter.machineDTOtoXML(machine));
 		}
@@ -71,6 +71,55 @@ public class MachineRestController {
 		builder.append("</response>");
 
 		return GenericController.returnXML(builder.toString());
+	}
+
+	@RequestMapping(value = "/add")
+	public HttpEntity<byte[]> addMachine(ModelMap map,
+			HttpServletResponse response,
+			@RequestParam(required = false) String label,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String type) {
+
+		List<String> errorMessages = new ArrayList<>();
+		if (label == null || label.isEmpty()) {
+			errorMessages.add("Missing required argument: label");
+		}
+		if (type == null || type.isEmpty()) {
+			errorMessages.add("Missing required argument: type");
+		}
+		if (description == null || description.isEmpty()) {
+			errorMessages.add("Missing required argument: description");
+		}
+
+		if (!errorMessages.isEmpty()) {
+			return GenericController.returnErrorXML(errorMessages);
+		}
+
+		MachineDTO machine = new MachineDTO();
+		machine.setLabel(label);
+		machine.setDescription(description);
+		machine.setType(converter.convert(type.toUpperCase()));
+
+		MachineDTO created = null;
+		try {
+			created = machineService.create(machine);
+		} catch (UnsupportedTypeException e) {
+			return GenericController
+					.returnErrorXML("Unsupported machine type: " + type);
+		} catch (DataAccessException e) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		}
+
+		if (created == null) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		} else {
+			return GenericController
+					.returnSuccessXML("Machine created with id:"
+							+ created.getId());
+		}
+
 	}
 
 }

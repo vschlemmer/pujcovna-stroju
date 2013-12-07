@@ -1,6 +1,7 @@
 package cz.muni.fi.pa165.pujcovnastroju.converter;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UnsupportedTypeException;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 
 /**
@@ -13,8 +14,12 @@ public class MachineTypeDTOConverter {
 	public static MachineTypeEnum dtoToEntity(MachineTypeEnumDTO dto) {
 		if (dto == null)
 			return null;
-
-		MachineTypeEnum type = MachineTypeEnum.valueOf(dto.typeLabel);
+		MachineTypeEnum type;
+		try {
+			 type = MachineTypeEnum.valueOf(dto.typeLabel);
+		} catch (IllegalArgumentException e) {
+			throw new UnsupportedTypeException("Unsuported machine type");
+		}
 		return type;
 	}
 
