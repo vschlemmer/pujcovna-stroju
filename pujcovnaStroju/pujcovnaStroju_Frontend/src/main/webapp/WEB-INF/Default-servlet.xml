@@ -12,7 +12,7 @@
    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 	<context:component-scan
-		base-package="cz.muni.fi.pa165.pujcovnaStroju.web.controller" />
+		base-package="cz.muni.fi.pa165.pujcovnaStroju.web.controller,cz.muni.fi.pa165.pujcovnaStroju.rest.controller" />
 
 
 	<bean id="localeResolver"
@@ -51,8 +51,8 @@
 					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserDTOConverter" />
 				<bean
 					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToDateConverter" />
-					<bean
-                    class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineDTOConverter" />
+				<bean
+					class="cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToMachineDTOConverter" />
 			</list>
 		</property>
 	</bean>
