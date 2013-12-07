@@ -47,7 +47,7 @@ public class GenericController {
 	}
 
 	/**
-	 * creates HttpEntity for given xml string
+	 * creates {@link HttpEntity} for given xml string
 	 * 
 	 * @param xml
 	 * @return
@@ -61,7 +61,7 @@ public class GenericController {
 	}
 
 	/**
-	 * creates HttpEntity for given error message
+	 * creates {@link HttpEntity} for given error message
 	 * 
 	 * @param message
 	 * @return
@@ -86,6 +86,11 @@ public class GenericController {
 		return returnXML(builder.toString());
 	}
 	
+	/**
+	 * creates {@link HttpEntity} for given success message
+	 * @param message
+	 * @return
+	 */
 	public static HttpEntity<byte[]> returnSuccessXML(String message) {
 		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"success\">");

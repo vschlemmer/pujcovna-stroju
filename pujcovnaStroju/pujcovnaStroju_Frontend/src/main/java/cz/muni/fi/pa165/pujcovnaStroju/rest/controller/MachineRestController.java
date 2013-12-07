@@ -61,13 +61,53 @@ public class MachineRestController {
 					.returnErrorXML("Error occured during processing request");
 		}
 
-		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 		builder.append("<response status=\"success\">");
 		builder.append("<machines numFound=\"" + listMachines.size() + "\">");
 		for (MachineDTO machine : listMachines) {
 			builder.append(DTOtoXMLConverter.machineDTOtoXML(machine));
 		}
 		builder.append("</machines>");
+		builder.append("</response>");
+
+		return GenericController.returnXML(builder.toString());
+	}
+
+	@RequestMapping(value = "/detail")
+	public HttpEntity<byte[]> detailOfMachine(ModelMap map,
+			HttpServletResponse response,
+			@RequestParam(required = false) String id) {
+
+		if (id == null || id.isEmpty()) {
+			return GenericController
+					.returnErrorXML("Missing required argument: id");
+		}
+
+		Long lid;
+		try {
+			lid = Long.valueOf(id);
+		} catch (NumberFormatException e) {
+			return GenericController
+					.returnErrorXML("Wrong format of argument: id");
+		}
+
+		MachineDTO machine = null;
+		try {
+			machine = machineService.read(lid);
+			if (machine == null) {
+				return GenericController.returnErrorXML("Machine with id: "
+						+ lid + " not found");
+			}
+		} catch (DataAccessException e) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		}
+
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		builder.append("<response status=\"success\">");
+		builder.append(DTOtoXMLConverter.machineDTOtoXML(machine));
 		builder.append("</response>");
 
 		return GenericController.returnXML(builder.toString());
@@ -118,6 +158,102 @@ public class MachineRestController {
 			return GenericController
 					.returnSuccessXML("Machine created with id:"
 							+ created.getId());
+		}
+
+	}
+
+	@RequestMapping(value = "/delete")
+	public HttpEntity<byte[]> deleteMachine(ModelMap map,
+			HttpServletResponse response,
+			@RequestParam(required = false) String id) {
+
+		if (id == null || id.isEmpty()) {
+			return GenericController
+					.returnErrorXML("Missing required argument: id");
+		}
+
+		Long lid;
+		try {
+			lid = Long.valueOf(id);
+		} catch (NumberFormatException e) {
+			return GenericController
+					.returnErrorXML("Wrong format of argument: id");
+		}
+
+		try {
+			MachineDTO machine = machineService.read(lid);
+			if (machine == null) {
+				return GenericController.returnErrorXML("Machine with id: "
+						+ lid + " not found");
+			}
+			machineService.delete(machine);
+		} catch (DataAccessException e) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		}
+
+		return GenericController.returnSuccessXML("Machine with id " + lid
+				+ " successfully deleted");
+	}
+
+	@RequestMapping(value = "/update")
+	public HttpEntity<byte[]> updateMachine(ModelMap map,
+			HttpServletResponse response,
+			@RequestParam(required = false) String id,
+			@RequestParam(required = false) String label,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String type) {
+
+		Long lid = null;
+		List<String> errorMessages = new ArrayList<>();
+		if (id == null || id.isEmpty()) {
+			errorMessages.add("Missing required argument: id");
+		} else {
+			try {
+				lid = Long.valueOf(id);
+			} catch (NumberFormatException e) {
+				errorMessages.add("Wrong format of argument: id");
+			}
+		}
+		if (label == null || label.isEmpty() || type == null || type.isEmpty()
+				|| description == null || description.isEmpty()) {
+			errorMessages
+					.add("None of arguments (label, description, type) set, nothing to update");
+		}
+
+		MachineDTO machine = null;
+		MachineDTO updated = null;
+		MachineTypeEnumDTO typeDTO = converter.convert(type);
+		try {
+			machine = machineService.read(lid);
+			if (machine == null) {
+				return GenericController.returnErrorXML("Machine with id: "
+						+ lid + " not found");
+			}
+			if (label != null && !label.isEmpty()) {
+				machine.setLabel(label);
+			}
+			if (description != null && !description.isEmpty()) {
+				machine.setDescription(description);
+			}
+			if (typeDTO.getTypeLabel() != null) {
+				machine.setType(typeDTO);
+			}
+			updated = machineService.update(machine);
+		} catch (UnsupportedTypeException e) {
+			return GenericController
+					.returnErrorXML("Unsupported machine type: " + type);
+		} catch (DataAccessException e) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		}
+
+		if (updated == null) {
+			return GenericController
+					.returnErrorXML("Error occured during processing request");
+		} else {
+			return GenericController.returnSuccessXML("Machine with id: "
+					+ updated.getId() + " successfully updated");
 		}
 
 	}
