@@ -62,7 +62,7 @@ public class MachineRestController {
 		}
 
 		StringBuilder builder = new StringBuilder(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"success\">");
 		builder.append("<machines numFound=\"" + listMachines.size() + "\">");
 		for (MachineDTO machine : listMachines) {
@@ -105,7 +105,7 @@ public class MachineRestController {
 		}
 
 		StringBuilder builder = new StringBuilder(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"success\">");
 		builder.append(DTOtoXMLConverter.machineDTOtoXML(machine));
 		builder.append("</response>");

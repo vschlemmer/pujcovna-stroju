@@ -1,9 +1,14 @@
 package cz.muni.fi.pa165.pujcovnaStroju.rest.controller;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -13,12 +18,14 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.support.ServletContextResource;
 
 /**
  * generic REST controller
@@ -30,19 +37,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/rest")
 public class GenericController {
 
+	private @Autowired
+	ServletContext servletContext;
+
 	/**
 	 * returns XML schema of REST responses
 	 * 
 	 * @param model
 	 * @return
+	 * @throws MalformedURLException
 	 */
 	@RequestMapping("schema.xml")
 	public HttpEntity<byte[]> getSchema(ModelMap model) {
-		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+
+		ServletContextResource res = new ServletContextResource(servletContext,
+				"/WEB-INF/schema/schema.xsd");
+		try {
+			Path path = res.getFile().toPath();
+			byte[] schema = Files.readAllBytes(path);
+			HttpHeaders header = new HttpHeaders();
+			header.setContentType(new MediaType("application", "xml"));
+			header.setContentLength(schema.length);
+			return new HttpEntity<byte[]>(schema, header);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response staus=\"success\">");
 		builder.append("<text>Schema is hidden at the end of the rainbow stealing "
 				+ "leprechaun's pot of gold. It's quite sad.</text>");
 		builder.append("</response>");
+
 		return returnXML(builder.toString());
 	}
 
@@ -67,16 +94,18 @@ public class GenericController {
 	 * @return
 	 */
 	public static HttpEntity<byte[]> returnErrorXML(String message) {
-		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"error\">");
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");
 		return returnXML(builder.toString());
 	}
-	
+
 	public static HttpEntity<byte[]> returnErrorXML(List<String> messages) {
-		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"error\">");
 		for (String message : messages) {
 			builder.append("<message>" + StringEscapeUtils.escapeXml(message)
@@ -85,14 +114,16 @@ public class GenericController {
 		builder.append("</response>");
 		return returnXML(builder.toString());
 	}
-	
+
 	/**
 	 * creates {@link HttpEntity} for given success message
+	 * 
 	 * @param message
 	 * @return
 	 */
 	public static HttpEntity<byte[]> returnSuccessXML(String message) {
-		StringBuilder builder = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		StringBuilder builder = new StringBuilder(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		builder.append("<response status=\"success\">");
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
@@ -100,27 +131,29 @@ public class GenericController {
 		return returnXML(builder.toString());
 	}
 
-	
 	/**
 	 * formats output XML document
+	 * 
 	 * @param input
 	 * @return
 	 */
 	public static String formatStringAsXML(String input) {
-	    try {
-	        Source xmlInput = new StreamSource(new StringReader(input));
-	        StringWriter stringWriter = new StringWriter();
-	        StreamResult xmlOutput = new StreamResult(stringWriter);
-	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-	        transformerFactory.setAttribute("indent-number", 4);
-	        Transformer transformer = transformerFactory.newTransformer(); 
-	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	        transformer.transform(xmlInput, xmlOutput);
-	        return xmlOutput.getWriter().toString();
-	    } catch (TransformerException e) {
-	        // TODO log better
-	    	e.printStackTrace();;
-	    	return input;
-	    }
+		try {
+			Source xmlInput = new StreamSource(new StringReader(input));
+			StringWriter stringWriter = new StringWriter();
+			StreamResult xmlOutput = new StreamResult(stringWriter);
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
+			transformerFactory.setAttribute("indent-number", 4);
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.transform(xmlInput, xmlOutput);
+			return xmlOutput.getWriter().toString();
+		} catch (TransformerException e) {
+			// TODO log better
+			e.printStackTrace();
+			;
+			return input;
+		}
 	}
 }
