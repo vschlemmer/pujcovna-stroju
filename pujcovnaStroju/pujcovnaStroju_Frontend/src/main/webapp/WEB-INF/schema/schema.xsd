@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="response">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="machines" type="machinesType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="machine" type="machineType" minOccurs="1" maxOccurs="1"/>
+				<xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:choice>
+			<xs:attribute name="status" use="required" type="statusType" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:simpleType name="statusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="success" />
+			<xs:enumeration value="error" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="machinesType">
+		<xs:sequence>
+			<xs:element name="machine" type="machineType" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="numFound" use="optional" type="xs:int"/>
+	</xs:complexType>
+
+	<xs:complexType name="machineType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" />
+			<xs:element name="label" type="xs:string" />
+			<xs:element name="description" type="xs:string" />
+			<xs:element name="type" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
