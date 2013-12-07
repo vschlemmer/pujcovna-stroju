@@ -15,24 +15,24 @@ public class DTOtoXMLConverter {
 	public static String machineDTOtoXML(MachineDTO machine) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<machine>");
-		builder.append("<id>" + machine.getId() + "</id>");
-		builder.append("<label>" + machine.getLabel() + "</label>");
+		builder.append("<id>" + StringEscapeUtils.escapeXml(machine.getId().toString()) + "</id>");
+		builder.append("<label>" + StringEscapeUtils.escapeXml(machine.getLabel()) + "</label>");
 		if (machine.getDescription() != null) {
-			builder.append("<description>" + machine.getDescription() + "</description>");
+			builder.append("<description>" + StringEscapeUtils.escapeXml(machine.getDescription()) + "</description>");
 		}
-		builder.append("<type>" + machine.getType().getTypeLabel() + "</type>");
+		builder.append("<type>" + StringEscapeUtils.escapeXml(machine.getType().getTypeLabel()) + "</type>");
 		builder.append("</machine>");
-		return StringEscapeUtils.escapeXml(builder.toString());
+		return builder.toString();
 	}
 	
 	public static String systemUserDTOtoXML(SystemUserDTO user) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<user>");
-		builder.append("<id>" + user.getId() + "</id>");
-		builder.append("<firstName>" + user.getFirstName() + "</firstName>");
-		builder.append("<lastName>" + user.getLastName() + "</lastName");
-		builder.append("<type>" + user.getType() + "</type>");
+		builder.append("<id>" + StringEscapeUtils.escapeXml(user.getId().toString()) + "</id>");
+		builder.append("<firstName>" + StringEscapeUtils.escapeXml(user.getFirstName()) + "</firstName>");
+		builder.append("<lastName>" + StringEscapeUtils.escapeXml(user.getLastName()) + "</lastName");
+		builder.append("<type>" + StringEscapeUtils.escapeXml(user.getType().getTypeLabel()) + "</type>");
 		builder.append("</user>");
-		return StringEscapeUtils.escapeXml(builder.toString());
+		return builder.toString();
 	}
 }
