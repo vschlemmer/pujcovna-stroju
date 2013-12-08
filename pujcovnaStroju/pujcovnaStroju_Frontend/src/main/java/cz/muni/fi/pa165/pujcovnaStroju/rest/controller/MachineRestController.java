@@ -63,7 +63,7 @@ public class MachineRestController {
 
 		StringBuilder builder = new StringBuilder(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response status=\"success\">");
+		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">");
 		builder.append("<machines numFound=\"" + listMachines.size() + "\">");
 		for (MachineDTO machine : listMachines) {
 			builder.append(DTOtoXMLConverter.machineDTOtoXML(machine));

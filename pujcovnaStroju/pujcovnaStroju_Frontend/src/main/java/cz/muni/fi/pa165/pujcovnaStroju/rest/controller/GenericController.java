@@ -47,7 +47,7 @@ public class GenericController {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	@RequestMapping("schema.xml")
+	@RequestMapping("schema.xsd")
 	public HttpEntity<byte[]> getSchema(ModelMap model) {
 
 		ServletContextResource res = new ServletContextResource(servletContext,
@@ -96,7 +96,7 @@ public class GenericController {
 	public static HttpEntity<byte[]> returnErrorXML(String message) {
 		StringBuilder builder = new StringBuilder(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response status=\"error\">");
+		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">");
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");
@@ -106,7 +106,7 @@ public class GenericController {
 	public static HttpEntity<byte[]> returnErrorXML(List<String> messages) {
 		StringBuilder builder = new StringBuilder(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response status=\"error\">");
+		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">");
 		for (String message : messages) {
 			builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 					+ "</message>");
@@ -124,7 +124,7 @@ public class GenericController {
 	public static HttpEntity<byte[]> returnSuccessXML(String message) {
 		StringBuilder builder = new StringBuilder(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response status=\"success\">");
+		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">");
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");
@@ -152,7 +152,6 @@ public class GenericController {
 		} catch (TransformerException e) {
 			// TODO log better
 			e.printStackTrace();
-			;
 			return input;
 		}
 	}

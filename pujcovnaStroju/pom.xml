@@ -10,6 +10,7 @@
 		<module>pujcovnaStroju_Backend</module>
 		<module>pujcovnaStroju_API</module>
 		<module>pujcovnaStroju_Frontend</module>
+		<module>pujcovnaStroju_RESTclient</module>
 	</modules>
 
 	<properties>
