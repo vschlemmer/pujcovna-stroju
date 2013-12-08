@@ -80,10 +80,8 @@ public class MessageResolverTest extends TestCase {
 				fail();
 			}
 
-		} catch (SAXException e) {
-			return;
-		} catch (IOException | ParserConfigurationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			fail();
 		}
 	}
 
@@ -116,10 +114,8 @@ public class MessageResolverTest extends TestCase {
 				fail();
 			}
 
-		} catch (SAXException e) {
-			return;
-		} catch (IOException | ParserConfigurationException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			fail();
 		}
 	}
 
