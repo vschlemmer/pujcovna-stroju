@@ -27,6 +27,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.support.ServletContextResource;
 
+import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+
 /**
  * generic REST controller
  * 
@@ -37,6 +40,11 @@ import org.springframework.web.context.support.ServletContextResource;
 @RequestMapping(value = "/rest")
 public class GenericController {
 
+	private static final String HEADER_SUCCESS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+			"<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">";
+	
+	private static final String HEADER_ERROR = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+			"<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">";
 	private @Autowired
 	ServletContext servletContext;
 
@@ -68,11 +76,34 @@ public class GenericController {
 		builder.append("<response staus=\"success\">");
 		builder.append("<text>Schema is hidden at the end of the rainbow stealing "
 				+ "leprechaun's pot of gold. It's quite sad.</text>");
-		builder.append("</response>");
+		
 
 		return returnXML(builder.toString());
 	}
 
+	
+	@RequestMapping("types")
+	public HttpEntity<byte[]> getTypes(ModelMap model) {
+
+		StringBuilder builder = new StringBuilder(HEADER_SUCCESS);
+		builder.append("<availableTypes>");
+		builder.append("<machineTypes>");
+		for (MachineTypeEnum type: MachineTypeEnum.class.getEnumConstants()) {
+			builder.append("<type>" + type.name()+ "</type>");
+		}
+		builder.append("</machineTypes>");
+		
+		builder.append("<userTypes>");
+		for (UserTypeEnum type: UserTypeEnum.class.getEnumConstants()) {
+			builder.append("<type>" + type.name()+ "</type>");
+		}
+		builder.append("</userTypes>");
+		builder.append("</availableTypes>");
+		
+		builder.append("</response>");
+		return returnXML(builder.toString());
+	}
+	
 	/**
 	 * creates {@link HttpEntity} for given xml string
 	 * 
@@ -94,9 +125,8 @@ public class GenericController {
 	 * @return
 	 */
 	public static HttpEntity<byte[]> returnErrorXML(String message) {
-		StringBuilder builder = new StringBuilder(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">");
+		StringBuilder builder = new StringBuilder();
+		builder.append(HEADER_ERROR);
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");
@@ -104,9 +134,8 @@ public class GenericController {
 	}
 
 	public static HttpEntity<byte[]> returnErrorXML(List<String> messages) {
-		StringBuilder builder = new StringBuilder(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">");
+		StringBuilder builder = new StringBuilder();
+		builder.append(HEADER_ERROR);
 		for (String message : messages) {
 			builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 					+ "</message>");
@@ -122,9 +151,8 @@ public class GenericController {
 	 * @return
 	 */
 	public static HttpEntity<byte[]> returnSuccessXML(String message) {
-		StringBuilder builder = new StringBuilder(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		builder.append("<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">");
+		StringBuilder builder = new StringBuilder(HEADER_SUCCESS);
+		
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");

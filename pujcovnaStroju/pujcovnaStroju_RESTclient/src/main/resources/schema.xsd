@@ -4,9 +4,14 @@
 	<xs:element name="response">
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="machines" type="machinesType" minOccurs="1" maxOccurs="1"/>
-				<xs:element name="machine" type="machineType" minOccurs="1" maxOccurs="1"/>
-				<xs:element name="message" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+				<xs:element name="machines" type="machinesType"
+					minOccurs="1" maxOccurs="1" />
+				<xs:element name="machine" type="machineType" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="message" type="xs:string" minOccurs="1"
+					maxOccurs="unbounded" />
+				<xs:element name="availableTypes" type="types" minOccurs="1"
+					maxOccurs="1" />
 			</xs:choice>
 			<xs:attribute name="status" use="required" type="statusType" />
 		</xs:complexType>
@@ -24,7 +29,7 @@
 			<xs:element name="machine" type="machineType" minOccurs="0"
 				maxOccurs="unbounded" />
 		</xs:sequence>
-		<xs:attribute name="numFound" use="optional" type="xs:int"/>
+		<xs:attribute name="numFound" use="optional" type="xs:int" />
 	</xs:complexType>
 
 	<xs:complexType name="machineType">
@@ -35,4 +40,24 @@
 			<xs:element name="type" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
+
+	<xs:complexType name="types">
+		<xs:sequence>
+			<xs:element name="machinesTypes" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+           <xs:element name="usersTypes" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
 </xs:schema>
