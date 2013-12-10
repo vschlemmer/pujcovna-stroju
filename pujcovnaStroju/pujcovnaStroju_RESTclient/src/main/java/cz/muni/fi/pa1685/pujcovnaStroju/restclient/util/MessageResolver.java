@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -30,16 +32,20 @@ public class MessageResolver {
 	List<Object> result;
 	private static final String STATUS_SUCCESS = "success";
 	private static final String STATUS_ERROR = "error";
-	
+
 	private static final String ELEMENT_MACHINE = "machine";
 	private static final String ELEMENT_MACHINES = "machines";
 	private static final String ELEMENT_MESSAGE = "message";
-	
+	private static final String ELEMENT_AVAILABLE_TYPES = "availableTypes";
+
+	private static final String ELEMENT_MACHINE_TYPES = "machinesTypes";
+	private static final String ELEMENT_USER_TYPES = "usersTypes";
+
 	private static final String MACHINE_ID = "id";
 	private static final String MACHINE_LABEL = "label";
 	private static final String MACHINE_TYPE = "type";
 	private static final String MACHINE_DESCRIPTION = "description";
-	
+
 	private static ErrorHandler handler = new XMLerrorHandler();
 	private List<? extends Object> response;
 
@@ -51,18 +57,16 @@ public class MessageResolver {
 
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		builder.setErrorHandler(handler);
-		
-		
-		
+
 		InputSource is = new InputSource();
-	    is.setCharacterStream(new StringReader(messageBody));
+		is.setCharacterStream(new StringReader(messageBody));
 		Document document = builder.parse(is);
 		Element root = (Element) document.getDocumentElement();
-		
+
 		String language = XMLConstants.W3C_XML_SCHEMA_NS_URI;
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(language);
 		URL url = this.getClass().getResource("/schema.xsd");
-		Schema schema = schemaFactory.newSchema( url);
+		Schema schema = schemaFactory.newSchema(url);
 		Validator validator = schema.newValidator();
 		validator.validate(new DOMSource(document));
 
@@ -77,31 +81,36 @@ public class MessageResolver {
 			break;
 		}
 	}
-	
+
 	public List<? extends Object> getResponse() {
 		return response;
 	}
-	
+
 	/**
-	 * returns list of objects 
+	 * returns list of objects
+	 * 
 	 * @param root
 	 * @return
 	 */
 	private List<? extends Object> parseSuccess(Element root) {
 		Element element = (Element) root.getFirstChild();
 		switch (element.getNodeName()) {
-			case ELEMENT_MACHINES: return parseMachines(element);
-			case ELEMENT_MACHINE:
-				ArrayList <MachineDTO> list = new ArrayList<>();
-				list.add(parseMachine(element));
-				return list;
-			case ELEMENT_MESSAGE: return parseMessageResponse(root);
-			default: break;
+		case ELEMENT_MACHINES:
+			return parseMachines(element);
+		case ELEMENT_MACHINE:
+			ArrayList<MachineDTO> list = new ArrayList<>();
+			list.add(parseMachine(element));
+			return list;
+		case ELEMENT_MESSAGE:
+			return parseMessageResponse(root);
+		case ELEMENT_AVAILABLE_TYPES:
+			return parseTypes(root);
+		default:
+			break;
 		}
 		return null;
 	}
-	
-	
+
 	/**
 	 * creates List of {@link MachineDTO} from <machines></machines> element
 	 * 
@@ -119,6 +128,7 @@ public class MessageResolver {
 
 	/**
 	 * creates List of error messages
+	 * 
 	 * @param element
 	 * @return
 	 */
@@ -151,5 +161,39 @@ public class MessageResolver {
 				.getTextContent());
 		machine.setType(type);
 		return machine;
+	}
+
+	/**
+	 * creates list of available types
+	 * sturcture list [0] "machines"  -> list of available machine types
+	 *				  [1] "user"	  -> list of available user types
+	 * @param element
+	 * @return
+	 */
+	private List<List<String>> parseTypes(Element element) {
+		List<List<String>> result = new ArrayList<>();
+		List<String> listMachineTypes = new ArrayList<>();
+		List<String> listUserTypes = new ArrayList<>();
+		
+		Element availvableTypes = (Element) element.getFirstChild();
+		NodeList userTypes = availvableTypes.getElementsByTagName(ELEMENT_USER_TYPES);
+		Element parent = (Element) userTypes.item(0);
+		NodeList list = parent.getChildNodes();
+		
+		for (int i = 0; i < list.getLength(); i++) {
+			listUserTypes.add(list.item(i).getTextContent());
+		}
+		
+		NodeList machineTypes = availvableTypes.getElementsByTagName(ELEMENT_MACHINE_TYPES);
+		parent = (Element) machineTypes.item(0);
+		list = parent.getChildNodes();
+		
+		for (int i = 0; i < list.getLength(); i++) {
+			listMachineTypes.add(list.item(i).getTextContent());
+		} 
+		
+		result.add(listMachineTypes);
+		result.add(listUserTypes);
+		return result;
 	}
 }
