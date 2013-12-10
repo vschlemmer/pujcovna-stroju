@@ -118,5 +118,49 @@ public class MessageResolverTest extends TestCase {
 			fail();
 		}
 	}
+	
+	@Test
+	public void testMessageMarchaling1() {
+		String mes1 = "aaa";
+		String mes2 = "bbb";
+		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">" +
+				"<message>"+mes1+"</message><message>"+mes2+"</message>" +
+				"</response>";	
+		
+		try {
+			MessageResolver resolver = new MessageResolver(message);
+			List<? extends Object> response = resolver.getResponse();
+			
+			assertEquals(response.size(), 2);
+			assertEquals(response.get(0), (String) mes1);
+			assertEquals(response.get(1), (String) mes2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testMessageMarchaling2() {
+		String mes1 = "aaa";
+		String mes2 = "bbb";
+		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">" +
+				"<message>"+mes1+"</message><message>"+mes2+"</message>" +
+				"</response>";	
+		
+		try {
+			MessageResolver resolver = new MessageResolver(message);
+			List<? extends Object> response = resolver.getResponse();
+			
+			assertEquals(response.size(), 2);
+			assertEquals(response.get(0), (String) mes1);
+			assertEquals(response.get(1), (String) mes2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+
 
 }

@@ -71,7 +71,7 @@ public class MessageResolver {
 			response = parseSuccess(root);
 			break;
 		case STATUS_ERROR:
-			response = parseErrorResponse(root);
+			response = parseMessageResponse(root);
 			break;
 		default:
 			break;
@@ -95,6 +95,7 @@ public class MessageResolver {
 				ArrayList <MachineDTO> list = new ArrayList<>();
 				list.add(parseMachine(element));
 				return list;
+			case ELEMENT_MESSAGE: return parseMessageResponse(root);
 			default: break;
 		}
 		return null;
@@ -121,7 +122,7 @@ public class MessageResolver {
 	 * @param element
 	 * @return
 	 */
-	private List<String> parseErrorResponse(Element element) {
+	private List<String> parseMessageResponse(Element element) {
 		List<String> errorList = new ArrayList<>();
 		NodeList messageList = element.getElementsByTagName(ELEMENT_MESSAGE);
 		for (int i = 0; i < messageList.getLength(); i++) {
