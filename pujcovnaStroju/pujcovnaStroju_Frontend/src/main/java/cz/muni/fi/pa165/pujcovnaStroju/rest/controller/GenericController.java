@@ -111,7 +111,7 @@ public class GenericController {
 	 * @return
 	 */
 	public static HttpEntity<byte[]> returnXML(String xml) {
-		byte content[] = formatStringAsXML(xml).getBytes();
+		byte content[] = xml.getBytes();
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType("application", "xml"));
 		header.setContentLength(content.length);
@@ -165,7 +165,7 @@ public class GenericController {
 	 * @param input
 	 * @return
 	 */
-	public static String formatStringAsXML(String input) {
+	public static String ormatStringAsXML(String input) {
 		try {
 			Source xmlInput = new StreamSource(new StringReader(input));
 			StringWriter stringWriter = new StringWriter();

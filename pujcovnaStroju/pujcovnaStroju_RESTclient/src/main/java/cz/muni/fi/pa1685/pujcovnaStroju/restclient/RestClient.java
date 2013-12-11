@@ -41,6 +41,7 @@ public class RestClient {
 
 	private static String HELP_CONTENT = null;
 
+	private static Options machineListOptions = new Options();
 	private static Options machineAddOptions = new Options();
 	private static Options machineUpdateOptions = new Options();
 	private static Options machineDetailOptions = new Options();
@@ -56,6 +57,9 @@ public class RestClient {
 	 */
 
 	public static void main(String[] args) {
+		machineListOptions.addOption("l", "label", true, "Label of machine")
+				.addOption("d", "description", true, "Description of Machine")
+				.addOption("t", "type", true, "Type of Machine");
 		machineAddOptions.addOption("l", "label", true, "Label of machine")
 				.addOption("d", "description", true, "Description of Machine")
 				.addOption("t", "type", true, "Type of Machine");
@@ -71,10 +75,13 @@ public class RestClient {
 		String fixedArgs[] = null;
 		boolean exit = false;
 		String url = null;
+		StringBuilder builder;
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("SUper turbo mega hyper ubercool feature:\n");
 		do {
 
+			url = null;
+			builder = null;
 			String arg[] = scanner.nextLine().split(" ");
 			try {
 				switch (arg[0]) {
@@ -91,7 +98,37 @@ public class RestClient {
 					switch (arg[1]) {
 
 					case COMMAND_LIST:
-						url = BASIC_URL + COMMAND_MACHINE + "/" + COMMAND_LIST;
+						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+						cmd = parser.parse(machineListOptions, fixedArgs);
+
+						builder = new StringBuilder(BASIC_URL
+								+ COMMAND_MACHINE);
+						builder.append("/" + COMMAND_LIST + "/");
+						boolean firstParam = true;
+						if (cmd.getOptionValue("l") != null) {
+							if (firstParam) {
+								builder.append("?");
+								firstParam = false;
+							}
+							builder.append("label=" + cmd.getOptionValue("l")
+									+ "&");
+						}
+						if (cmd.getOptionValue("d") != null) {
+							if (firstParam) {
+								builder.append("?");
+								firstParam = false;
+							}
+							builder.append("description="
+									+ cmd.getOptionValue("d") + "&");
+						}
+						if (cmd.getOptionValue("t") != null) {
+							if (firstParam) {
+								builder.append("?");
+								firstParam = false;
+							}
+							builder.append("type=" + cmd.getOptionValue("t"));
+						}
+						url = builder.toString();
 						break;
 					case COMMAND_DETAIL:
 						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
@@ -142,9 +179,9 @@ public class RestClient {
 						cmd = parser.parse(machineUpdateOptions, fixedArgs);
 
 						if (cmd.getOptionValue("i") != null) {
-							StringBuilder builder = new StringBuilder(BASIC_URL
+							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_MACHINE);
-							builder.append("/" + COMMAND_ADD + "/?");
+							builder.append("/" + COMMAND_UPDATE + "/?");
 							if (cmd.getOptionValue("l") != null) {
 								builder.append("label="
 										+ cmd.getOptionValue("l") + "&");
@@ -215,8 +252,8 @@ public class RestClient {
 					"exit application"));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
-			builder.append(String.format("%s %s\t%s", COMMAND_MACHINE,
-					COMMAND_LIST, "show list of machines\n"));
+			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_LIST,
+					machineListOptions));
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
 					machineAddOptions));
 			builder.append(getOptionHelp(
@@ -284,21 +321,25 @@ public class RestClient {
 		}
 		return response.toString();
 	}
-	
+
 	/**
 	 * Transforms response object into readable form
+	 * 
 	 * @param response
 	 * @return
 	 */
 	private static String handleResponse(List<? extends Object> response) {
-		if (response == null || response.isEmpty()) {
+		if (response == null) {
 			return "Error occured during processing of response";
+		}
+		if (response.isEmpty()) {
+			return "Nothing was found";
 		}
 		Object sample = response.get(0);
 		StringBuilder builder = new StringBuilder();
 		if (sample instanceof MachineDTO) {
 			builder.append("---machines---");
-			for (Object machine:  response.toArray()) {
+			for (Object machine : response.toArray()) {
 				if (machine instanceof MachineDTO) {
 					builder.append(formatMachine((MachineDTO) machine));
 				}
@@ -306,7 +347,7 @@ public class RestClient {
 			return builder.toString();
 		}
 		if (sample instanceof String) {
-			for (Object message: response.toArray()) {
+			for (Object message : response.toArray()) {
 				if (message instanceof String) {
 					builder.append(formatMessage((String) message));
 				}
@@ -316,22 +357,22 @@ public class RestClient {
 		if (sample instanceof List<?>) {
 			builder.append("---machine types---\n");
 			List<?> machineTypes = (List<?>) response.get(0);
-			for (Object mType: machineTypes.toArray()) {
+			for (Object mType : machineTypes.toArray()) {
 				if (mType instanceof String) {
 					builder.append(mType);
 				}
 			}
-			
+
 			builder.append("---user types---\n");
 			List<?> userTypes = (List<?>) response.get(1);
-			for (Object uType: userTypes.toArray()) {
+			for (Object uType : userTypes.toArray()) {
 				if (uType instanceof String) {
 					builder.append(uType);
 				}
 			}
 			return builder.toString();
 		}
-		return "";
+		return "Nothing found";
 	}
 
 	private static void printParseError() {
@@ -342,25 +383,25 @@ public class RestClient {
 	private static void printConnectionError() {
 		System.out.println("Connection to server failed.");
 	}
-	
+
 	/**
 	 * returns printable String of {@link MachineDTO}
+	 * 
 	 * @param messages
 	 * @return
 	 */
 	private static String formatMachine(MachineDTO machine) {
 		return machine.toString() + "\n";
 	}
-	
+
 	/**
 	 * returns printable String of message
+	 * 
 	 * @param messages
 	 * @return
 	 */
 	private static String formatMessage(String message) {
 		return message + "\n";
 	}
-	
-
 
 }

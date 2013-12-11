@@ -42,13 +42,15 @@ public class MachineRestController {
 	@RequestMapping(value = "/list")
 	public HttpEntity<byte[]> listMachines(ModelMap map,
 			HttpServletResponse response,
+			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String label,
 			@RequestParam(required = false) String type) {
 
 		MachineTypeEnumDTO typeDTO = converter.convert(type);
 
 		List<MachineDTO> listMachines = null;
 		try {
-			listMachines = machineService.getMachineDTOsByParams(null, null,
+			listMachines = machineService.getMachineDTOsByParams(label, description,
 					typeDTO, null, null, null, null);
 			if (listMachines == null) {
 				listMachines = new ArrayList<>();
