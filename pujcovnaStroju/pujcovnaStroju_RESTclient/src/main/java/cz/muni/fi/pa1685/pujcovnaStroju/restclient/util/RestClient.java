@@ -21,30 +21,29 @@ public class RestClient {
 	private static final String COMMAND_USER_TYPES = "user_types";
 
 	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_EXIT = "exit";
 	private static final String COMMAND_LIST = "list";
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DETAIL = "detail";
 	private static final String COMMAND_UPDATE = "update";
 	private static final String COMMAND_DELETE = "delete";
 
+	private static String HELP_CONTENT = null;
+
 	private static Options machineAddOptions = new Options();
 	private static Options machineUpdateOptions = new Options();
 	private static Options machineDetailOptions = new Options();
 	private static Options machineDeleteOptions = new Options();
 
-	
 	/*
-	 * each command has three parts
-	 * 1) machine || user || help
-	 * 2) action (list, add, update, delete...)
-	 * 3) arguments of action represented as Option objects
+	 * each command has three parts 1) machine || user || help 2) action (list,
+	 * add, update, delete...) 3) arguments of action represented as Option
+	 * objects
 	 * 
-	 * example:
-	 * 	machine list
-	 *  machine add --label karel --description karel2 --type buldozer
-	 *  machine add -l karel -d karel2 -t buldozer
+	 * example: machine list machine add --label karel --description karel2
+	 * --type buldozer machine add -l karel -d karel2 -t buldozer
 	 */
-	
+
 	public static void main(String[] args) {
 		machineAddOptions.addOption("l", "label", true, "Label of machine")
 				.addOption("d", "description", true, "Description of Machine")
@@ -55,25 +54,25 @@ public class RestClient {
 				.addOption("t", "type", true, "Type of Machine");
 		machineDetailOptions.addOption("i", "id", true, "ID of machine");
 		machineDeleteOptions.addOption("i", "id", true, "ID of machine");
-		
+
 		CommandLineParser parser = new BasicParser();
 		CommandLine cmd;
 		String fixedArgs[] = null;
 		boolean exit = false;
 		String url = null;
+		Scanner scanner = new Scanner(System.in);
 		System.out.println("SUper turbo mega hyper ubercool feature:\n");
 		do {
 
-			Scanner scanner = new Scanner(System.in);
 			String arg[] = scanner.nextLine().split(" ");
 			try {
 				switch (arg[0]) {
 				case COMMAND_HELP:
-					StringBuilder sb = new StringBuilder(
-							"help  Show this help\n");
 					System.out.println(renderHelp());
-					System.out.println(sb);
-					break;
+					continue;
+				case COMMAND_EXIT:
+					exit = true;
+					continue;
 				case COMMAND_MACHINE_TYPES:
 					// fall through
 				case COMMAND_USER_TYPES:
@@ -94,7 +93,8 @@ public class RestClient {
 									+ COMMAND_DETAIL + "?id="
 									+ cmd.getOptionValue('i');
 						} else {
-							// error
+							printParseError();
+							continue;
 						}
 						break;
 
@@ -107,7 +107,8 @@ public class RestClient {
 									+ COMMAND_DELETE + "?id="
 									+ cmd.getOptionValue('i');
 						} else {
-							// error
+							printParseError();
+							continue;
 						}
 						break;
 					case COMMAND_ADD:
@@ -123,7 +124,8 @@ public class RestClient {
 									+ cmd.getOptionValue("d") + "&type="
 									+ cmd.getOptionValue("t");
 						} else {
-							// error
+							printParseError();
+							continue;
 						}
 						break;
 					case COMMAND_UPDATE:
@@ -148,40 +150,57 @@ public class RestClient {
 							}
 							url = builder.toString();
 						} else {
-							// error
+							printParseError();
+							continue;
 						}
 						break;
 					}
 					break;
-
+				default:
+					printParseError();
+					continue;
 				}
 
+				// at this point should be URL handled somehow
 				System.out.println(url);
-		
+
 			} catch (ParseException e) {
-				System.err.println("parse error");
+				printParseError();
+				continue;
 			}
 		} while (!exit);
+		scanner.close();
 	}
 
-	
 	/**
-	 * renders help contenten and returns as String
+	 * renders help content and returns as String
+	 * 
 	 * @return
 	 */
 	private static String renderHelp() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(COMMAND_MACHINE + " " + COMMAND_LIST + "\t shows list of machines\n");
-		builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
-				machineAddOptions));
-		builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_DETAIL,
-				machineDetailOptions));
-		builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_DELETE,
-				machineDeleteOptions));
-		builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_UPDATE,
-				machineDeleteOptions));
-		
-		return builder.toString();
+		if (HELP_CONTENT == null) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(String.format("%s\t%s\n", COMMAND_HELP,
+					"print this help"));
+			builder.append(String.format("%s\t%s\n", COMMAND_EXIT,
+					"exit application"));
+			builder.append(String.format("%s %s\t%s", COMMAND_MACHINE,
+					COMMAND_LIST, "show list of machines\n"));
+			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
+					machineAddOptions));
+			builder.append(getOptionHelp(
+					COMMAND_MACHINE + " " + COMMAND_DETAIL,
+					machineDetailOptions));
+			builder.append(getOptionHelp(
+					COMMAND_MACHINE + " " + COMMAND_DELETE,
+					machineDeleteOptions));
+			builder.append(getOptionHelp(
+					COMMAND_MACHINE + " " + COMMAND_UPDATE,
+					machineUpdateOptions));
+			HELP_CONTENT = builder.toString();
+		}
+		return HELP_CONTENT;
+
 	}
 
 	private static String getOptionHelp(String begin, Options options) {
@@ -197,6 +216,11 @@ public class RestClient {
 					current.getDescription()));
 		}
 		return builder.toString();
+	}
+
+	private static void printParseError() {
+		System.out
+				.println("Invalid command, help can by displayed by typing 'help'");
 	}
 
 }
