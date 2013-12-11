@@ -1,7 +1,16 @@
 package cz.muni.fi.pa1685.pujcovnaStroju.restclient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -9,6 +18,10 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.xml.sax.SAXException;
+
+import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
 
 public class RestClient {
 
@@ -16,9 +29,7 @@ public class RestClient {
 
 	private static final String COMMAND_MACHINE = "machine";
 
-	private static final String COMMAND_MACHINE_TYPES = "machine_types";
-	private static final String COMMAND_USER = "user";
-	private static final String COMMAND_USER_TYPES = "user_types";
+	private static final String COMMAND_TYPES = "types";
 
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_EXIT = "exit";
@@ -73,9 +84,7 @@ public class RestClient {
 				case COMMAND_EXIT:
 					exit = true;
 					continue;
-				case COMMAND_MACHINE_TYPES:
-					// fall through
-				case COMMAND_USER_TYPES:
+				case COMMAND_TYPES:
 					url = BASIC_URL + "types";
 					break;
 				case COMMAND_MACHINE:
@@ -161,8 +170,28 @@ public class RestClient {
 					continue;
 				}
 
+				try {
+					String responseString = sendRequest(url);
+
+					MessageResolver resolver = new MessageResolver(
+							responseString);
+					System.out.println(handleResponse(resolver.getResponse()));
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					System.out.println(url);
+					e.printStackTrace();
+				} catch (ConnectException e) {
+					printConnectionError();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+
+				}
+
 				// at this point should be URL handled somehow
-				System.out.println(url);
 
 			} catch (ParseException e) {
 				printParseError();
@@ -180,10 +209,12 @@ public class RestClient {
 	private static String renderHelp() {
 		if (HELP_CONTENT == null) {
 			StringBuilder builder = new StringBuilder();
-			builder.append(String.format("%s\t%s\n", COMMAND_HELP,
+			builder.append(String.format("%s\t\t%s\n", COMMAND_HELP,
 					"print this help"));
-			builder.append(String.format("%s\t%s\n", COMMAND_EXIT,
+			builder.append(String.format("%s\t\t%s\n", COMMAND_EXIT,
 					"exit application"));
+			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
+					"display supported types of users and machines"));
 			builder.append(String.format("%s %s\t%s", COMMAND_MACHINE,
 					COMMAND_LIST, "show list of machines\n"));
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
@@ -218,9 +249,118 @@ public class RestClient {
 		return builder.toString();
 	}
 
+	/**
+	 * sends request represented by given url
+	 * 
+	 * @param url
+	 * @return String - response
+	 * @throws ConnectException
+	 *             - if connection fails
+	 * @throws MalformedURLException
+	 */
+	private static String sendRequest(String url) throws ConnectException,
+			MalformedURLException {
+		BufferedReader reader = null;
+		StringBuffer response = null;
+		try {
+			URL restURL = new URL(url);
+
+			reader = new BufferedReader(new InputStreamReader(
+					restURL.openStream(), "UTF-8"));
+			response = new StringBuffer();
+			for (String line; (line = reader.readLine()) != null;) {
+				response.append(line);
+			}
+		}
+
+		catch (IOException e) {
+			printConnectionError();
+		} finally {
+			if (reader != null)
+				try {
+					reader.close();
+				} catch (IOException ignore) {
+				}
+		}
+		return response.toString();
+	}
+	
+	/**
+	 * Transforms response object into readable form
+	 * @param response
+	 * @return
+	 */
+	private static String handleResponse(List<? extends Object> response) {
+		if (response == null || response.isEmpty()) {
+			return "Error occured during processing of response";
+		}
+		Object sample = response.get(0);
+		StringBuilder builder = new StringBuilder();
+		if (sample instanceof MachineDTO) {
+			builder.append("---machines---");
+			for (Object machine:  response.toArray()) {
+				if (machine instanceof MachineDTO) {
+					builder.append(formatMachine((MachineDTO) machine));
+				}
+			}
+			return builder.toString();
+		}
+		if (sample instanceof String) {
+			for (Object message: response.toArray()) {
+				if (message instanceof String) {
+					builder.append(formatMessage((String) message));
+				}
+			}
+			return builder.toString();
+		}
+		if (sample instanceof List<?>) {
+			builder.append("---machine types---\n");
+			List<?> machineTypes = (List<?>) response.get(0);
+			for (Object mType: machineTypes.toArray()) {
+				if (mType instanceof String) {
+					builder.append(mType);
+				}
+			}
+			
+			builder.append("---user types---\n");
+			List<?> userTypes = (List<?>) response.get(1);
+			for (Object uType: userTypes.toArray()) {
+				if (uType instanceof String) {
+					builder.append(uType);
+				}
+			}
+			return builder.toString();
+		}
+		return "";
+	}
+
 	private static void printParseError() {
 		System.out
 				.println("Invalid command, help can by displayed by typing 'help'");
 	}
+
+	private static void printConnectionError() {
+		System.out.println("Connection to server failed.");
+	}
+	
+	/**
+	 * returns printable String of {@link MachineDTO}
+	 * @param messages
+	 * @return
+	 */
+	private static String formatMachine(MachineDTO machine) {
+		return machine.toString() + "\n";
+	}
+	
+	/**
+	 * returns printable String of message
+	 * @param messages
+	 * @return
+	 */
+	private static String formatMessage(String message) {
+		return message + "\n";
+	}
+	
+
 
 }

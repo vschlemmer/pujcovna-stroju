@@ -175,14 +175,14 @@ public class MessageResolverTest extends TestCase {
 		String machineType2 = "rrr";
 		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">"
 				+ "<availableTypes>"
-				+ "<machinesTypes>"
+				+ "<machineTypes>"
 				+ "<type>"+machineType1+"</type>"
 				+ "<type>"+machineType2+"</type>"
-				+ "</machinesTypes>"
-				+ "<usersTypes>"
+				+ "</machineTypes>"
+				+ "<userTypes>"
 				+ "<type>"+userType1+"</type>"
 				+ "<type>"+userType2+"</type>"
-				+ "</usersTypes>" + "</availableTypes>" + "</response>";
+				+ "</userTypes>" + "</availableTypes>" + "</response>";
 		
 		try {
 			MessageResolver resolver = new MessageResolver(message);

@@ -38,8 +38,8 @@ public class MessageResolver {
 	private static final String ELEMENT_MESSAGE = "message";
 	private static final String ELEMENT_AVAILABLE_TYPES = "availableTypes";
 
-	private static final String ELEMENT_MACHINE_TYPES = "machinesTypes";
-	private static final String ELEMENT_USER_TYPES = "usersTypes";
+	private static final String ELEMENT_MACHINE_TYPES = "machineTypes";
+	private static final String ELEMENT_USER_TYPES = "userTypes";
 
 	private static final String MACHINE_ID = "id";
 	private static final String MACHINE_LABEL = "label";
