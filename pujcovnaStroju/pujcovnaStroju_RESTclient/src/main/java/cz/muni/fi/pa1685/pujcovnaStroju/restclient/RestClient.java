@@ -353,8 +353,10 @@ public class RestClient {
 				}
 
 				try {
-					System.out.println(url);
 					String responseString = sendRequest(url);
+					if (responseString == null) {
+						continue;
+					}
 
 					MessageResolver resolver = new MessageResolver(
 							responseString);
@@ -470,6 +472,7 @@ public class RestClient {
 
 		catch (IOException e) {
 			printConnectionError();
+			return null;
 		} finally {
 			if (reader != null)
 				try {
