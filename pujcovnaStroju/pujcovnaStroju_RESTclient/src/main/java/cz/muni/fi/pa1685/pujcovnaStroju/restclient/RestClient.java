@@ -24,6 +24,11 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
 
+/**
+ * CLI client 
+ * @author Michal Merta
+ *
+ */
 public class RestClient {
 
 	private static final String BASIC_URL = "http://localhost:8080/pa165/rest/";
@@ -98,11 +103,12 @@ public class RestClient {
 		String url = null;
 		StringBuilder builder;
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("SUper turbo mega hyper ubercool feature:\n");
+		System.out.println("Super turbo mega hyper ubercool feature:\n");
 		do {
 
 			url = null;
 			builder = null;
+			System.out.print("> ");
 			String arg[] = scanner.nextLine().split(" ");
 			try {
 				switch (arg[0]) {
@@ -332,7 +338,9 @@ public class RestClient {
 						}
 						break;
 					}
-
+					break;
+				case "":
+					continue;
 				default:
 					break;
 				}
@@ -388,6 +396,7 @@ public class RestClient {
 					"exit application"));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
+			
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_LIST,
 					machineListOptions));
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
@@ -405,9 +414,9 @@ public class RestClient {
 			builder.append(getOptionHelp(COMMAND_USER + " " + COMMAND_LIST,
 					userListOptions));
 			builder.append(getOptionHelp(COMMAND_USER + " " + COMMAND_ADD,
-					machineAddOptions));
+					userAddOptions));
 			builder.append(getOptionHelp(COMMAND_USER + " " + COMMAND_UPDATE,
-					machineUpdateOptions));
+					userUpdateOptions));
 			builder.append(getOptionHelp(COMMAND_USER + " " + COMMAND_DETAIL,
 					userDetailOptions));
 			builder.append(getOptionHelp(COMMAND_USER + " " + COMMAND_DELETE,
