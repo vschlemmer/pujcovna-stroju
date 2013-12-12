@@ -209,7 +209,8 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_MACHINE);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							if (cmd.getOptionValue("l") != null) {
+							builder.append("id=" + cmd.getOptionValue("i") + "&");
+                                                        if (cmd.getOptionValue("l") != null) {
 								builder.append("label="
 										+ cmd.getOptionValue("l") + "&");
 							}
@@ -319,7 +320,8 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_USER);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							if (cmd.getOptionValue("f") != null) {
+							builder.append("id=" + cmd.getOptionValue("i") + "&");
+                                                        if (cmd.getOptionValue("f") != null) {
 								builder.append("firstName="
 										+ cmd.getOptionValue("f") + "&");
 							}

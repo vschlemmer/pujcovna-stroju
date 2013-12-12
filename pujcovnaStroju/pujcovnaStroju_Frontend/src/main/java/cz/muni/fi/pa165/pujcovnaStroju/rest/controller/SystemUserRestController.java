@@ -205,11 +205,10 @@ public class SystemUserRestController {
         if (firstName == null || firstName.isEmpty() || type == null || type.isEmpty()
                         || lastName == null || lastName.isEmpty()) {
             errorMessages
-                .add("None of arguments (label, description, type) set, nothing to update");
+                .add("None of arguments (firstName, lastName, type) set, nothing to update");
         }
         SystemUserDTO user = null;
         SystemUserDTO updated = null;
-        UserTypeEnumDTO typeDTO = converter.convert(type);
         try {
             user = userService.read(lid);
             if (user == null) {
@@ -222,8 +221,11 @@ public class SystemUserRestController {
             if (lastName != null && !lastName.isEmpty()) {
                 user.setLastName(lastName);
             }	
-            if (typeDTO.getTypeLabel() != null) {
-                user.setType(typeDTO);
+            if (type != null && !type.isEmpty()){
+                UserTypeEnumDTO typeDTO = typeDTO = converter.convert(type);
+                if (typeDTO.getTypeLabel() != null) {
+                    user.setType(typeDTO);
+                }
             }
             updated = userService.update(user);
         } catch (UnsupportedTypeException e) {
