@@ -26,15 +26,19 @@ import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 
 public class MessageResolver {
 
-	List<Object> result;
+	
 	private static final String STATUS_SUCCESS = "success";
 	private static final String STATUS_ERROR = "error";
 
 	private static final String ELEMENT_MACHINE = "machine";
 	private static final String ELEMENT_MACHINES = "machines";
+	private static final String ELEMENT_USER = "user";
+	private static final String ELEMENT_USERS = "users";
 	private static final String ELEMENT_MESSAGE = "message";
 	private static final String ELEMENT_AVAILABLE_TYPES = "availableTypes";
 
@@ -45,6 +49,11 @@ public class MessageResolver {
 	private static final String MACHINE_LABEL = "label";
 	private static final String MACHINE_TYPE = "type";
 	private static final String MACHINE_DESCRIPTION = "description";
+	
+	private static final String USER_ID = "id";
+	private static final String USER_FIRSTNAME = "firstName";
+	private static final String USER_TYPE = "type";
+	private static final String USER_LASTNAME = "lastName";
 
 	private static ErrorHandler handler = new XMLerrorHandler();
 	private List<? extends Object> response;
@@ -101,6 +110,12 @@ public class MessageResolver {
 			ArrayList<MachineDTO> list = new ArrayList<>();
 			list.add(parseMachine(element));
 			return list;
+		case ELEMENT_USERS:
+			return parseUsers(element);
+		case ELEMENT_USER:
+			ArrayList<SystemUserDTO> userList = new ArrayList<>();
+			userList.add(parseUser(element));
+			return userList;
 		case ELEMENT_MESSAGE:
 			return parseMessageResponse(root);
 		case ELEMENT_AVAILABLE_TYPES:
@@ -196,4 +211,42 @@ public class MessageResolver {
 		result.add(listUserTypes);
 		return result;
 	}
+	
+	/**
+	 * creates List of {@link MachineDTO} from <machines></machines> element
+	 * 
+	 * @param element
+	 * @return
+	 */
+	private List<SystemUserDTO> parseUsers(Element element) {
+		List<SystemUserDTO> userList = new ArrayList<>();
+		NodeList nodes = element.getElementsByTagName(ELEMENT_USER);
+		for (int i = 0; i < nodes.getLength(); i++) {
+			userList.add(parseUser((Element) nodes.item(i)));
+		}
+		return userList;
+	}
+	
+	/**
+	 * creates {@link MachineDTO} object from <machine></machine> element
+	 * 
+	 * @param element
+	 * @return
+	 */
+	private SystemUserDTO parseUser(Element element) {
+		SystemUserDTO user = new SystemUserDTO();
+		user.setId(Long.valueOf(element.getElementsByTagName(USER_ID)
+				.item(0).getTextContent()));
+		user.setFirstName(element.getElementsByTagName(USER_FIRSTNAME).item(0)
+				.getTextContent());
+		user.setLastName(element
+				.getElementsByTagName(USER_LASTNAME).item(0)
+				.getTextContent());
+		UserTypeEnumDTO type = new UserTypeEnumDTO();
+		type.setTypeLabel(element.getElementsByTagName(USER_TYPE).item(0)
+				.getTextContent());
+		user.setType(type);
+		return user;
+	}
+
 }

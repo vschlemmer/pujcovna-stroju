@@ -8,6 +8,10 @@
 					minOccurs="1" maxOccurs="1" />
 				<xs:element name="machine" type="machineType" minOccurs="1"
 					maxOccurs="1" />
+				<xs:element name="users" type="usersType" minOccurs="1"
+					maxOccurs="1" />
+				<xs:element name="user" type="userType" minOccurs="1"
+					maxOccurs="1" />
 				<xs:element name="message" type="xs:string" minOccurs="1"
 					maxOccurs="unbounded" />
 				<xs:element name="availableTypes" type="types" minOccurs="1"
@@ -46,17 +50,36 @@
 			<xs:element name="machineTypes" minOccurs="1" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+						<xs:element name="type" type="xs:string" minOccurs="1"
+							maxOccurs="unbounded" />
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-           <xs:element name="userTypes" minOccurs="1" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+			<xs:element name="userTypes" minOccurs="1" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type" type="xs:string" minOccurs="1"
+							maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+    <xs:complexType name="usersType">
+        <xs:sequence>
+            <xs:element name="user" type="userType" minOccurs="0"
+                maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="numFound" use="optional" type="xs:int" />
+    </xs:complexType>
+	<xs:complexType name="userType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:long" />
+			<xs:element name="firstName" type="xs:string" />
+			<xs:element name="lastName" type="xs:string" />
+			<xs:element name="type" type="xs:string" />
 		</xs:sequence>
 	</xs:complexType>
 

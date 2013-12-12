@@ -12,6 +12,8 @@ import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
 
 public class MessageResolverTest extends TestCase {
@@ -199,6 +201,36 @@ public class MessageResolverTest extends TestCase {
 			List<String> userTypes = (List<String>) response.get(1);
 			assertEquals(userTypes.get(0), (String) userType1);
 			assertEquals(userTypes.get(1), (String) userType2);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testUserMarshaling() {
+		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\"><users numFound=\"1\"><user><id>1</id><firstName>karel</firstName><lastName>karel2</lastName><type>REVISIONER</type></user></users></response>";
+
+		try {
+			MessageResolver resolver = new MessageResolver(message);
+			SystemUserDTO user = new SystemUserDTO();
+			user.setId(1L);
+			user.setFirstName("karel");
+			user.setLastName("karel2");
+			UserTypeEnumDTO type = new UserTypeEnumDTO();
+			type.setTypeLabel("revisioner");
+			user.setType(type);
+
+			List<? extends Object> response = resolver.getResponse();
+			assertEquals(1, response.size());
+			Object recievedUser = response.get(0);
+
+			if (recievedUser instanceof SystemUserDTO) {
+				assertEquals(user, (SystemUserDTO) response.get(0));
+			} else {
+				fail();
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

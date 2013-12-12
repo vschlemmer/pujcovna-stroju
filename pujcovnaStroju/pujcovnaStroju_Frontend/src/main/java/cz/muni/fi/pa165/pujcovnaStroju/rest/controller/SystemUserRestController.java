@@ -44,6 +44,8 @@ public class SystemUserRestController {
     @RequestMapping(value = "/list")
     public HttpEntity<byte[]> listUsers(ModelMap map,
                     HttpServletResponse response,
+                    @RequestParam(required = false) String firstName,
+                    @RequestParam(required = false) String lastName,
                     @RequestParam(required = false) String type) {
         UserTypeEnumDTO typeDTO = null;
         if (type != null){
@@ -51,7 +53,7 @@ public class SystemUserRestController {
         }
         List<SystemUserDTO> listUsers = null;
         try {
-            listUsers = userService.getSystemUsersByParams(null, null, typeDTO);
+            listUsers = userService.getSystemUsersByParams(firstName, lastName, typeDTO);
                 if (listUsers == null) {
                     listUsers = new ArrayList<>();
                 }
