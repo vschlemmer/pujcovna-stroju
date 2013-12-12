@@ -527,6 +527,7 @@ public class RestClient {
 			for (Object mType : machineTypes.toArray()) {
 				if (mType instanceof String) {
 					builder.append(mType);
+                                        builder.append("\n");
 				}
 			}
 
@@ -535,6 +536,7 @@ public class RestClient {
 			for (Object uType : userTypes.toArray()) {
 				if (uType instanceof String) {
 					builder.append(uType);
+                                        builder.append("\n");
 				}
 			}
 			return builder.toString();
