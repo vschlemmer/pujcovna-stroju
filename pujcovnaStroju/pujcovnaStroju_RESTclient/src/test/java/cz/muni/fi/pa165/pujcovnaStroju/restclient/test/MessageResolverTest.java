@@ -209,16 +209,27 @@ public class MessageResolverTest extends TestCase {
 	
 	@Test
 	public void testUserMarshaling() {
-		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\"><users numFound=\"1\"><user><id>1</id><firstName>karel</firstName><lastName>karel2</lastName><type>REVISIONER</type></user></users></response>";
+		String userName = "karel";
+		String userSurname = "karel2";
+		String typeName = "revisioner";
+		
+		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">"
+				+ "<users numFound=\"1\">"
+				+ "<user>"
+				+ "<id>1</id>"
+				+ "<firstName>"+userName+"</firstName>"
+				+ "<lastName>"+userSurname+"</lastName>"
+				+ "<type>"+typeName+"</type>"
+				+ "</user></users></response>";
 
 		try {
 			MessageResolver resolver = new MessageResolver(message);
 			SystemUserDTO user = new SystemUserDTO();
 			user.setId(1L);
-			user.setFirstName("karel");
-			user.setLastName("karel2");
+			user.setFirstName(userName);
+			user.setLastName(userSurname);
 			UserTypeEnumDTO type = new UserTypeEnumDTO();
-			type.setTypeLabel("revisioner");
+			type.setTypeLabel(typeName);
 			user.setType(type);
 
 			List<? extends Object> response = resolver.getResponse();

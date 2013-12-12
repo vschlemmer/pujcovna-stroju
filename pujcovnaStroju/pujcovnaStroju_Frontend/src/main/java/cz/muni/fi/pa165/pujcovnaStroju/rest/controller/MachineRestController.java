@@ -239,6 +239,7 @@ public class MachineRestController {
 				machine.setDescription(description);
 			}
 			if (typeDTO.getTypeLabel() != null) {
+				typeDTO.setTypeLabel(typeDTO.getTypeLabel().toUpperCase());
 				machine.setType(typeDTO);
 			}
 			updated = machineService.update(machine);
