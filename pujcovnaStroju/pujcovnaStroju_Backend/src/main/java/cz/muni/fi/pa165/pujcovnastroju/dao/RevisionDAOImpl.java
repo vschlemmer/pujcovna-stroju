@@ -78,10 +78,8 @@ public class RevisionDAOImpl implements RevisionDAO {
 		if (revision == null) {
 			throw new IllegalArgumentException("revision is null");
 		}
-		// em.getTransaction().begin();
 		Revision revision1 = em.merge(revision);
 		em.remove(revision1);
-		// em.getTransaction().commit();
 		return em.find(Revision.class, revision.getRevID());
 	}
 
@@ -92,10 +90,8 @@ public class RevisionDAOImpl implements RevisionDAO {
 		if (revision.getRevID() == null) {
 			throw new IllegalArgumentException("revision.id is null");
 		}
-		// em.getTransaction().begin();
 		Revision revision1 = em.merge(revision);
 		em.persist(revision1);
-		// em.getTransaction().commit();
 		return em.find(Revision.class, revision1.getRevID());
 	}
 
@@ -113,11 +109,6 @@ public class RevisionDAOImpl implements RevisionDAO {
 		cq.select(revisionRoot);
 
 		return em.createQuery(cq).getResultList();
-
-		// TypedQuery<Revision> query1 = em.createQuery(
-		// "SELECT r FROM Revision r", Revision.class);
-		// return query1.getResultList();
-
 	}
 
 	public List<Revision> findRevisionsByDate(Date dateFrom, Date dateTo) {

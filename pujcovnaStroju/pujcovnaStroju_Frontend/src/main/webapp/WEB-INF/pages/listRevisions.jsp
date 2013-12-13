@@ -170,16 +170,6 @@
 							</c:forEach>
 						</form:select></td>
 				</tr>
-				<%--<tr>
-                    <td><form:label path="type">
-                        <spring:message code="lang.type" text="Type" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField" path="type" /></td>
-                    <td><label id="userFormTypeWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>--%>
 				<tr>
 					<td colspan="2">
 						<button class="button" type="button" value="Add revision"

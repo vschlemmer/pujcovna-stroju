@@ -158,20 +158,6 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.delete(user1);
         em.getTransaction().commit();
     }
-
-    /**
-     * Test deleting a user
-     */
-//    public void testDelete(){
-//        SystemUser user1 = createSampleUser();
-//        em.getTransaction().begin();
-//        userDAO.create(user1);
-//        em.getTransaction().commit();
-//        em.getTransaction().begin();
-//        userDAO.delete(user1);
-//        em.getTransaction().commit();
-//        assertNull(userDAO.read(user1.getId()));
-//    }
     
     /**
      * Test retrieving all users

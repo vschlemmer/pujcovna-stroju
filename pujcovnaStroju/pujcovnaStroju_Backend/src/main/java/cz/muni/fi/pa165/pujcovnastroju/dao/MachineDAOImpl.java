@@ -186,13 +186,6 @@ public class MachineDAOImpl implements MachineDAO {
 			Expression<Date> loanTime = join.get("loanTime");
 			subPredicates.add(criteriaBuilder.lessThanOrEqualTo(loanTime, freeTill));
 		    }
-		    
-		    //add availability counting machines that are already assigned to loan
-		    /*if (loan != null) {
-			Expression<Collection> loansExp = rootMachines.get("loans");
-			subPredicates.add(criteriaBuilder.isNotMember(loan, loansExp));
-		    }*/
-		    
 		    subquery.where(subPredicates.toArray(new Predicate[]{}));
 		    
 		    predicates.add(criteriaBuilder.not(criteriaBuilder.in(rootMachines.get("id")).value(subquery)));

@@ -154,7 +154,6 @@ public class LoanDAOTest extends TestCase {
         Loan result = loanDAO.delete(id);
 	em.getTransaction().commit();
         assertEquals(expResult, result);
-//        assertNull(loanDAO.read(expResult.getId()));
     }
 
     /**

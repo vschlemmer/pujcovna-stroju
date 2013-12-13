@@ -62,9 +62,7 @@ public class MachineController {
 		return "redirect:/machine/list";
 	}
 
-	@RequestMapping(value = "/list"
-	// , params = {"stored","errorText"}, method = RequestMethod.GET
-	)
+	@RequestMapping(value = "/list")
 	public ModelAndView listMachines(
 			ModelMap model,
 			@RequestParam(value = "storeStatus", required = false, defaultValue = "") String storeStatus,

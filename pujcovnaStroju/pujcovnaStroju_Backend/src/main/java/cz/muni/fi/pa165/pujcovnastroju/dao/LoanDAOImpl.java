@@ -75,7 +75,6 @@ public class LoanDAOImpl implements LoanDAO {
 					.setParameter("machineId", machine.getId()).setParameter("rTime", loan.getReturnTime()).setParameter("lTime", loan.getLoanTime());
 			}
 			if (availableMachine.getResultList().isEmpty()) {
-				//machine = (Machine) availableMachine.getSingleResult();
 				if (!machinesToMerge.contains(machine)) {
 					machine = em.merge(machine);
 					machinesToMerge.add(machine);
