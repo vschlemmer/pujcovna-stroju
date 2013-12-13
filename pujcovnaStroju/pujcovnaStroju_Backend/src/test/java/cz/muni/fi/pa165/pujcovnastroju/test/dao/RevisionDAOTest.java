@@ -193,7 +193,10 @@ public class RevisionDAOTest extends TestCase {
         List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
         assertEquals(revisions1, revisions2);
     }
-
+    
+/**
+     * Test retrieving revisions by parameters
+     */
     public void testFindRevisionsByParams() {
         Revision revision1 = createSampleRevision();
         Revision revision2 = createSampleRevision();
