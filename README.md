@@ -10,9 +10,9 @@ To run the Application:
            "username: pa165"
             "password: pa165"
 
-3) Run the server part using jetty container:
+3) Run the server part using tomcat container:
      (cd pujcovna-stroju\pujcovnaStroju)
-     mvn jetty:run-war
+     mvn tomcat:run-war
 
 4) Web app is now available at http://http://localhost:8084/frontend/
 
