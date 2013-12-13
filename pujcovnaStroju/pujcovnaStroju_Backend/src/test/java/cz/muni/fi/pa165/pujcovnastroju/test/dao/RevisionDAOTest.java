@@ -193,4 +193,26 @@ public class RevisionDAOTest extends TestCase {
         List<Revision> revisions2 = revDAO.findRevisionsByDate(dateFrom, dateTo);
         assertEquals(revisions1, revisions2);
     }
+
+    public void testFindRevisionsByParams() {
+        Revision revision1 = createSampleRevision();
+        Revision revision2 = createSampleRevision();
+        Revision revision3 = createSampleRevision();
+        em.getTransaction().begin();
+        revDAO.create(revision1);
+        revDAO.create(revision2);
+        revDAO.create(revision3);
+        em.getTransaction().commit();
+        em.getTransaction().begin();
+        List<Revision> revisionList1 = revDAO.findRevisionsByParams("Opraveno", null, null, null);
+        em.getTransaction().commit();
+        assertEquals(revisionList1, revDAO.findAllrevisions());
+        assertEquals(3, revisionList1.size());
+        em.getTransaction().begin();
+        revDAO.delete(revision1);
+        revDAO.delete(revision2);
+        revDAO.delete(revision3);
+        em.getTransaction().commit();
+
+    }
 }
