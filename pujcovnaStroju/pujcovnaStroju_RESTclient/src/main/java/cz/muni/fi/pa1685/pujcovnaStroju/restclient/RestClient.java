@@ -23,6 +23,8 @@ import org.xml.sax.SAXException;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
+import java.net.SocketTimeoutException;
+import java.net.URLConnection;
 
 /**
  * CLI client 
@@ -45,8 +47,13 @@ public class RestClient {
 	private static final String COMMAND_DETAIL = "detail";
 	private static final String COMMAND_UPDATE = "update";
 	private static final String COMMAND_DELETE = "delete";
+	private static final String COMMAND_TIMEOUT = "timeout";
 
 	private static String HELP_CONTENT = null;
+	
+	
+	private static final int DEFAULT_CONNECTION_TIMEOUT = 18000;
+	private static int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT; // in millis
 
 	private static Options machineListOptions = new Options();
 	private static Options machineAddOptions = new Options();
@@ -114,6 +121,21 @@ public class RestClient {
 				switch (arg[0]) {
 				case COMMAND_HELP:
 					System.out.println(renderHelp());
+					continue;
+				case COMMAND_TIMEOUT:
+					if (arg.length > 1) {
+						try {
+							int newTimeout = Integer.parseInt(arg[1]);
+							connectionTimeout = newTimeout;
+							System.out.println("Timeout set to " + connectionTimeout + "ms.");
+						} catch (NumberFormatException e) {
+							System.out.println("Timeout value hasn't been changed. "
+								+ "Wrong number format was given.");
+						}
+					}
+					else {
+						System.out.println("Timeout is set to " + connectionTimeout + "ms.");
+					}
 					continue;
 				case COMMAND_EXIT:
 					exit = true;
@@ -383,7 +405,6 @@ public class RestClient {
 				continue;
 			}
 		} while (!exit);
-		scanner.close();
 	}
 
 	/**
@@ -398,6 +419,10 @@ public class RestClient {
 					"print this help"));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_EXIT,
 					"exit application"));
+			builder.append(String.format("%s\t\t%s\n", COMMAND_TIMEOUT,
+					"return current value of timeout"));
+			builder.append(String.format("%s [time]\t%s\n", COMMAND_TIMEOUT,
+					"set timeout to given [time] in milliseconds; default is " + DEFAULT_CONNECTION_TIMEOUT));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
 			
@@ -461,15 +486,21 @@ public class RestClient {
 		StringBuffer response = null;
 		try {
 			URL restURL = new URL(url);
-
+			URLConnection restURLConnection = restURL.openConnection();
+			restURLConnection.setConnectTimeout(connectionTimeout);
+			restURLConnection.setReadTimeout(connectionTimeout);
+			
 			reader = new BufferedReader(new InputStreamReader(
-					restURL.openStream(), "UTF-8"));
+					restURLConnection.getInputStream(), "UTF-8"));
 			response = new StringBuffer();
 			for (String line; (line = reader.readLine()) != null;) {
 				response.append(line);
 			}
 		}
-
+		catch (SocketTimeoutException e) {
+			printSocketTimeOutError();
+			return null;
+		}
 		catch (IOException e) {
 			printConnectionError();
 			return null;
@@ -548,12 +579,15 @@ public class RestClient {
 	}
 
 	private static void printParseError() {
-		System.out
-				.println("Invalid command, help can by displayed by typing 'help'");
+		System.out.println("Invalid command, help can by displayed by typing 'help'");
 	}
 
 	private static void printConnectionError() {
 		System.out.println("Connection to server failed.");
+	}
+	
+	private static void printSocketTimeOutError() {
+		System.out.println("Operation timed out.");
 	}
 
 	/**
