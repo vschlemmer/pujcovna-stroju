@@ -1,9 +1,9 @@
 pujcovna-stroju
 ===============
 
-To run the application:
-1) Clean and build the whole project: 
-     (cd pujcovna-stroju\pujcovnaStroju)
+To run the Application:
+-------------------------
+1) Clean and build the whole project: (cd pujcovna-stroju\pujcovnaStroju)
      mvn clean install
 
 2) Make sure your derby db is available at jdbc:derby://localhost:1527/memory:sample;create=true
