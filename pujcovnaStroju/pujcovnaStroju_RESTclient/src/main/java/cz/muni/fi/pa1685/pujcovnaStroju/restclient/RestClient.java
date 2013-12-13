@@ -90,7 +90,7 @@ public class RestClient {
 		
 		exit = false;
 		String url = null;
-		Scanner scanner = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in,"utf-8");
 		
 		System.out.println("Super turbo mega hyper ubercool feature:\n");
 		
@@ -277,6 +277,10 @@ public class RestClient {
 			for (String line; (line = reader.readLine()) != null;) {
 				response.append(line);
 			}
+		}
+		catch (MalformedURLException e) {
+			printError(ClientErrorEnum.PARSE_ERROR);
+			return null;
 		}
 		catch (SocketTimeoutException e) {
 			printError(ClientErrorEnum.TIMEOUT_ERROR);
