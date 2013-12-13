@@ -31,3 +31,10 @@ all commands are described in the "help"
 to create a user: USER ADD -F mane -l lastname -T ADMINISTRATOR 
 
 to list user user with ID 1: user detail -i 1
+
+dalsie sample prikazy
+curl http://localhost:8080/pa165/rest/user/add?firstName=Tomas\&lastName="Jedno"\&type=REVISIONER
+curl http://localhost:8080/pa165/rest/user/list
+curl http://localhost:8080/pa165/rest/user/detail?id=1
+curl http://localhost:8080/pa165/rest/user/update?id=1\&type=CUSTOMERLEGAL\&firstName=Tomas2\&lastName=Jedno2
+curl http://localhost:8080/pa165/rest/user/delete?id=1
