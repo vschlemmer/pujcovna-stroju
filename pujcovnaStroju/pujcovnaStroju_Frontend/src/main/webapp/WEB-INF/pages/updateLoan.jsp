@@ -131,7 +131,12 @@
 	    <tr>
 		<td colspan="2">
 		    <c:if test="${not empty loan}"><input class="button" type="button" value="Update loan" onclick="javascript:validateAndSubmitUpdateLoanForm()" /></c:if>
-		    <c:if test="${empty loan}"><input class="button" type="button" value="Add loan" onclick="javascript:validateAndSubmitAddLoanForm()" /></c:if>
+		    <c:if test="${empty loan}">
+                        <button class="button" type="button" value="Add loan" 
+                            onclick="javascript:validateAndSubmitAddLoanForm()">
+                                <spring:message code="lang.addLoan" text="Add Loan" />
+                        </button>
+                    </c:if>
 		    
 		</td>
 	    </tr>
