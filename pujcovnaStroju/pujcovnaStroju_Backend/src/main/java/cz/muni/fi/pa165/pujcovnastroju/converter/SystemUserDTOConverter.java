@@ -12,7 +12,18 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
  */
 public class SystemUserDTOConverter {
 
-	public static SystemUser dtoToEntity(SystemUserDTO userDTO, boolean bounded) {
+	
+        /**
+	 * Converts DTO to entity object
+	 * 
+	 * @param userDTO
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return SystemUser object or null if userDTO is null
+	 */
+        public static SystemUser dtoToEntity(SystemUserDTO userDTO, boolean bounded) {
 		if (userDTO == null)
 			return null;
 
@@ -29,6 +40,17 @@ public class SystemUserDTOConverter {
 		return user;
 	}
 
+        /**
+	 * Converts entity object to DTO
+	 * 
+	 * @param systemUser
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * 
+	 * @return SystemUserDTO or null if systemUser is null
+	 */
 	public static SystemUserDTO entityToDTO(SystemUser systemUser,
 			boolean bounded) {
 		if (systemUser == null)
@@ -47,6 +69,16 @@ public class SystemUserDTOConverter {
 		return userDTO;
 	}
 
+        /**
+	 * Converts list of entity objects to list of DTOs
+	 * 
+	 * @param users
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return list of DTOs or null if users is null
+	 */
 	public static List<SystemUserDTO> listToDTO(List<SystemUser> users,
 			boolean bounded) {
 		if (users == null)
@@ -59,6 +91,16 @@ public class SystemUserDTOConverter {
 		return usersDTO;
 	}
 
+        /**
+	 * Converts list of DTOs to list of entity objects
+	 * 
+	 * @param usersDTO
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return list of SystemUser or null if usersDTO is null
+	 */
 	public static List<SystemUser> listToEntities(List<SystemUserDTO> usersDTO,
 			boolean bounded) {
 		if (usersDTO == null)

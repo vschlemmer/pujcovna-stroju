@@ -11,7 +11,16 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
  * 
  */
 public class MachineTypeDTOConverter {
-	public static MachineTypeEnum dtoToEntity(MachineTypeEnumDTO dto) {
+
+        
+        /**
+	 * Converts DTO to entity object
+	 * 
+	 * @param dto
+	 *            to be converted
+	 * @return MachineTypeEnum object or null if dto is null
+	 */
+        public static MachineTypeEnum dtoToEntity(MachineTypeEnumDTO dto) {
 		if (dto == null)
 			return null;
 		MachineTypeEnum type;
@@ -23,6 +32,14 @@ public class MachineTypeDTOConverter {
 		return type;
 	}
 
+        /**
+	 * Converts entity object to DTO
+	 * 
+	 * @param type
+	 *            to be converted
+	 * 
+	 * @return MachineTypeEnumDTO or null if type is null
+	 */
 	public static MachineTypeEnumDTO entityToDto(MachineTypeEnum type) {
 		if (type == null)
 			return null;

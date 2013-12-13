@@ -12,6 +12,16 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
  */
 public class MachineDTOConverter {
 
+        /**
+	 * Converts DTO to entity object
+	 * 
+	 * @param dto
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return Machine object or null if dto is null
+	 */
 	public static Machine dtoToEntity(MachineDTO dto, boolean bounded) {
 		if (dto == null)
 			return null;
@@ -30,6 +40,17 @@ public class MachineDTOConverter {
 		return entity;
 	}
 
+        /**
+	 * Converts entity object to DTO
+	 * 
+	 * @param entity
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * 
+	 * @return MachineDTO or null if entity is null
+	 */
 	public static MachineDTO entityToDto(Machine entity, boolean bounded) {
 		if (entity == null)
 			return null;
@@ -46,6 +67,16 @@ public class MachineDTOConverter {
 		return dto;
 	}
 
+        /**
+	 * Converts list of entity objects to list of DTOs
+	 * 
+	 * @param list
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return list of DTOs or null if list is null
+	 */
 	public static List<MachineDTO> listToDto(List<Machine> list, boolean bounded) {
 		if (list == null)
 			return null;
@@ -57,6 +88,16 @@ public class MachineDTOConverter {
 		return resultList;
 	}
 
+        /**
+	 * Converts list of DTOs to list of entity objects
+	 * 
+	 * @param listDTO
+	 *            to be converted
+	 * @param bounded
+	 *            if false inner collections will be also transformed, otherwise
+	 *            are null
+	 * @return list of Machines or null if listDTO is null
+	 */
 	public static List<Machine> listToEntities(List<MachineDTO> listDTO,
 			boolean bounded) {
 		if (listDTO == null)

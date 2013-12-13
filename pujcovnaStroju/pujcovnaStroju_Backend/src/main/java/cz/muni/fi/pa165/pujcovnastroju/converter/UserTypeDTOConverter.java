@@ -13,7 +13,15 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
  * @author Vojtech Schlemmer
  */
 public class UserTypeDTOConverter {
-	public static UserTypeEnum dtoToEntity(UserTypeEnumDTO dto) {
+
+        /**
+	 * Converts DTO to entity object
+	 * 
+	 * @param dto
+	 *            to be converted
+	 * @return UserTypeEnum object or null if dto is null
+	 */
+        public static UserTypeEnum dtoToEntity(UserTypeEnumDTO dto) {
 		if (dto == null)
 			return null;
 		UserTypeEnum type;
@@ -25,6 +33,14 @@ public class UserTypeDTOConverter {
 		return type;
 	}
 
+        /**
+	 * Converts entity object to DTO
+	 * 
+	 * @param type
+	 *            to be converted
+	 * 
+	 * @return UserTypeEnumDTO or null if type is null
+	 */
 	public static UserTypeEnumDTO entityToDto(UserTypeEnum type) {
 		if (type == null)
 			return null;
@@ -34,6 +50,13 @@ public class UserTypeDTOConverter {
 		return dto;
 	}
 
+        /**
+	 * Converts list of DTOs to list of entity objects
+	 * 
+	 * @param dtoTypes
+	 *            to be converted
+	 * @return list of UserTypeEnum or null if dtoTypes is null
+	 */
 	public static List<UserTypeEnum> listToEntities(
 			List<UserTypeEnumDTO> dtoTypes) {
 		if (dtoTypes == null)
@@ -45,6 +68,13 @@ public class UserTypeDTOConverter {
 		return types;
 	}
 
+        /**
+	 * Converts list of entity objects to list of DTOs
+	 * 
+	 * @param types
+	 *            to be converted
+	 * @return list of UserTypeEnumDTO or null if types is null
+	 */
 	public static List<UserTypeEnumDTO> listToDTO(List<UserTypeEnum> types) {
 		if (types == null)
 			return null;
