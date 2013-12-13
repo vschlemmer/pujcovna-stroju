@@ -3,12 +3,17 @@ package cz.muni.fi.pa1685.pujcovnaStroju.restclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -18,19 +23,19 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.ClientErrorEnum;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
-import java.net.SocketTimeoutException;
-import java.net.URLConnection;
 
 /**
- * CLI client 
+ * CLI client
+ * 
  * @author Michal Merta
- *
+ * 
  */
 public class RestClient {
 
@@ -91,7 +96,10 @@ public class RestClient {
 		
 		do {
 			System.out.print("> ");
-			String arg[] = scanner.nextLine().split(" ");
+			String arg[] = scanner.nextLine().split(
+					"(?<!\\\\)" + Pattern.quote(" "));
+			
+			unescapeArgs(arg);
 			
 			url = getUrl(arg);
 
@@ -106,8 +114,15 @@ public class RestClient {
 				MessageResolver resolver = new MessageResolver(
 						responseString);
 				System.out.println(handleResponse(resolver.getResponse()));
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-				printError(ClientErrorEnum.PARSE_ERROR);
+			} catch (SAXException | ConnectException e) {
+				printError(ClientErrorEnum.CONNECTION_ERROR);
+			} catch (IOException e) {
+				printError(ClientErrorEnum.IO_ERROR);
+				System.exit(2);
+			} catch (ParserConfigurationException e) {
+				printError(ClientErrorEnum.PARSER_CONFIGURATION_ERROR);
+				System.exit(3);
+
 			}
 		} while (!exit);
 	}
@@ -191,10 +206,11 @@ public class RestClient {
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TIMEOUT,
 					"return current value of timeout"));
 			builder.append(String.format("%s [time]\t%s\n", COMMAND_TIMEOUT,
-					"set timeout to given [time] in milliseconds; default is " + DEFAULT_CONNECTION_TIMEOUT));
+					"set timeout to given [time] in milliseconds; default is "
+							+ DEFAULT_CONNECTION_TIMEOUT));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
-			
+
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_LIST,
 					machineListOptions));
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
@@ -254,7 +270,7 @@ public class RestClient {
 			URLConnection restURLConnection = restURL.openConnection();
 			restURLConnection.setConnectTimeout(connectionTimeout);
 			restURLConnection.setReadTimeout(connectionTimeout);
-			
+
 			reader = new BufferedReader(new InputStreamReader(
 					restURLConnection.getInputStream(), "UTF-8"));
 			response = new StringBuffer();
@@ -294,7 +310,14 @@ public class RestClient {
 		Object sample = response.get(0);
 		StringBuilder builder = new StringBuilder();
 		if (sample instanceof MachineDTO) {
-			builder.append("---machines---");
+			builder.append(String.format("%4s | %20s | %15s | %50s\n", "ID",
+					"LABEL", "TYPE", "DESCRIPTION"));
+			char line[] = builder.toString().toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				line[i] = '=';
+			}
+			builder.append(line);
+			builder.append("\n");
 			for (Object machine : response.toArray()) {
 				if (machine instanceof MachineDTO) {
 					builder.append(formatMachine((MachineDTO) machine));
@@ -312,6 +335,14 @@ public class RestClient {
 		}
 
 		if (sample instanceof SystemUserDTO) {
+			builder.append(String.format("%4s | %15s | %20s | %20s\n", "ID",
+					"TYPE", "FIRST NAME", "LAST NAME"));
+			char line[] = builder.toString().toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				line[i] = '=';
+			}
+			builder.append(line);
+			builder.append("\n");
 			for (Object user : response.toArray()) {
 				if (user instanceof SystemUserDTO) {
 					builder.append(formatUser((SystemUserDTO) user));
@@ -325,7 +356,7 @@ public class RestClient {
 			for (Object mType : machineTypes.toArray()) {
 				if (mType instanceof String) {
 					builder.append(mType);
-                                        builder.append("\n");
+					builder.append("\n");
 				}
 			}
 
@@ -334,7 +365,7 @@ public class RestClient {
 			for (Object uType : userTypes.toArray()) {
 				if (uType instanceof String) {
 					builder.append(uType);
-                                        builder.append("\n");
+					builder.append("\n");
 				}
 			}
 			return builder.toString();
@@ -378,7 +409,18 @@ public class RestClient {
 	 * @return
 	 */
 	private static String formatMachine(MachineDTO machine) {
-		return machine.toString() + "\n";
+		String label = machine.getLabel();
+		String description = machine.getDescription();
+		if (label != null && label.length() > 17) {
+			label = label.substring(0, 16) + "...";
+		}
+		if (description != null && description.length() > 47) {
+			description = description.substring(0, 46) + "...";
+		}
+
+		return String.format("%4s | %20s | %15s | %50s\n", machine.getId()
+				.toString(), label, machine.getType().getTypeLabel(),
+				description);
 	}
 
 	/**
@@ -388,7 +430,17 @@ public class RestClient {
 	 * @return
 	 */
 	private static String formatUser(SystemUserDTO user) {
-		return user.toString() + "\n";
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		if (firstName != null && firstName.length() > 20) {
+			firstName = firstName.substring(0, 17) + "...";
+		}
+		if (lastName != null && lastName.length() > 20) {
+			lastName = lastName.substring(0, 17) + "...";
+		}
+		return String.format("%4s | %15s | %20s | %20s\n", user.getId(), user
+				.getType().getTypeLabel(), firstName, lastName);
+
 	}
 
 	/**
@@ -429,7 +481,7 @@ public class RestClient {
 						builder.append("?");
 						firstParam = false;
 					}
-					builder.append("label=" + cmd.getOptionValue("l")
+					builder.append("label=" + URLEncoder.encode(cmd.getOptionValue("l"), "utf-8")
 							+ "&");
 				}
 				if (cmd.getOptionValue("d") != null) {
@@ -438,14 +490,14 @@ public class RestClient {
 						firstParam = false;
 					}
 					builder.append("description="
-							+ cmd.getOptionValue("d") + "&");
+							+ URLEncoder.encode(cmd.getOptionValue("d"), "utf-8") + "&");
 				}
 				if (cmd.getOptionValue("t") != null) {
 					if (firstParam) {
 						builder.append("?");
 						firstParam = false;
 					}
-					builder.append("type=" + cmd.getOptionValue("t"));
+					builder.append("type=" + URLEncoder.encode(cmd.getOptionValue("t"), "utf-8"));
 				}
 				url = builder.toString();
 				break;
@@ -456,10 +508,9 @@ public class RestClient {
 				if (cmd.getOptionValue("i") != null) {
 					url = BASIC_URL + COMMAND_MACHINE + "/"
 							+ COMMAND_DETAIL + "?id="
-							+ cmd.getOptionValue('i');
+							+ URLEncoder.encode(cmd.getOptionValue('i'), "utf-8");
 				}
 				break;
-
 			case COMMAND_DELETE:
 				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
 				cmd = parser.parse(machineDeleteOptions, fixedArgs);
@@ -467,7 +518,7 @@ public class RestClient {
 				if (cmd.getOptionValue("i") != null) {
 					url = BASIC_URL + COMMAND_MACHINE + "/"
 							+ COMMAND_DELETE + "?id="
-							+ cmd.getOptionValue('i');
+							+ URLEncoder.encode(cmd.getOptionValue('i'), "utf-8");
 				}
 				break;
 			case COMMAND_ADD:
@@ -479,9 +530,9 @@ public class RestClient {
 						&& cmd.getOptionValue("t") != null) {
 					url = BASIC_URL + COMMAND_MACHINE + "/"
 							+ COMMAND_ADD + "" + "?label="
-							+ cmd.getOptionValue("l") + "&description="
-							+ cmd.getOptionValue("d") + "&type="
-							+ cmd.getOptionValue("t");
+							+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&description="
+							+ URLEncoder.encode(cmd.getOptionValue("d"), "utf-8") + "&type="
+							+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8");
 				}
 				break;
 			case COMMAND_UPDATE:
@@ -492,18 +543,18 @@ public class RestClient {
 					builder = new StringBuilder(BASIC_URL
 							+ COMMAND_MACHINE);
 					builder.append("/" + COMMAND_UPDATE + "/?");
-					builder.append("id=" + cmd.getOptionValue("i") + "&");
+					builder.append("id=" + URLEncoder.encode(cmd.getOptionValue("i"), "utf-8") + "&");
 					if (cmd.getOptionValue("l") != null) {
 						builder.append("label="
-								+ cmd.getOptionValue("l") + "&");
+								+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&");
 					}
 					if (cmd.getOptionValue("d") != null) {
 						builder.append("description="
-								+ cmd.getOptionValue("d") + "&");
+								+ URLEncoder.encode(cmd.getOptionValue("d"), "utf-8") + "&");
 					}
 					if (cmd.getOptionValue("t") != null) {
 						builder.append("type="
-								+ cmd.getOptionValue("t"));
+								+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8"));
 					}
 					url = builder.toString();
 				}
@@ -512,6 +563,8 @@ public class RestClient {
 			
 			if (url == null) throw new ParseException("");
 			
+		} catch (UnsupportedEncodingException e) {
+			printError(ClientErrorEnum.UNSUPPORTED_ENCODING_ERROR);
 		} catch (ParseException e) {
 			printError(ClientErrorEnum.PARSE_ERROR);
 		}
@@ -547,7 +600,7 @@ public class RestClient {
 						firstParam = false;
 					}
 					builder.append("firstName="
-							+ cmd.getOptionValue("f") + "&");
+							+ URLEncoder.encode(cmd.getOptionValue("f"), "utf-8") + "&");
 				}
 				if (cmd.getOptionValue("l") != null) {
 					if (firstParam) {
@@ -555,14 +608,14 @@ public class RestClient {
 						firstParam = false;
 					}
 					builder.append("lastName="
-							+ cmd.getOptionValue("l") + "&");
+							+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&");
 				}
 				if (cmd.getOptionValue("t") != null) {
 					if (firstParam) {
 						builder.append("?");
 						firstParam = false;
 					}
-					builder.append("type=" + cmd.getOptionValue("t"));
+					builder.append("type=" + URLEncoder.encode(cmd.getOptionValue("t"), "utf-8"));
 				}
 				url = builder.toString();
 				break;
@@ -574,7 +627,7 @@ public class RestClient {
 				if (cmd.getOptionValue("i") != null) {
 					url = BASIC_URL + COMMAND_USER + "/"
 							+ COMMAND_DETAIL + "?id="
-							+ cmd.getOptionValue('i');
+							+ URLEncoder.encode(cmd.getOptionValue('i'), "utf-8");
 				}
 				break;
 			case COMMAND_DELETE:
@@ -584,7 +637,7 @@ public class RestClient {
 				if (cmd.getOptionValue("i") != null) {
 					url = BASIC_URL + COMMAND_USER + "/"
 							+ COMMAND_DELETE + "?id="
-							+ cmd.getOptionValue('i');
+							+ URLEncoder.encode(cmd.getOptionValue('i'), "utf-8");
 				}
 				break;
 
@@ -597,9 +650,9 @@ public class RestClient {
 						&& cmd.getOptionValue("t") != null) {
 					url = BASIC_URL + COMMAND_USER + "/" + COMMAND_ADD
 							+ "" + "?firstName="
-							+ cmd.getOptionValue("f") + "&lastName="
-							+ cmd.getOptionValue("l") + "&type="
-							+ cmd.getOptionValue("t");
+							+ URLEncoder.encode(cmd.getOptionValue("f"), "utf-8") + "&lastName="
+							+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&type="
+							+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8");
 				}
 				break;
 
@@ -611,18 +664,18 @@ public class RestClient {
 					builder = new StringBuilder(BASIC_URL
 							+ COMMAND_USER);
 					builder.append("/" + COMMAND_UPDATE + "/?");
-					builder.append("id=" + cmd.getOptionValue("i") + "&");
+					builder.append("id=" + URLEncoder.encode(cmd.getOptionValue("i"), "utf-8") + "&");
 					if (cmd.getOptionValue("f") != null) {
 						builder.append("firstName="
-								+ cmd.getOptionValue("f") + "&");
+								+ URLEncoder.encode(cmd.getOptionValue("f"), "utf-8") + "&");
 					}
 					if (cmd.getOptionValue("l") != null) {
 						builder.append("lastName="
-								+ cmd.getOptionValue("l") + "&");
+								+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&");
 					}
 					if (cmd.getOptionValue("t") != null) {
 						builder.append("type="
-								+ cmd.getOptionValue("t"));
+								+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8"));
 					}
 					url = builder.toString();
 				}
@@ -632,9 +685,22 @@ public class RestClient {
 			if (url == null) {
 				throw new ParseException("");
 			}
+		} catch (UnsupportedEncodingException ex) {
+			printError(ClientErrorEnum.UNSUPPORTED_ENCODING_ERROR);
 		} catch (ParseException e) {
-		    printError(ClientErrorEnum.PARSE_ERROR);
+			printError(ClientErrorEnum.PARSE_ERROR);
 		}
 		return url;
 	}
+
+	/** unescape giveg array of arguments
+	 * 
+	 * @param arg
+	 */
+	private static void unescapeArgs(String arg[]) {
+		for (int i = 0; i < arg.length; i++) {
+			arg[i] = StringEscapeUtils.unescapeJava(arg[i]);
+		}
+	}
+
 }
