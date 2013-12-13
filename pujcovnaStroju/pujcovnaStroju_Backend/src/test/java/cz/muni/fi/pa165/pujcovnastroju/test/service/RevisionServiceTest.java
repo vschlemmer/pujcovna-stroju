@@ -24,7 +24,9 @@ import org.springframework.dao.DataAccessResourceFailureException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dao.RevisionDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
+import cz.muni.fi.pa165.pujcovnastroju.entity.SystemUser;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.RevisionServiceImpl;
 
@@ -171,5 +173,24 @@ public class RevisionServiceTest extends AbstractTest {
         Mockito.when(mockRevisionDao.findRevisionsByDate(Matchers.any(Date.class), Matchers.any(Date.class))).thenReturn(revisionList);
         List<Revision> returnedRevisions = mockRevisionDao.findRevisionsByDate(new Date(324), new Date(2344));
         assertEquals(returnedRevisions, revisionList);
+    }
+    
+    @Test
+     public void findRevisionsByParams() {
+        List<Revision> revisionList = new ArrayList<>();
+	revisionList.add(new Revision());
+	revisionList.add(new Revision());
+	
+	Mockito.when(mockRevisionDao.findRevisionsByParams(
+                Matchers.any(String.class),
+                Matchers.any(Date.class),
+                Matchers.any(Machine.class),
+                Matchers.any(SystemUser.class))).thenReturn(null);
+	
+	Mockito.when(mockRevisionDao.findRevisionsByParams(
+                Matchers.any(String.class),
+                Matchers.any(Date.class),
+                Matchers.any(Machine.class),
+                Matchers.any(SystemUser.class))).thenReturn(revisionList);
     }
 }
