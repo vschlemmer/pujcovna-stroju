@@ -22,6 +22,7 @@ import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.ClientErrorEnum;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
 import java.net.SocketTimeoutException;
 import java.net.URLConnection;
@@ -51,8 +52,8 @@ public class RestClient {
 
 	private static String HELP_CONTENT = null;
 	
-	
 	private static final int DEFAULT_CONNECTION_TIMEOUT = 18000;
+	
 	private static int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT; // in millis
 
 	private static Options machineListOptions = new Options();
@@ -66,6 +67,8 @@ public class RestClient {
 	private static Options userUpdateOptions = new Options();
 	private static Options userDetailOptions = new Options();
 	private static Options userDeleteOptions = new Options();
+	
+	private static boolean exit;
 
 	/*
 	 * each command has three parts 1) machine || user || help 2) action (list,
@@ -77,6 +80,39 @@ public class RestClient {
 	 */
 
 	public static void main(String[] args) {
+		
+		initializeOptions();
+		
+		exit = false;
+		String url = null;
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("Super turbo mega hyper ubercool feature:\n");
+		
+		do {
+			System.out.print("> ");
+			String arg[] = scanner.nextLine().split(" ");
+			
+			url = getUrl(arg);
+
+			try {
+				if (url == null) continue;
+				
+				String responseString = sendRequest(url);
+				if (responseString == null) {
+					continue;
+				}
+
+				MessageResolver resolver = new MessageResolver(
+						responseString);
+				System.out.println(handleResponse(resolver.getResponse()));
+			} catch (SAXException | IOException | ParserConfigurationException e) {
+				printError(ClientErrorEnum.PARSE_ERROR);
+			}
+		} while (!exit);
+	}
+	
+	private static void initializeOptions() {
 		machineListOptions.addOption("l", "label", true, "Label of machine")
 				.addOption("d", "description", true, "Description of Machine")
 				.addOption("t", "type", true, "Type of Machine");
@@ -102,309 +138,42 @@ public class RestClient {
 				.addOption("t", "type", true, "Type of user");
 		userDeleteOptions.addOption("i", "id", true, "ID of user");
 		userDetailOptions.addOption("i", "id", true, "ID of user");
-
-		CommandLineParser parser = new BasicParser();
-		CommandLine cmd;
-		String fixedArgs[] = null;
-		boolean exit = false;
+	}
+	
+	/**
+	 * returns url string for the given arg
+	 * 
+	 * @param arg
+	 * @return url for the given arg; if command need processing only by
+	 *	    client side, returns null
+	 */
+	private static String getUrl(String[] arg) {
 		String url = null;
-		StringBuilder builder;
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Super turbo mega hyper ubercool feature:\n");
-		do {
-
-			url = null;
-			builder = null;
-			System.out.print("> ");
-			String arg[] = scanner.nextLine().split(" ");
-			try {
-				switch (arg[0]) {
-				case COMMAND_HELP:
-					System.out.println(renderHelp());
-					continue;
-				case COMMAND_TIMEOUT:
-					if (arg.length > 1) {
-						try {
-							int newTimeout = Integer.parseInt(arg[1]);
-							connectionTimeout = newTimeout;
-							System.out.println("Timeout set to " + connectionTimeout + "ms.");
-						} catch (NumberFormatException e) {
-							System.out.println("Timeout value hasn't been changed. "
-								+ "Wrong number format was given.");
-						}
-					}
-					else {
-						System.out.println("Timeout is set to " + connectionTimeout + "ms.");
-					}
-					continue;
-				case COMMAND_EXIT:
-					exit = true;
-					continue;
-				case COMMAND_TYPES:
-					url = BASIC_URL + "types";
-					break;
-				// ---HANDLING MACHINE----
-				case COMMAND_MACHINE:
-					switch (arg[1]) {
-
-					case COMMAND_LIST:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(machineListOptions, fixedArgs);
-
-						builder = new StringBuilder(BASIC_URL + COMMAND_MACHINE);
-						builder.append("/" + COMMAND_LIST + "/");
-						boolean firstParam = true;
-						if (cmd.getOptionValue("l") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("label=" + cmd.getOptionValue("l")
-									+ "&");
-						}
-						if (cmd.getOptionValue("d") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("description="
-									+ cmd.getOptionValue("d") + "&");
-						}
-						if (cmd.getOptionValue("t") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("type=" + cmd.getOptionValue("t"));
-						}
-						url = builder.toString();
-						break;
-					case COMMAND_DETAIL:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(machineDetailOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_DETAIL + "?id="
-									+ cmd.getOptionValue('i');
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-
-					case COMMAND_DELETE:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(machineDeleteOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_DELETE + "?id="
-									+ cmd.getOptionValue('i');
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-					case COMMAND_ADD:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(machineAddOptions, fixedArgs);
-
-						if (cmd.getOptionValue("l") != null
-								&& cmd.getOptionValue("d") != null
-								&& cmd.getOptionValue("t") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_ADD + "" + "?label="
-									+ cmd.getOptionValue("l") + "&description="
-									+ cmd.getOptionValue("d") + "&type="
-									+ cmd.getOptionValue("t");
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-					case COMMAND_UPDATE:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(machineUpdateOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							builder = new StringBuilder(BASIC_URL
-									+ COMMAND_MACHINE);
-							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i") + "&");
-                                                        if (cmd.getOptionValue("l") != null) {
-								builder.append("label="
-										+ cmd.getOptionValue("l") + "&");
-							}
-							if (cmd.getOptionValue("d") != null) {
-								builder.append("description="
-										+ cmd.getOptionValue("d") + "&");
-							}
-							if (cmd.getOptionValue("t") != null) {
-								builder.append("type="
-										+ cmd.getOptionValue("t"));
-							}
-							url = builder.toString();
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-					}
-					break;
-				// ---HANDLING USER----
-				case COMMAND_USER:
-					switch (arg[1]) {
-
-					case COMMAND_LIST:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(userListOptions, fixedArgs);
-
-						builder = new StringBuilder(BASIC_URL + COMMAND_USER);
-						builder.append("/" + COMMAND_LIST + "/");
-						boolean firstParam = true;
-						if (cmd.getOptionValue("f") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("firstName="
-									+ cmd.getOptionValue("f") + "&");
-						}
-						if (cmd.getOptionValue("l") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("lastName="
-									+ cmd.getOptionValue("l") + "&");
-						}
-						if (cmd.getOptionValue("t") != null) {
-							if (firstParam) {
-								builder.append("?");
-								firstParam = false;
-							}
-							builder.append("type=" + cmd.getOptionValue("t"));
-						}
-						url = builder.toString();
-						break;
-
-					case COMMAND_DETAIL:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(userDetailOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_USER + "/"
-									+ COMMAND_DETAIL + "?id="
-									+ cmd.getOptionValue('i');
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-					case COMMAND_DELETE:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(userDetailOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_USER + "/"
-									+ COMMAND_DELETE + "?id="
-									+ cmd.getOptionValue('i');
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-
-					case COMMAND_ADD:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(userAddOptions, fixedArgs);
-
-						if (cmd.getOptionValue("f") != null
-								&& cmd.getOptionValue("l") != null
-								&& cmd.getOptionValue("t") != null) {
-							url = BASIC_URL + COMMAND_USER + "/" + COMMAND_ADD
-									+ "" + "?firstName="
-									+ cmd.getOptionValue("f") + "&lastName="
-									+ cmd.getOptionValue("l") + "&type="
-									+ cmd.getOptionValue("t");
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-						
-					case COMMAND_UPDATE:
-						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
-						cmd = parser.parse(userUpdateOptions, fixedArgs);
-
-						if (cmd.getOptionValue("i") != null) {
-							builder = new StringBuilder(BASIC_URL
-									+ COMMAND_USER);
-							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i") + "&");
-                                                        if (cmd.getOptionValue("f") != null) {
-								builder.append("firstName="
-										+ cmd.getOptionValue("f") + "&");
-							}
-							if (cmd.getOptionValue("l") != null) {
-								builder.append("lastName="
-										+ cmd.getOptionValue("l") + "&");
-							}
-							if (cmd.getOptionValue("t") != null) {
-								builder.append("type="
-										+ cmd.getOptionValue("t"));
-							}
-							url = builder.toString();
-						} else {
-							printParseError();
-							continue;
-						}
-						break;
-					}
-					break;
-				case "":
-					continue;
-				default:
-					break;
-				}
-
-				if (url == null) {
-					printParseError();
-					continue;
-				}
-
-				try {
-					String responseString = sendRequest(url);
-					if (responseString == null) {
-						continue;
-					}
-
-					MessageResolver resolver = new MessageResolver(
-							responseString);
-					System.out.println(handleResponse(resolver.getResponse()));
-				} catch (SAXException e) {
-					// TODO Auto-generated catch block
-					System.out.println(url);
-					e.printStackTrace();
-				} catch (ConnectException e) {
-					printConnectionError();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParserConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-
-				}
-
-				// at this point should be URL handled somehow
-
-			} catch (ParseException e) {
-				printParseError();
-				continue;
-			}
-		} while (!exit);
+		
+		switch (arg[0]) {
+		case COMMAND_HELP:
+			System.out.println(renderHelp());
+			break;
+		case COMMAND_TIMEOUT:
+			handleTimeout(arg);
+			break;
+		case COMMAND_EXIT:
+			exit = true;
+			break;
+		case COMMAND_TYPES:
+			url = BASIC_URL + "types";
+			break;
+		case COMMAND_MACHINE:
+			url = getMachineUrl(arg);
+			break;
+		case COMMAND_USER:
+			url = getUserUrl(arg);
+			break;
+		default:
+			break;
+		}
+		
+		return url;
 	}
 
 	/**
@@ -476,12 +245,8 @@ public class RestClient {
 	 * 
 	 * @param url
 	 * @return String - response
-	 * @throws ConnectException
-	 *             - if connection fails
-	 * @throws MalformedURLException
 	 */
-	private static String sendRequest(String url) throws ConnectException,
-			MalformedURLException {
+	private static String sendRequest(String url) {
 		BufferedReader reader = null;
 		StringBuffer response = null;
 		try {
@@ -498,18 +263,17 @@ public class RestClient {
 			}
 		}
 		catch (SocketTimeoutException e) {
-			printSocketTimeOutError();
+			printError(ClientErrorEnum.TIMEOUT_ERROR);
 			return null;
 		}
 		catch (IOException e) {
-			printConnectionError();
+			printError(ClientErrorEnum.CONNECTION_ERROR);
 			return null;
 		} finally {
 			if (reader != null)
 				try {
 					reader.close();
-				} catch (IOException ignore) {
-				}
+				} catch (IOException ignore) {}
 		}
 		return response.toString();
 	}
@@ -578,28 +342,51 @@ public class RestClient {
 		return "Nothing found";
 	}
 
-	private static void printParseError() {
-		System.out.println("Invalid command, help can by displayed by typing 'help'");
-	}
-
-	private static void printConnectionError() {
-		System.out.println("Connection to server failed.");
+	/**
+	 * sets and prints timeout value
+	 * 
+	 * @param arg 
+	 */
+	private static void handleTimeout(String[] arg) {
+		if (arg.length > 1) {
+			try {
+				int newTimeout = Integer.parseInt(arg[1]);
+				connectionTimeout = newTimeout;
+				System.out.println("Timeout set to " + connectionTimeout + "ms.");
+			} catch (NumberFormatException e) {
+				printError(ClientErrorEnum.TIMEOUT_NUMBER_FORMAT_ERROR);
+			}
+		}
+		else {
+			System.out.println("Timeout is set to " + connectionTimeout + "ms.");
+		}
 	}
 	
-	private static void printSocketTimeOutError() {
-		System.out.println("Operation timed out.");
+	/**
+	 * prints error according to its string value in error enum
+	 * 
+	 * @param error 
+	 */
+	private static void printError(ClientErrorEnum error) {
+		System.out.println(error.errorString());
 	}
 
 	/**
 	 * returns printable String of {@link MachineDTO}
 	 * 
-	 * @param messages
+	 * @param machine
 	 * @return
 	 */
 	private static String formatMachine(MachineDTO machine) {
 		return machine.toString() + "\n";
 	}
 
+	/**
+	 * returns printable String of {@link SystemUserDTO}
+	 * 
+	 * @param user
+	 * @return
+	 */
 	private static String formatUser(SystemUserDTO user) {
 		return user.toString() + "\n";
 	}
@@ -607,11 +394,247 @@ public class RestClient {
 	/**
 	 * returns printable String of message
 	 * 
-	 * @param messages
+	 * @param message
 	 * @return
 	 */
 	private static String formatMessage(String message) {
 		return message + "\n";
 	}
 
+	/**
+	 * returns url string for the given arg for machine-connected commands
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	private static String getMachineUrl(String[] arg) {
+		CommandLineParser parser = new BasicParser();
+		CommandLine cmd;
+		String fixedArgs[] = null;
+		String url = null;
+		StringBuilder builder;
+		try {
+			if (arg.length < 2) throw new ParseException("");
+			
+			switch (arg[1]) {
+			case COMMAND_LIST:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(machineListOptions, fixedArgs);
+
+				builder = new StringBuilder(BASIC_URL + COMMAND_MACHINE);
+				builder.append("/" + COMMAND_LIST + "/");
+				boolean firstParam = true;
+				if (cmd.getOptionValue("l") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("label=" + cmd.getOptionValue("l")
+							+ "&");
+				}
+				if (cmd.getOptionValue("d") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("description="
+							+ cmd.getOptionValue("d") + "&");
+				}
+				if (cmd.getOptionValue("t") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("type=" + cmd.getOptionValue("t"));
+				}
+				url = builder.toString();
+				break;
+			case COMMAND_DETAIL:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(machineDetailOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					url = BASIC_URL + COMMAND_MACHINE + "/"
+							+ COMMAND_DETAIL + "?id="
+							+ cmd.getOptionValue('i');
+				}
+				break;
+
+			case COMMAND_DELETE:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(machineDeleteOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					url = BASIC_URL + COMMAND_MACHINE + "/"
+							+ COMMAND_DELETE + "?id="
+							+ cmd.getOptionValue('i');
+				}
+				break;
+			case COMMAND_ADD:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(machineAddOptions, fixedArgs);
+
+				if (cmd.getOptionValue("l") != null
+						&& cmd.getOptionValue("d") != null
+						&& cmd.getOptionValue("t") != null) {
+					url = BASIC_URL + COMMAND_MACHINE + "/"
+							+ COMMAND_ADD + "" + "?label="
+							+ cmd.getOptionValue("l") + "&description="
+							+ cmd.getOptionValue("d") + "&type="
+							+ cmd.getOptionValue("t");
+				}
+				break;
+			case COMMAND_UPDATE:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(machineUpdateOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					builder = new StringBuilder(BASIC_URL
+							+ COMMAND_MACHINE);
+					builder.append("/" + COMMAND_UPDATE + "/?");
+					builder.append("id=" + cmd.getOptionValue("i") + "&");
+					if (cmd.getOptionValue("l") != null) {
+						builder.append("label="
+								+ cmd.getOptionValue("l") + "&");
+					}
+					if (cmd.getOptionValue("d") != null) {
+						builder.append("description="
+								+ cmd.getOptionValue("d") + "&");
+					}
+					if (cmd.getOptionValue("t") != null) {
+						builder.append("type="
+								+ cmd.getOptionValue("t"));
+					}
+					url = builder.toString();
+				}
+				break;
+			}
+			
+			if (url == null) throw new ParseException("");
+			
+		} catch (ParseException e) {
+			printError(ClientErrorEnum.PARSE_ERROR);
+		}
+		return url;
+	}
+	
+	/**
+	 * returns url string for the given arg for user-connected commands
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	private static String getUserUrl(String[] arg) {
+		CommandLineParser parser = new BasicParser();
+		CommandLine cmd;
+		String fixedArgs[] = null;
+		String url = null;
+		StringBuilder builder;
+		try {
+			if (arg.length < 2) throw new ParseException("");
+			
+			switch (arg[1]) {
+			case COMMAND_LIST:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(userListOptions, fixedArgs);
+
+				builder = new StringBuilder(BASIC_URL + COMMAND_USER);
+				builder.append("/" + COMMAND_LIST + "/");
+				boolean firstParam = true;
+				if (cmd.getOptionValue("f") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("firstName="
+							+ cmd.getOptionValue("f") + "&");
+				}
+				if (cmd.getOptionValue("l") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("lastName="
+							+ cmd.getOptionValue("l") + "&");
+				}
+				if (cmd.getOptionValue("t") != null) {
+					if (firstParam) {
+						builder.append("?");
+						firstParam = false;
+					}
+					builder.append("type=" + cmd.getOptionValue("t"));
+				}
+				url = builder.toString();
+				break;
+
+			case COMMAND_DETAIL:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(userDetailOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					url = BASIC_URL + COMMAND_USER + "/"
+							+ COMMAND_DETAIL + "?id="
+							+ cmd.getOptionValue('i');
+				}
+				break;
+			case COMMAND_DELETE:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(userDetailOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					url = BASIC_URL + COMMAND_USER + "/"
+							+ COMMAND_DELETE + "?id="
+							+ cmd.getOptionValue('i');
+				}
+				break;
+
+			case COMMAND_ADD:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(userAddOptions, fixedArgs);
+
+				if (cmd.getOptionValue("f") != null
+						&& cmd.getOptionValue("l") != null
+						&& cmd.getOptionValue("t") != null) {
+					url = BASIC_URL + COMMAND_USER + "/" + COMMAND_ADD
+							+ "" + "?firstName="
+							+ cmd.getOptionValue("f") + "&lastName="
+							+ cmd.getOptionValue("l") + "&type="
+							+ cmd.getOptionValue("t");
+				}
+				break;
+
+			case COMMAND_UPDATE:
+				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
+				cmd = parser.parse(userUpdateOptions, fixedArgs);
+
+				if (cmd.getOptionValue("i") != null) {
+					builder = new StringBuilder(BASIC_URL
+							+ COMMAND_USER);
+					builder.append("/" + COMMAND_UPDATE + "/?");
+					builder.append("id=" + cmd.getOptionValue("i") + "&");
+					if (cmd.getOptionValue("f") != null) {
+						builder.append("firstName="
+								+ cmd.getOptionValue("f") + "&");
+					}
+					if (cmd.getOptionValue("l") != null) {
+						builder.append("lastName="
+								+ cmd.getOptionValue("l") + "&");
+					}
+					if (cmd.getOptionValue("t") != null) {
+						builder.append("type="
+								+ cmd.getOptionValue("t"));
+					}
+					url = builder.toString();
+				}
+				break;
+			}
+			
+			if (url == null) {
+				throw new ParseException("");
+			}
+		} catch (ParseException e) {
+		    printError(ClientErrorEnum.PARSE_ERROR);
+		}
+		return url;
+	}
 }
