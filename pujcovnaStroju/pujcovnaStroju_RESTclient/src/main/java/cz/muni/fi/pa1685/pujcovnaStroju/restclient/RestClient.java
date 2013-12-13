@@ -27,9 +27,10 @@ import java.net.SocketTimeoutException;
 import java.net.URLConnection;
 
 /**
- * CLI client 
+ * CLI client
+ * 
  * @author Michal Merta
- *
+ * 
  */
 public class RestClient {
 
@@ -50,10 +51,10 @@ public class RestClient {
 	private static final String COMMAND_TIMEOUT = "timeout";
 
 	private static String HELP_CONTENT = null;
-	
-	
+
 	private static final int DEFAULT_CONNECTION_TIMEOUT = 18000;
-	private static int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT; // in millis
+	private static int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT; // in
+																		// millis
 
 	private static Options machineListOptions = new Options();
 	private static Options machineAddOptions = new Options();
@@ -127,14 +128,16 @@ public class RestClient {
 						try {
 							int newTimeout = Integer.parseInt(arg[1]);
 							connectionTimeout = newTimeout;
-							System.out.println("Timeout set to " + connectionTimeout + "ms.");
+							System.out.println("Timeout set to "
+									+ connectionTimeout + "ms.");
 						} catch (NumberFormatException e) {
-							System.out.println("Timeout value hasn't been changed. "
-								+ "Wrong number format was given.");
+							System.out
+									.println("Timeout value hasn't been changed. "
+											+ "Wrong number format was given.");
 						}
-					}
-					else {
-						System.out.println("Timeout is set to " + connectionTimeout + "ms.");
+					} else {
+						System.out.println("Timeout is set to "
+								+ connectionTimeout + "ms.");
 					}
 					continue;
 				case COMMAND_EXIT:
@@ -231,8 +234,9 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_MACHINE);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i") + "&");
-                                                        if (cmd.getOptionValue("l") != null) {
+							builder.append("id=" + cmd.getOptionValue("i")
+									+ "&");
+							if (cmd.getOptionValue("l") != null) {
 								builder.append("label="
 										+ cmd.getOptionValue("l") + "&");
 							}
@@ -333,7 +337,7 @@ public class RestClient {
 							continue;
 						}
 						break;
-						
+
 					case COMMAND_UPDATE:
 						fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
 						cmd = parser.parse(userUpdateOptions, fixedArgs);
@@ -342,8 +346,9 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_USER);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i") + "&");
-                                                        if (cmd.getOptionValue("f") != null) {
+							builder.append("id=" + cmd.getOptionValue("i")
+									+ "&");
+							if (cmd.getOptionValue("f") != null) {
 								builder.append("firstName="
 										+ cmd.getOptionValue("f") + "&");
 							}
@@ -383,22 +388,16 @@ public class RestClient {
 					MessageResolver resolver = new MessageResolver(
 							responseString);
 					System.out.println(handleResponse(resolver.getResponse()));
-				} catch (SAXException e) {
-					// TODO Auto-generated catch block
-					System.out.println(url);
-					e.printStackTrace();
-				} catch (ConnectException e) {
+				} catch (SAXException | ConnectException e) {
 					printConnectionError();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("IO error occured, exiting...");
+					System.exit(2);
 				} catch (ParserConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-
+					System.out
+							.println("XML parser configuration failed, exiting...");
+					System.exit(3);
 				}
-
-				// at this point should be URL handled somehow
 
 			} catch (ParseException e) {
 				printParseError();
@@ -422,10 +421,11 @@ public class RestClient {
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TIMEOUT,
 					"return current value of timeout"));
 			builder.append(String.format("%s [time]\t%s\n", COMMAND_TIMEOUT,
-					"set timeout to given [time] in milliseconds; default is " + DEFAULT_CONNECTION_TIMEOUT));
+					"set timeout to given [time] in milliseconds; default is "
+							+ DEFAULT_CONNECTION_TIMEOUT));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
-			
+
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_LIST,
 					machineListOptions));
 			builder.append(getOptionHelp(COMMAND_MACHINE + " " + COMMAND_ADD,
@@ -489,18 +489,18 @@ public class RestClient {
 			URLConnection restURLConnection = restURL.openConnection();
 			restURLConnection.setConnectTimeout(connectionTimeout);
 			restURLConnection.setReadTimeout(connectionTimeout);
-			
+
 			reader = new BufferedReader(new InputStreamReader(
 					restURLConnection.getInputStream(), "UTF-8"));
 			response = new StringBuffer();
 			for (String line; (line = reader.readLine()) != null;) {
 				response.append(line);
 			}
-		}
-		catch (SocketTimeoutException e) {
+		} catch (SocketTimeoutException e) {
 			printSocketTimeOutError();
 			return null;
 		}
+
 		catch (IOException e) {
 			printConnectionError();
 			return null;
@@ -530,7 +530,14 @@ public class RestClient {
 		Object sample = response.get(0);
 		StringBuilder builder = new StringBuilder();
 		if (sample instanceof MachineDTO) {
-			builder.append("---machines---");
+			builder.append(String.format("%4s | %20s | %15s | %50s\n", "ID",
+					"LABEL", "TYPE", "DESCRIPTION"));
+			char line[] = builder.toString().toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				line[i] = '=';
+			}
+			builder.append(line);
+			builder.append("\n");
 			for (Object machine : response.toArray()) {
 				if (machine instanceof MachineDTO) {
 					builder.append(formatMachine((MachineDTO) machine));
@@ -548,6 +555,14 @@ public class RestClient {
 		}
 
 		if (sample instanceof SystemUserDTO) {
+			builder.append(String.format("%4s | %15s | %20s | %20s\n", "ID",
+					"TYPE", "FIRST NAME", "LAST NAME"));
+			char line[] = builder.toString().toCharArray();
+			for (int i = 0; i < line.length; i++) {
+				line[i] = '=';
+			}
+			builder.append(line);
+			builder.append("\n");
 			for (Object user : response.toArray()) {
 				if (user instanceof SystemUserDTO) {
 					builder.append(formatUser((SystemUserDTO) user));
@@ -561,7 +576,7 @@ public class RestClient {
 			for (Object mType : machineTypes.toArray()) {
 				if (mType instanceof String) {
 					builder.append(mType);
-                                        builder.append("\n");
+					builder.append("\n");
 				}
 			}
 
@@ -570,7 +585,7 @@ public class RestClient {
 			for (Object uType : userTypes.toArray()) {
 				if (uType instanceof String) {
 					builder.append(uType);
-                                        builder.append("\n");
+					builder.append("\n");
 				}
 			}
 			return builder.toString();
@@ -579,13 +594,14 @@ public class RestClient {
 	}
 
 	private static void printParseError() {
-		System.out.println("Invalid command, help can by displayed by typing 'help'");
+		System.out
+				.println("Invalid command, help can by displayed by typing 'help'");
 	}
 
 	private static void printConnectionError() {
 		System.out.println("Connection to server failed.");
 	}
-	
+
 	private static void printSocketTimeOutError() {
 		System.out.println("Operation timed out.");
 	}
@@ -597,11 +613,32 @@ public class RestClient {
 	 * @return
 	 */
 	private static String formatMachine(MachineDTO machine) {
-		return machine.toString() + "\n";
+		String label = machine.getLabel();
+		String description = machine.getDescription();
+		if (label != null && label.length() > 17) {
+			label = label.substring(0, 16) + "...";
+		}
+		if (description != null && description.length() > 47) {
+			description = description.substring(0, 46) + "...";
+		}
+
+		return String.format("%4s | %20s | %15s | %50s\n", machine.getId()
+				.toString(), label, machine.getType().getTypeLabel(),
+				description);
 	}
 
 	private static String formatUser(SystemUserDTO user) {
-		return user.toString() + "\n";
+		String firstName = user.getFirstName();
+		String lastName = user.getLastName();
+		if (firstName != null && firstName.length() > 20) {
+			firstName = firstName.substring(0, 17) + "...";
+		}
+		if (lastName != null && lastName.length() > 20) {
+			lastName = lastName.substring(0, 17) + "...";
+		}
+		return String.format("%4s | %15s | %20s | %20s\n", user.getId(), user
+				.getType().getTypeLabel(), firstName, lastName);
+
 	}
 
 	/**
