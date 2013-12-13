@@ -3,12 +3,17 @@ package cz.muni.fi.pa1685.pujcovnaStroju.restclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -18,13 +23,12 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
-import java.net.SocketTimeoutException;
-import java.net.URLConnection;
 
 /**
  * CLI client
@@ -117,7 +121,9 @@ public class RestClient {
 			url = null;
 			builder = null;
 			System.out.print("> ");
-			String arg[] = scanner.nextLine().split(" ");
+			String arg[] = scanner.nextLine().split(
+					"(?<!\\\\)" + Pattern.quote(" "));
+			unescapeArgs(arg);
 			try {
 				switch (arg[0]) {
 				case COMMAND_HELP:
@@ -162,7 +168,9 @@ public class RestClient {
 								builder.append("?");
 								firstParam = false;
 							}
-							builder.append("label=" + cmd.getOptionValue("l")
+							builder.append("label="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("l"), "utf-8")
 									+ "&");
 						}
 						if (cmd.getOptionValue("d") != null) {
@@ -171,14 +179,18 @@ public class RestClient {
 								firstParam = false;
 							}
 							builder.append("description="
-									+ cmd.getOptionValue("d") + "&");
+									+ URLEncoder.encode(
+											cmd.getOptionValue("d"), "utf-8")
+									+ "&");
 						}
 						if (cmd.getOptionValue("t") != null) {
 							if (firstParam) {
 								builder.append("?");
 								firstParam = false;
 							}
-							builder.append("type=" + cmd.getOptionValue("t"));
+							builder.append("type="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("t"), "utf-8"));
 						}
 						url = builder.toString();
 						break;
@@ -187,9 +199,13 @@ public class RestClient {
 						cmd = parser.parse(machineDetailOptions, fixedArgs);
 
 						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_DETAIL + "?id="
-									+ cmd.getOptionValue('i');
+							url = BASIC_URL
+									+ COMMAND_MACHINE
+									+ "/"
+									+ COMMAND_DETAIL
+									+ "?id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue('i'), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -201,9 +217,13 @@ public class RestClient {
 						cmd = parser.parse(machineDeleteOptions, fixedArgs);
 
 						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_DELETE + "?id="
-									+ cmd.getOptionValue('i');
+							url = BASIC_URL
+									+ COMMAND_MACHINE
+									+ "/"
+									+ COMMAND_DELETE
+									+ "?id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue('i'), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -216,11 +236,20 @@ public class RestClient {
 						if (cmd.getOptionValue("l") != null
 								&& cmd.getOptionValue("d") != null
 								&& cmd.getOptionValue("t") != null) {
-							url = BASIC_URL + COMMAND_MACHINE + "/"
-									+ COMMAND_ADD + "" + "?label="
-									+ cmd.getOptionValue("l") + "&description="
-									+ cmd.getOptionValue("d") + "&type="
-									+ cmd.getOptionValue("t");
+							url = BASIC_URL
+									+ COMMAND_MACHINE
+									+ "/"
+									+ COMMAND_ADD
+									+ ""
+									+ "?label="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("l"), "utf-8")
+									+ "&description="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("d"), "utf-8")
+									+ "&type="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("t"), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -234,19 +263,27 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_MACHINE);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i")
+							builder.append("id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("i"), "utf-8")
 									+ "&");
 							if (cmd.getOptionValue("l") != null) {
 								builder.append("label="
-										+ cmd.getOptionValue("l") + "&");
+										+ URLEncoder.encode(
+												cmd.getOptionValue("l"),
+												"utf-8") + "&");
 							}
 							if (cmd.getOptionValue("d") != null) {
 								builder.append("description="
-										+ cmd.getOptionValue("d") + "&");
+										+ URLEncoder.encode(
+												cmd.getOptionValue("d"),
+												"utf-8") + "&");
 							}
 							if (cmd.getOptionValue("t") != null) {
 								builder.append("type="
-										+ cmd.getOptionValue("t"));
+										+ URLEncoder.encode(
+												cmd.getOptionValue("t"),
+												"utf-8"));
 							}
 							url = builder.toString();
 						} else {
@@ -273,7 +310,9 @@ public class RestClient {
 								firstParam = false;
 							}
 							builder.append("firstName="
-									+ cmd.getOptionValue("f") + "&");
+									+ URLEncoder.encode(
+											cmd.getOptionValue("f"), "utf-8")
+									+ "&");
 						}
 						if (cmd.getOptionValue("l") != null) {
 							if (firstParam) {
@@ -281,14 +320,18 @@ public class RestClient {
 								firstParam = false;
 							}
 							builder.append("lastName="
-									+ cmd.getOptionValue("l") + "&");
+									+ URLEncoder.encode(
+											cmd.getOptionValue("l"), "utf-8")
+									+ "&");
 						}
 						if (cmd.getOptionValue("t") != null) {
 							if (firstParam) {
 								builder.append("?");
 								firstParam = false;
 							}
-							builder.append("type=" + cmd.getOptionValue("t"));
+							builder.append("type="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("t"), "utf-8"));
 						}
 						url = builder.toString();
 						break;
@@ -298,9 +341,13 @@ public class RestClient {
 						cmd = parser.parse(userDetailOptions, fixedArgs);
 
 						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_USER + "/"
-									+ COMMAND_DETAIL + "?id="
-									+ cmd.getOptionValue('i');
+							url = BASIC_URL
+									+ COMMAND_USER
+									+ "/"
+									+ COMMAND_DETAIL
+									+ "?id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue('i'), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -311,9 +358,13 @@ public class RestClient {
 						cmd = parser.parse(userDetailOptions, fixedArgs);
 
 						if (cmd.getOptionValue("i") != null) {
-							url = BASIC_URL + COMMAND_USER + "/"
-									+ COMMAND_DELETE + "?id="
-									+ cmd.getOptionValue('i');
+							url = BASIC_URL
+									+ COMMAND_USER
+									+ "/"
+									+ COMMAND_DELETE
+									+ "?id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue('i'), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -327,11 +378,20 @@ public class RestClient {
 						if (cmd.getOptionValue("f") != null
 								&& cmd.getOptionValue("l") != null
 								&& cmd.getOptionValue("t") != null) {
-							url = BASIC_URL + COMMAND_USER + "/" + COMMAND_ADD
-									+ "" + "?firstName="
-									+ cmd.getOptionValue("f") + "&lastName="
-									+ cmd.getOptionValue("l") + "&type="
-									+ cmd.getOptionValue("t");
+							url = BASIC_URL
+									+ COMMAND_USER
+									+ "/"
+									+ COMMAND_ADD
+									+ ""
+									+ "?firstName="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("f"), "utf-8")
+									+ "&lastName="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("l"), "utf-8")
+									+ "&type="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("t"), "utf-8");
 						} else {
 							printParseError();
 							continue;
@@ -346,19 +406,27 @@ public class RestClient {
 							builder = new StringBuilder(BASIC_URL
 									+ COMMAND_USER);
 							builder.append("/" + COMMAND_UPDATE + "/?");
-							builder.append("id=" + cmd.getOptionValue("i")
+							builder.append("id="
+									+ URLEncoder.encode(
+											cmd.getOptionValue("i"), "utf-8")
 									+ "&");
 							if (cmd.getOptionValue("f") != null) {
 								builder.append("firstName="
-										+ cmd.getOptionValue("f") + "&");
+										+ URLEncoder.encode(
+												cmd.getOptionValue("f"),
+												"utf-8") + "&");
 							}
 							if (cmd.getOptionValue("l") != null) {
 								builder.append("lastName="
-										+ cmd.getOptionValue("l") + "&");
+										+ URLEncoder.encode(
+												cmd.getOptionValue("l"),
+												"utf-8") + "&");
 							}
 							if (cmd.getOptionValue("t") != null) {
 								builder.append("type="
-										+ cmd.getOptionValue("t"));
+										+ URLEncoder.encode(
+												cmd.getOptionValue("t"),
+												"utf-8"));
 							}
 							url = builder.toString();
 						} else {
@@ -379,25 +447,24 @@ public class RestClient {
 					continue;
 				}
 
-				try {
-					String responseString = sendRequest(url);
-					if (responseString == null) {
-						continue;
-					}
+				System.out.println(url);
+				String responseString = sendRequest(url);
 
-					MessageResolver resolver = new MessageResolver(
-							responseString);
-					System.out.println(handleResponse(resolver.getResponse()));
-				} catch (SAXException | ConnectException e) {
-					printConnectionError();
-				} catch (IOException e) {
-					System.out.println("IO error occured, exiting...");
-					System.exit(2);
-				} catch (ParserConfigurationException e) {
-					System.out
-							.println("XML parser configuration failed, exiting...");
-					System.exit(3);
+				if (responseString == null) {
+					continue;
 				}
+
+				MessageResolver resolver = new MessageResolver(responseString);
+				System.out.println(handleResponse(resolver.getResponse()));
+			} catch (SAXException | ConnectException e) {
+				printConnectionError();
+			} catch (IOException e) {
+				System.out.println("IO error occured, exiting...");
+				System.exit(2);
+			} catch (ParserConfigurationException e) {
+				System.out
+						.println("XML parser configuration failed, exiting...");
+				System.exit(3);
 
 			} catch (ParseException e) {
 				printParseError();
@@ -649,6 +716,17 @@ public class RestClient {
 	 */
 	private static String formatMessage(String message) {
 		return message + "\n";
+	}
+
+	/**
+	 * unescape giveg array of arguments
+	 * 
+	 * @param arg
+	 */
+	private static void unescapeArgs(String arg[]) {
+		for (int i = 0; i < arg.length; i++) {
+			arg[i] = StringEscapeUtils.unescapeJava(arg[i]);
+		}
 	}
 
 }
