@@ -14,7 +14,7 @@ To run the Application:
      (cd pujcovna-stroju\pujcovnaStroju)
      mvn tomcat:run-war
 
-4) Web app is now available at http://localhost:8084/frontend/
+4) Web app is now available at http://localhost:8080/pa165/
 
 
 To run the REST client:
@@ -23,7 +23,7 @@ To run the REST client:
 2) run command mvn exec:java  
 3) type 'help' to see available commands  
 
-
+http://localhost:8080/pa165/rest/
 Examples
 -------------------
 all commands are described in the "help"
