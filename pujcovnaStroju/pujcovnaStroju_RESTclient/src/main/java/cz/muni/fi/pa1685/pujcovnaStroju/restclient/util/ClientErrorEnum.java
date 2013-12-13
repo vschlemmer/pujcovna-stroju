@@ -13,7 +13,10 @@ public enum ClientErrorEnum {
     CONNECTION_ERROR("Connection to server failed."),
     PARSE_ERROR("Invalid command, help can by displayed by typing 'help'."),
     TIMEOUT_NUMBER_FORMAT_ERROR("Timeout value hasn't been changed. "
-	    + "Wrong number format was given.");
+	    + "Wrong number format was given."), 
+    PARSER_CONFIGURATION_ERROR("Parser configuration error occured."),
+    IO_ERROR("IO error occured, exiting..."), 
+    UNSUPPORTED_ENCODING_ERROR("Unsupported encoding was used.");
 
     private String errorString;
     
