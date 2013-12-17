@@ -14,7 +14,7 @@ To run the Application:
      (cd pujcovna-stroju\pujcovnaStroju)
      mvn tomcat:run-war
 
-4) Web app is now available at http://http://localhost:8084/frontend/
+4) Web app is now available at http://localhost:8080/pa165/
 
 
 To run the REST client:
@@ -22,3 +22,19 @@ To run the REST client:
 1) Go to the directory pujcovnaStroju/pujcovnaStroju_RESTclient  
 2) run command mvn exec:java  
 3) type 'help' to see available commands  
+
+http://localhost:8080/pa165/rest/
+Examples
+-------------------
+all commands are described in the "help"
+
+to create a user: USER ADD -F mane -l lastname -T ADMINISTRATOR 
+
+to list user user with ID 1: user detail -i 1
+
+other examples:
+curl http://localhost:8080/pa165/rest/user/add?firstName=Tomas\&lastName="Jedno"\&type=REVISIONER
+curl http://localhost:8080/pa165/rest/user/list
+curl http://localhost:8080/pa165/rest/user/detail?id=1
+curl http://localhost:8080/pa165/rest/user/update?id=1\&type=CUSTOMERLEGAL\&firstName=Tomas2\&lastName=Jedno2
+curl http://localhost:8080/pa165/rest/user/delete?id=1
