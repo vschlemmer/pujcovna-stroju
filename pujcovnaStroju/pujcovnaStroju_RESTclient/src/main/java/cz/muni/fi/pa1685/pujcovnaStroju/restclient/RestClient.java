@@ -92,7 +92,6 @@ public class RestClient {
 		String url = null;
 		Scanner scanner = new Scanner(System.in,"utf-8");
 		
-		System.out.println("Super turbo mega hyper ubercool feature:\n");
 		
 		do {
 			System.out.print("> ");
@@ -472,6 +471,8 @@ public class RestClient {
 		try {
 			if (arg.length < 2) throw new ParseException("");
 			
+			arg[0] = arg[0].toLowerCase();
+			arg[1] = arg[0].toLowerCase();
 			switch (arg[1]) {
 			case COMMAND_LIST:
 				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
