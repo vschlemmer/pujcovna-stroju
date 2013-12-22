@@ -3,25 +3,25 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 
 
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
-<div class="content">
-    <h2>
+    <div class="content">
+        <h2>
         <spring:message code="lang.updateUserTitle" text="Update user" />
     </h2>
     <br /><br /><br />
     <c:if test="${not empty user}">
         <form:form method="post" id="updateUserForm" name="updateUserForm"
-                action="update">
+                   action="update">
             <table>
                 <tr>
                     <form:hidden path="id" value="${user.id}" />
                     <td>
                         <form:label path="firstName">
-                        <spring:message code="lang.firstName" text="First Name" />
+                            <spring:message code="lang.firstName" text="First Name" />
                         </form:label>
                     </td>
                     <td>
@@ -29,14 +29,14 @@
                     </td>
                     <td><label id="userFormFirstNameWarning"
                                class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
+                            <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <form:label path="lastName">
-                        <spring:message code="lang.lastName" text="Last Name" />
+                            <spring:message code="lang.lastName" text="Last Name" />
                         </form:label>
                     </td>
                     <td>
@@ -44,35 +44,51 @@
                     </td>
                     <td><label id="userFormLastNameWarning"
                                class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
+                            <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label>
                     </td>
                 </tr>
+
+                <tr>
+                    <td>
+                        <form:label path="username">
+                            <spring:message code="lang.username" text="Username" />
+                        </form:label>
+                    </td>
+                    <td>
+                        <form:input cssClass="inputField" path="username" value="${user.username}" />
+                        <form:input type="hidden" path="password" value="${user.password}" />
+                    </td>
+                    <td><label id="userFormLastNameWarning"
+                               class="offscreen warningMessage">
+                            <spring:message code="lang.mandatory" text="Mandatory Field" />
+                        </label>
+                    </td>
+                </tr>
+
                 <tr>
                     <td><form:label path="type">
-                        <spring:message code="lang.type" text="Type" />
+                            <spring:message code="lang.type" text="Type" />
                         </form:label></td>
                     <td>
                         <form:select path="type">
                             <form:option value="${user.type.typeLabel}" />
                             <form:options items="${types}" />
-                        </form:select>
-                            
-                            
+                        </form:select>   
                     </td>
                     <td><label id="userFormTypeWarning"
-                            class="offscreen warningMessage">
-                        <spring:message code="lang.mandatory" text="Mandatory Field" />
+                               class="offscreen warningMessage">
+                            <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
                 </tr>
-                
+
                 <tr>
                     <td colspan="2">
                         <button class="button" type="button" value="Update user"
                                 onclick="javascript:validateAndSubmitUpdateUserForm()">
                             <spring:message code="lang.updateUser" text="Update User" />
                         </button>
-                            
+
                     </td>
                 </tr>
             </table>

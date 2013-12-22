@@ -83,4 +83,12 @@ public interface SystemUserDAO {
          * @return list of users of given types
          */
         public List<SystemUser> getSystemUsersByTypeList(List<UserTypeEnum> types);
+        
+        /**
+         * Retrieves user of given username
+         * 
+         * @param username username of the user
+         * @return user with given username
+         */
+        public SystemUser getSystemUserByUsername(String username);
 }

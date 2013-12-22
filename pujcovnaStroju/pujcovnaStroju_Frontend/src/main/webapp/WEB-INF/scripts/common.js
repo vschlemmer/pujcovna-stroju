@@ -48,16 +48,39 @@ function validateAndSubmitAddUserForm() {
     var firstName = document.forms['addUserForm'].firstName.value;
     var lastName = document.forms['addUserForm'].lastName.value;
     var type = document.forms['addUserForm'].type.value;
+    var username = document.forms['addUserForm'].username.value;
+    var password = document.forms['addUserForm'].password.value;
+    var confPassword = document.forms['addUserForm'].confPassword.value;
+    var proceed = true;
     if(firstName == "") {
         showPart('userFormFirstNameWarning');
+        proceed = false;
     }
     if(lastName == "") {
         showPart('userFormLastNameWarning');
+        proceed = false;
     } 
     if(type == "") {
         showPart('userFormTypeWarning');
+        proceed = false;
     }
-    if (firstName != "" && lastName != "" && type != "") {
+    if(username == "") {
+        showPart('userFormUsernameWarning');
+        proceed = false;
+    }
+    if(password == "") {
+        showPart('userFormPasswordWarning');
+        proceed = false;
+    }
+    if(confPassword == "") {
+        showPart('userFormConfPasswordWarning');
+        proceed = false;
+    }
+    if (password != confPassword){
+        showPart('userFormConfPasswordWarning');
+        proceed = false;
+    }
+    if (proceed) {
         document.getElementById('addUserForm').submit();
     }
 }

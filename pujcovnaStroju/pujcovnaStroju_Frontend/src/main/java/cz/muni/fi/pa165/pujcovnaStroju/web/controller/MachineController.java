@@ -77,6 +77,7 @@ public class MachineController {
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
+                model.addAttribute("userType", DefaultController.getLoggedUserType());
 		DefaultController.addHeaderFooterInfo(model);
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus", "true");

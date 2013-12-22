@@ -31,6 +31,8 @@ public class SystemUserDTOConverter {
 		user.setId(userDTO.getId());
 		user.setFirstName(userDTO.getFirstName());
 		user.setLastName(userDTO.getLastName());
+                user.setUsername(userDTO.getUsername());
+                user.setPassword(userDTO.getPassword());
 		user.setType(UserTypeDTOConverter.dtoToEntity(userDTO.getType()));
 		if (!bounded) {
 			user.setLoans(LoanDTOConverter.listToEntities(userDTO.getLoans(),
@@ -60,6 +62,8 @@ public class SystemUserDTOConverter {
 		userDTO.setId(systemUser.getId());
 		userDTO.setFirstName(systemUser.getFirstName());
 		userDTO.setLastName(systemUser.getLastName());
+                userDTO.setUsername(systemUser.getUsername());
+                userDTO.setPassword(systemUser.getPassword());
 		userDTO.setType(UserTypeDTOConverter.entityToDto(systemUser.getType()));
 		if (!bounded) {
 			userDTO.setLoans(LoanDTOConverter.listToDTOs(systemUser.getLoans(),

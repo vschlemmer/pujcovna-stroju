@@ -115,4 +115,20 @@ public class SystemUserDAOImpl implements SystemUserDAO {
             cq.where(predicates.toArray(new Predicate[predicates.size()]));
             return em.createQuery(cq).getResultList();
         }
+        
+        public SystemUser getSystemUserByUsername(String username){
+            List<SystemUser> users = new ArrayList<>();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<SystemUser> cq = cb.createQuery(SystemUser.class);
+            Root<SystemUser> userRoot = cq.from(SystemUser.class);
+            cq.select(userRoot);
+            if (username != null)
+                    cq.where(cb.equal(userRoot.get("username"), username));
+            
+            users = em.createQuery(cq).getResultList();
+            if (users.size() == 0){
+                return null;
+            }
+            return users.get(0);
+        }
 }

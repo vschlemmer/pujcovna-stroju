@@ -26,7 +26,9 @@ public class SystemUser implements Serializable {
 	private Long id;
 	private String firstName; 
 	private String lastName;
-	private UserTypeEnum type;
+        private String username;
+        private String password;
+        private UserTypeEnum type;
 
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.REFRESH, CascadeType.REMOVE }, mappedBy="customer")
@@ -82,6 +84,22 @@ public class SystemUser implements Serializable {
 	public void setRevisions(List<Revision> revisions) {
 		this.revisions = revisions;
 	}
+        
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
 
 	@Override
 	public int hashCode() {
@@ -106,10 +124,13 @@ public class SystemUser implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "User{" + "id=" + id + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", type=" + type + '}';
-	}
+        @Override
+        public String toString() {
+            return "SystemUser{" + "id=" + id + ", firstName=" + firstName + 
+                    ", lastName=" + lastName + ", username=" + username + 
+                    ", password=" + password + ", type=" + type + 
+                    ", loans=" + loans + ", revisions=" + revisions + '}';
+        }
+
 
 }

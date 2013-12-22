@@ -1,0 +1,41 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+ 
+        <http auto-config="true" use-expressions="true">
+            <intercept-url pattern="/user/*" access="hasRole('ADMINISTRATOR')" />
+            <intercept-url pattern="/loan/*" access="hasRole('ADMINISTRATOR') OR 
+                    hasRole('CUSTOMERINDIVIDUAL') OR 
+                    hasRole('CUSTOMERLEGAL') OR
+                    hasRole('EMPLOYEE')" />
+            <intercept-url pattern="/revision/*" access="hasRole('ADMINISTRATOR') OR 
+                    hasRole('REVISIONER')" />
+            <form-login login-page="/login"
+                        authentication-failure-url="/loginfailed" />
+            <logout logout-url="/logout" logout-success-url="/" />
+	</http>
+        
+        <beans:bean id="userDetailsService" 
+              class="cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsServiceImpl" />
+        
+        <beans:bean id="encoder" 
+              class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+        
+        <authentication-manager>
+            <authentication-provider user-service-ref="userDetailsService">
+                <password-encoder ref="encoder">
+                    <salt-source ref="saltSource"/>
+                </password-encoder>
+            </authentication-provider>
+        </authentication-manager>
+        
+        <beans:bean id="saltSource"
+            class="org.springframework.security.authentication.dao.ReflectionSaltSource"
+            p:userPropertyToUse="salt" />
+ 
+</beans:beans>
