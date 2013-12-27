@@ -19,10 +19,15 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsImpl;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 import java.util.Date;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 /**
  * revision Controller implementation
@@ -110,17 +115,18 @@ public class RevisionController {
 
 		// empty objects with id only
 		MachineDTO machine = revision.getMachine();
-		SystemUserDTO user = revision.getSystemUser();
+		SystemUserDTO user = null; //revision.getSystemUser();
 
 		try {
 			machine = machineService.read(machine.getId());
 			if (machine == null) {
 				errorMsg = "Machine not found";
 			}
+			UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			user = userService.getSystemUserByUsername(userDetails.getUsername());
 			if (user == null) {
 				errorMsg = "User not found";
 			}
-			user = userService.read(user.getId());
 			revision.setMachine(machine);
 			revision.setSystemUser(user);
 
@@ -187,7 +193,6 @@ public class RevisionController {
 		RevisionDTO revision = null;
 		boolean found = false;
 		try {
-			System.err.println("blabla1");
 			Long revID = Long.valueOf(id);
 			revision = revisionService.readBizRevision(revID);
 			found = true;
@@ -214,7 +219,6 @@ public class RevisionController {
 		MachineDTO machine = revision.getMachine();
 		SystemUserDTO user = revision.getSystemUser();
 		try {
-			System.err.println("blabla2");
 
 			machine = machineService.read(machine.getId());
 			if (machine == null) {

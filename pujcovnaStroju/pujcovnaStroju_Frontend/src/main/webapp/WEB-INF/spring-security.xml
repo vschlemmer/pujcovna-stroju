@@ -8,17 +8,35 @@
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
  
         <http auto-config="true" use-expressions="true">
-            <intercept-url pattern="/user/*" access="hasRole('ADMINISTRATOR')" />
+			
+			<intercept-url pattern="/user/registrate" access="isAnonymous() OR hasRole('CUSTOMERLEGAL') OR 
+                    hasRole('CUSTOMERINDIVIDUAL')" />
+					
+            <intercept-url pattern="/user/*" access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE')" />
+			
             <intercept-url pattern="/loan/*" access="hasRole('ADMINISTRATOR') OR 
                     hasRole('CUSTOMERINDIVIDUAL') OR 
                     hasRole('CUSTOMERLEGAL') OR
                     hasRole('EMPLOYEE')" />
+					
             <intercept-url pattern="/revision/*" access="hasRole('ADMINISTRATOR') OR 
                     hasRole('REVISIONER')" />
+					
+			<intercept-url pattern="/machine/add/*" access="hasRole('ADMINISTRATOR') OR
+					hasRole('EMPLOYEE')" />
+			<intercept-url pattern="/machine/add" access="hasRole('ADMINISTRATOR') OR
+					hasRole('EMPLOYEE')" />
+			<intercept-url pattern="/machine/delete/**" access="hasRole('ADMINISTRATOR') OR
+					hasRole('EMPLOYEE')" />
+			<intercept-url pattern="/machine/update/**" access="hasRole('ADMINISTRATOR') OR
+					hasRole('EMPLOYEE')" />
+					
             <form-login login-page="/login"
                         authentication-failure-url="/loginfailed" />
             <logout logout-url="/logout" logout-success-url="/" />
 	</http>
+	
+		<global-method-security pre-post-annotations="enabled" />
         
         <beans:bean id="userDetailsService" 
               class="cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsServiceImpl" />

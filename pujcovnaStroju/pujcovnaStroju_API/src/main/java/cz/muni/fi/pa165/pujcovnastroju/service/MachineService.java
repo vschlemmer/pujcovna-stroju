@@ -7,6 +7,7 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import java.util.Date;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * 
@@ -22,6 +23,7 @@ public interface MachineService {
 	 * @throws IllegalArgumentException
 	 *             when given object, it's label or type are null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE')")
 	public MachineDTO create(MachineDTO machineDTO);
 
 	/**
@@ -32,6 +34,7 @@ public interface MachineService {
 	 * @throws DataAccessException
 	 *             when given object, it's label or type are null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE')")
 	public MachineDTO update(MachineDTO machineDTO);
 
 	/**
@@ -51,6 +54,7 @@ public interface MachineService {
 	 * @throws DataAccessException
 	 *             when MachineDTO or MachineDTO.id are null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE')")
 	public MachineDTO delete(MachineDTO machine);
 
 	/**

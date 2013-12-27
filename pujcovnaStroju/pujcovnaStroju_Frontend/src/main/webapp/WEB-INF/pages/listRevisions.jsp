@@ -161,7 +161,7 @@
 							</c:forEach>
 						</form:select></td>
 				</tr>
-				<tr>
+				<!--<tr>
 				<td><spring:message code="lang.customer" text="Customer" /></td>
 					<td><form:select path="systemUser">
 							<c:forEach items="${users}" var="currentUser">
@@ -169,7 +169,7 @@
 									label="${currentUser.firstName} ${currentUser.lastName}"></form:option>
 							</c:forEach>
 						</form:select></td>
-				</tr>
+				</tr>-->
 				<tr>
 					<td colspan="2">
 						<button class="button" type="button" value="Add revision"

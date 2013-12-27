@@ -131,14 +131,16 @@ public class LoanServiceTest extends AbstractTest {
 	LoanDTO loanDTOProcessed = null;
 	
 	try {
-	    loanService.delete(id);
+	    loanService.delete(loanDTOProcessed);
 	    assertNotNull(id); //if the exception is not thrown, test doesn't pass
 	} catch (DataAccessException e) {
 	    assertNull(id);
 	}
 	
 	id = (long)1;
-	loanDTOProcessed = loanService.delete(id);
+	LoanDTO loanDTO = new LoanDTO();
+	loanDTO.setId(id);
+	loanDTOProcessed = loanService.delete(loanDTO);
 	assertNotNull(loanDTOProcessed);
     }
     

@@ -4,6 +4,9 @@ import java.util.List;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * 
@@ -19,6 +22,9 @@ public interface SystemUserService {
 	 * @throws DataAccessException
 	 *             if the userDTO is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "((hasRole('EMPLOYEE') OR hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')) AND "
+			+ "(#userDTO.type.typeLabel == 'CUSTOMERLEGAL' OR #userDTO.type.typeLabel == 'CUSTOMERINDIVIDUAL'))")
 	public SystemUserDTO create(SystemUserDTO userDTO);
 
 	/**
@@ -30,6 +36,12 @@ public interface SystemUserService {
 	 * @throws DataAccessException
 	 *             if the id is null
 	 */
+	@PostAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND "
+			+ "(returnObject.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "returnObject.type.typeLabel == 'CUSTOMERINDIVIDUAL')) OR "
+			+ "(hasRole('REVISIONER') AND returnObject.type.typeLabel == 'REVISIONER') OR "
+			+ "returnObject.username == principal.username")
 	public SystemUserDTO read(Long id);
 
 	/**
@@ -41,6 +53,11 @@ public interface SystemUserService {
 	 * @throws DataAccessException
 	 *             if the user is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND " 
+			+ "(#userDTO.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "#userDTO.type.typeLabel == 'CUSTOMERINDIVIDUAL')) OR "
+			+ "#userDTO.username == principal.username")
 	public SystemUserDTO update(SystemUserDTO userDTO);
 
 	/**
@@ -51,6 +68,10 @@ public interface SystemUserService {
 	 * @throws DataAccessException
 	 *             if the user is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND " 
+			+ "(#userDTO.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "#userDTO.type.typeLabel == 'CUSTOMERINDIVIDUAL'))")
 	public SystemUserDTO delete(SystemUserDTO userDTO);
 
 	/**
@@ -58,6 +79,12 @@ public interface SystemUserService {
 	 * 
 	 * @return list of all users
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE')")
+	@PostAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND "
+			+ "(returnObject.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "returnObject.type.typeLabel == 'CUSTOMERINDIVIDUAL')) OR "
+			+ "returnObject.username == principal.username")
 	public List<SystemUserDTO> findAllSystemUsers();
 
 	/**
@@ -72,22 +99,39 @@ public interface SystemUserService {
 	 *            type of users
 	 * @return list of users that match the given parameters
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
+			+ "(hasRole('REVISIONER') AND #type.typeLabel == 'REVISIONER')")
+	@PostAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND "
+			+ "(returnObject.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "returnObject.type.typeLabel == 'CUSTOMERINDIVIDUAL')) OR "
+			+ "(hasRole('REVISIONER') AND #type.typeLabel == 'REVISIONER')")
 	public List<SystemUserDTO> getSystemUsersByParams(String firstName,
 			String lastName, UserTypeEnumDTO type);
 
-        /**
-         * Retrieves users of given types
-         * 
-         * @param types list of types
-         * @return list of users of given types
-         */
-        public List<SystemUserDTO> getSystemUsersByTypeList(List<UserTypeEnumDTO> types);
-        
-        /**
-         * Retrieves user of given username
-         * 
-         * @param username
-         * @return user with given username
-         */
-        public SystemUserDTO getSystemUserByUsername(String username);
+	/**
+	 * Retrieves users of given types
+	 * 
+	 * @param types list of types
+	 * @return list of users of given types
+	 */
+	@PostFilter("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
+			+ "((hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')) AND "
+			+ "(filterObject.username == principal.username))")
+	public List<SystemUserDTO> getSystemUsersByTypeList(List<UserTypeEnumDTO> types);
+
+	/**
+	 * Retrieves user of given username
+	 * 
+	 * @param username
+	 * @return user with given username
+	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
+			+ "isAnonymous() OR #username == principal.username")
+	@PostAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('EMPLOYEE') AND "
+			+ "(returnObject.type.typeLabel == 'CUSTOMERLEGAL' OR "
+			+ "returnObject.type.typeLabel == 'CUSTOMERINDIVIDUAL')) OR "
+			+ "isAnonymous() OR returnObject.username == principal.username")
+	public SystemUserDTO getSystemUserByUsername(String username);
 }

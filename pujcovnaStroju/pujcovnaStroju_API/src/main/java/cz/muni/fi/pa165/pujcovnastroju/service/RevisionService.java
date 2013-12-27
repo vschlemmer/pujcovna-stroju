@@ -6,6 +6,7 @@ import java.util.List;
 
 import cz.muni.fi.pa165.pujcovnastroju.dto.RevisionDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  *
@@ -22,6 +23,7 @@ public interface RevisionService {
 	 * @throws DataAccessException
 	 *             if the Revision is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')")
 	public RevisionDTO createBizRevision(RevisionDTO revisionDTO);
 
 	/**
@@ -34,6 +36,9 @@ public interface RevisionService {
 	 * @throws DataAccessException
 	 *             if the RevID is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('REVISIONER') AND "
+			+ "#revisionDTO.systemUser.username == principal.username)")
 	public RevisionDTO updateBizRevision(RevisionDTO revisionDTO);
 
 	/**
@@ -45,6 +50,9 @@ public interface RevisionService {
 	 * @throws DataAccessException
 	 *             if the revisionDTO is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR "
+			+ "(hasRole('REVISIONER') AND "
+			+ "#revisionDTO.systemUser.username == principal.username)")
 	public RevisionDTO deleteBizRevision(RevisionDTO revisionDTO);
 
 	/**
@@ -54,6 +62,7 @@ public interface RevisionService {
 	 *             if the revID is null
 	 * @return list of all Revision
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')")
 	public List<RevisionDTO> findAllrevisionsBizRevision();
 
 	/**
@@ -65,6 +74,7 @@ public interface RevisionService {
 	 * @throws DataAccessException
 	 *             if the revID is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')")
 	public RevisionDTO readBizRevision(Long revID);
 
 	/**
@@ -78,6 +88,7 @@ public interface RevisionService {
 	 * @throws DataAccessException
 	 *             if the revID is null
 	 */
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')")
 	public List<RevisionDTO> findRevisionsByDateBizRevision(Date dateFrom,
 			Date dateTo);
         
@@ -90,6 +101,7 @@ public interface RevisionService {
 	 * @param systemUser the revisioner
 	 * @return list of the revisions satisfying the parameters
 	 */
-        public List<RevisionDTO> findRevisionsByParams(String comment, Date revDate,
+	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')")
+    public List<RevisionDTO> findRevisionsByParams(String comment, Date revDate,
                             MachineDTO machine, SystemUserDTO systemUser);
 }

@@ -129,7 +129,7 @@ public class LoanController {
 		loan.setMachines(machines);
 	    }
 	    
-            if (loan.getId() != null) stored = loanService.update(loan) != null;
+        if (loan.getId() != null) stored = loanService.update(loan) != null;
 	    else stored = loanService.create(loan) != null;
             System.out.println(stored);
         } catch (DataAccessException e) {
@@ -171,7 +171,7 @@ public class LoanController {
         try {
             Long loanID = Long.valueOf(id);
             loanDTO = loanService.read(loanID);
-            loanService.delete(loanDTO.getId());
+            loanService.delete(loanDTO);
             deleted = true;
         } catch (DataAccessException | NumberFormatException
                         | NullPointerException e) {

@@ -73,7 +73,7 @@ public class DefaultController {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String hashedPassword = passwordEncoder.encode("admin");
             user.setPassword(hashedPassword);
-            user.setType(UserTypeDTOConverter.entityToDto(UserTypeEnum.ADMINISTRATOR));
+            user.setType(UserTypeDTOConverter.entityToDto(UserTypeEnum.CUSTOMERINDIVIDUAL));
             userService.create(user);
         }
         

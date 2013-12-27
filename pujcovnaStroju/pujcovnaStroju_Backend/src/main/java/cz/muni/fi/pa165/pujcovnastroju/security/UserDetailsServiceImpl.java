@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(user01.getType().name()));
-        return new UserDetailsImpl(user01.getUsername(), user01.getPassword(), true,
+        return new UserDetailsImpl(user01, true,
                 true, true, true, authorities);
     }
     

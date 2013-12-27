@@ -77,11 +77,15 @@ public class LoanServiceImpl implements LoanService {
 	}
 
 	@Override
-	public LoanDTO delete(Long id) {
+	public LoanDTO delete(LoanDTO loanDTO) {
+		if (loanDTO == null) {
+			throw new DataAccessResourceFailureException(
+					"Error occured during deleting loan.");
+		}
 		LoanDTO ldto = null;
 		Loan loan = null;
 		try {
-			loan = loanDAO.delete(id);
+			loan = loanDAO.delete(loanDTO.getId());
 			ldto = LoanDTOConverter.entityToDTO(loan,false);
 		} catch (IllegalArgumentException e) {
 			throw new DataAccessResourceFailureException(

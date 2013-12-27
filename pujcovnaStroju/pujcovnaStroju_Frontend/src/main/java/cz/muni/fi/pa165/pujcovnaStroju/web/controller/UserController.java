@@ -1,14 +1,18 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
 import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
+import cz.muni.fi.pa165.pujcovnastroju.converter.SystemUserDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsImpl;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -103,6 +107,42 @@ public class UserController {
                 model.addAttribute("errorMessage", errorMsg);
         }
         return "redirect:list";
+    }
+	
+	@RequestMapping(value = "/registrate")
+    public ModelAndView registrateUser(@ModelAttribute("userReg") SystemUserDTO userReg,
+                    BindingResult result, ModelMap model) {
+        if (userReg.getPassword() != null) {
+			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String hashedPassword = passwordEncoder.encode(userReg.getPassword());
+			userReg.setPassword(hashedPassword);
+			boolean stored = false;
+			String errorMsg = null;
+			try {
+					stored = userService.create(userReg) != null;
+			} catch (DataAccessException e) {
+					stored = false;
+					errorMsg = e.getMessage();
+			}
+			model.addAttribute("userReg", userReg);
+			model.addAttribute("storeStatus", stored);
+			if (errorMsg != null) {
+					model.addAttribute("errorMessage", errorMsg);
+			}
+		}
+		else {
+			UserTypeEnum [] types = {UserTypeEnum.CUSTOMERINDIVIDUAL, UserTypeEnum.CUSTOMERLEGAL};
+			model.addAttribute("types", types);
+		}
+		if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+			UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
+					.getPrincipal();
+			userReg = this.userService.getSystemUserByUsername(userDetails.getUsername());
+			model.addAttribute("userReg", userReg);
+		}
+		model.addAttribute("pageTitle", "lang.listUsersTitle");
+        DefaultController.addHeaderFooterInfo(model);
+        return new ModelAndView("registrate", "command", new SystemUserDTO());
     }
 
     @RequestMapping("/detail/{id}")
