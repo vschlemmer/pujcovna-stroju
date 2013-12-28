@@ -32,6 +32,12 @@ public class SystemUserServiceImpl implements SystemUserService {
     public SystemUserDTO create(SystemUserDTO userDTO) {
             SystemUser user = null;
             SystemUserDTO userDTO2 = null;
+			if (userDTO == null) {
+				throw new DataAccessResourceFailureException("Username wasn't filled in");
+			}
+			if (userDao.getSystemUserByUsername(userDTO.getUsername()) != null) {
+				throw new DataAccessResourceFailureException("Duplicit username");
+			}
             try {
                     user = userDao.create(SystemUserDTOConverter.dtoToEntity(userDTO,false));
                     userDTO2 = SystemUserDTOConverter.entityToDTO(user,false);
@@ -60,6 +66,12 @@ public class SystemUserServiceImpl implements SystemUserService {
     public SystemUserDTO update(SystemUserDTO userDTO) {
             SystemUser user = null;
             SystemUserDTO userDTO2 = null;
+			if (userDTO == null) {
+				throw new DataAccessResourceFailureException("Username wasn't filled in");
+			}
+			if (userDao.getSystemUserByUsername(userDTO.getUsername()) != null) {
+				throw new DataAccessResourceFailureException("Duplicit username");
+			}
             try {
                     user = userDao.update(SystemUserDTOConverter.dtoToEntity(userDTO,false));
                     userDTO2 = SystemUserDTOConverter.entityToDTO(user,false);
