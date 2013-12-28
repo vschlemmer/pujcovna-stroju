@@ -26,9 +26,13 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
 import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsImpl;
 import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
+import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Machine controller implementation
@@ -43,13 +47,15 @@ public class MachineController {
 	MachineService machineService;
 	LoanService loanService;
 	RevisionService revisionService;
+	SystemUserService userService;
 
 	@Autowired
 	public MachineController(MachineService machineService,
-			RevisionService revisionService, LoanService loanService) {
+			RevisionService revisionService, LoanService loanService, SystemUserService userService) {
 		this.machineService = machineService;
 		this.loanService = loanService;
 		this.revisionService = revisionService;
+		this.userService = userService;
 	}
 
 	@RequestMapping("")
@@ -161,11 +167,18 @@ public class MachineController {
 			for (LoanDTO loan : machine.getLoans()) {
 				loans.add(loanService.read(loan.getId()));
 			}
-			System.out.println(machine.getRevisions());
+			
 			model.addAttribute("loans", loans.size() == 0 ? null : loans);
 			List<RevisionDTO> revisions = new ArrayList<>();
-			for (RevisionDTO revision : machine.getRevisions()) {
-				revisions.add(revisionService.readBizRevision(revision.getRevID()));
+			if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+				UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
+						.getPrincipal();
+				SystemUserDTO user = userService.getSystemUserByUsername(userDetails.getUsername());
+				if (user.getType().getId() == UserTypeEnum.REVISIONER.ordinal()) {
+					for (RevisionDTO revision : machine.getRevisions()) {
+						revisions.add(revisionService.readBizRevision(revision.getRevID()));
+					}
+				}
 			}
 			model.addAttribute("revisions", revisions);
 		} else {

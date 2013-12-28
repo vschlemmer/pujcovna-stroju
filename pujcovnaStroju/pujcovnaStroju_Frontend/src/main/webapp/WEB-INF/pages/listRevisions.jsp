@@ -2,10 +2,13 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
+
+<sec:authentication var="principal" property="principal" />
 
 <div class="content">
 	<h2>
@@ -89,22 +92,32 @@
 				<c:forEach items="${revisions}" var="revision">
 					<tr>
 						<td>${revision.revID}</td>
-						<td><a
-							href="<c:url value="/machine/detail/${revision.machine.id}"/>">
-								${revision.machine.label}</a></td>
-
+						<td>
+							<a href="<c:url value="/machine/detail/${revision.machine.id}"/>">
+								${revision.machine.label}
+							</a>
+						</td>
 						<td>${revision.revDate}</td>
 						<td>${revision.comment}</td>
-						<td><a
-							href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.firstName}
-								${revision.systemUser.lastName}</a></td>
-						<td><a
-							href="<c:url value="/revision/detail/${revision.revID}"/>"> <img
-								alt="detail" src="<c:url value="/images/search.png"/>"></a> <a
-							href="<c:url value="/revision/delete/${revision.revID}"/>"> <img
-								alt="delete" src="<c:url value="/images/delete.png" />"></a> <a
-							href="<c:url value="/revision/update/${revision.revID}"/>"> <img
-								alt="update" src="<c:url value="/images/update.png" />"></a></td>
+						<td>
+							<sec:authorize access="${principal.username == revision.systemUser.username}">
+								<a href="<c:url value="/user/detail/${revision.systemUser.id}"/>">
+							</sec:authorize>
+									${revision.systemUser.lastName} ${revision.systemUser.firstName} 
+							<sec:authorize access="${principal.username == revision.systemUser.username}">
+								</a>
+							</sec:authorize>
+						</td>
+						<td>
+							<a href="<c:url value="/revision/detail/${revision.revID}"/>"> <img
+								alt="detail" src="<c:url value="/images/search.png"/>"></a>
+							<sec:authorize access="${principal.username == revision.systemUser.username}">
+								<a href="<c:url value="/revision/delete/${revision.revID}"/>"> <img
+									alt="delete" src="<c:url value="/images/delete.png" />"></a> <a
+								href="<c:url value="/revision/update/${revision.revID}"/>"> <img
+									alt="update" src="<c:url value="/images/update.png" />"></a>
+							</sec:authorize>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

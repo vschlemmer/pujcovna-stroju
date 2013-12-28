@@ -162,6 +162,27 @@ public class LoanController {
         }
         return "loanDetail";
     }
+	
+	@RequestMapping("/detailFull/{id}")
+    public String viewFullLoan(@PathVariable String id, ModelMap model) {
+        LoanDTO loan = null;
+        boolean found = false;
+		String errorMsg = null;
+			try {
+				Long loanID = Long.valueOf(id);
+				loan = loanService.read(loanID);
+				found = true;
+			} catch (DataAccessException | NumberFormatException e) {
+			errorMsg = e.getMessage();
+		}
+        model.addAttribute("loan", loan);
+        if (!found) {
+            model.addAttribute("id", id);
+	    model.addAttribute("errorMessage", errorMsg);
+        }
+		DefaultController.addHeaderFooterInfo(model);
+        return "loanFullDetail";
+    }
     
     @RequestMapping(value = "/delete/{id}")
     public String deleteLoan(@PathVariable String id, ModelMap model) {

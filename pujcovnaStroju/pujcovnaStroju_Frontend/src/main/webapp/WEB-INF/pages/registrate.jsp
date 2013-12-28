@@ -7,11 +7,31 @@
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
 <div class="content">
-        <h2><spring:message code="lang.listUsers" text="List of users" /></h2>
+	<h2>
+		<c:if test="${edit}" ><spring:message code="lang.editAccount" text="Edit Account" /></c:if>
+		<c:if test="${!edit}" ><spring:message code="lang.registrate" text="Registrate" /></c:if>
+	</h2>
     <ul id="addUserWrapper">
         <form:form method="post" commandName="command" id="addUserForm" name="addUserForm"
                    action="">
             <table>
+				 <tr>
+                    <td><form:label path="username">
+                            <spring:message code="lang.username" text="Username" />
+                        </form:label></td>
+                    <td><c:if test="${edit}">
+							<c:out value="${userReg.username}" />
+							<form:hidden cssClass="inputField" path="username" value="${userReg.username}"/>
+						</c:if>
+						<c:if test="${!edit}">
+							<form:input cssClass="inputField" path="username" value="${userReg.username}"/>
+						</c:if>
+					</td>
+                    <td><label id="userFormUsernameWarning"
+                               class="offscreen warningMessage">
+                            <spring:message code="lang.mandatory" text="Mandatory Field" />
+                        </label></td>
+                </tr>
                 <tr>
                     <td><form:label path="firstName">
                             <spring:message code="lang.firstName" text="First Name" />
@@ -28,16 +48,6 @@
                         </form:label></td>
                     <td><form:input cssClass="inputField" path="lastName" value="${userReg.lastName}"/></td>
                     <td><label id="userFormLastNameWarning"
-                               class="offscreen warningMessage">
-                            <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label></td>
-                </tr>
-                <tr>
-                    <td><form:label path="username">
-                            <spring:message code="lang.username" text="Username" />
-                        </form:label></td>
-                    <td><form:input cssClass="inputField" path="username" value="${userReg.username}"/></td>
-                    <td><label id="userFormUsernameWarning"
                                class="offscreen warningMessage">
                             <spring:message code="lang.mandatory" text="Mandatory Field" />
                         </label></td>
@@ -82,7 +92,7 @@
                     <td colspan="2">
                         <button class="button" type="button"
                                 value="Add user"
-                                onclick="javascript:validateAndSubmitAddUserForm()">
+                                onclick="javascript:validateAndSubmitRegistrationForm()">
                             <spring:message code="lang.addUser" text="Add User" />
                         </button>
                     </td>

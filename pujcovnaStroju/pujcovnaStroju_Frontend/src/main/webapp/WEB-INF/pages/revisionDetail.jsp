@@ -2,9 +2,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<sec:authentication var="principal" property="principal" />
 
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
@@ -37,9 +39,15 @@
 		</tr>
 		<tr>
 			<td><spring:message code="lang.revisionUser" text="Revisioner" /></td>
-			<td><a
-				href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.lastName}
-					${revision.systemUser.firstName} </a></td>
+			<td>
+				<sec:authorize access="${principal.username == revision.systemUser.username}">
+					<a href="<c:url value="/user/detail/${revision.systemUser.id}"/>">
+				</sec:authorize>
+						${revision.systemUser.lastName} ${revision.systemUser.firstName} 
+				<sec:authorize access="${principal.username == revision.systemUser.username}">
+					</a>
+				</sec:authorize>
+			</td>
 		</tr>
 
 	</table>

@@ -2,6 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 
@@ -81,7 +82,15 @@
                 <c:forEach items="${machines}" var="machine">
                     <tr>
                         <td>${machine.id}</td>
-                        <td>${machine.label}</td>
+                        <td>
+							<sec:authorize access="isAuthenticated()">
+								<a href="<c:url value="/machine/detail/${machine.id}"/>">
+							</sec:authorize>
+								${machine.label}
+							<sec:authorize access="isAuthenticated()">
+								</a>	
+							</sec:authorize>
+						</td>
                         <td>${machine.type.typeLabel}</td>
                         <td>${machine.description}</td>
                         <c:if test="${userType == 'ADMINISTRATOR' || 

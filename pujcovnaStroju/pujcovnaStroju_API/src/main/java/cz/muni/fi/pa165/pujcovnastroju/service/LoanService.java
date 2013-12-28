@@ -55,9 +55,8 @@ public interface LoanService {
 	 * @throws DataAccessException
 	 *             when id is null
 	 */
-	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
-			+ "hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')")
 	@PostAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
+			+ "hasRole('REVISIONER') OR "
 			+ "(returnObject.customer.username == principal.username AND "
 			+ "(hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')))")
 	public LoanDTO read(Long id);
@@ -82,8 +81,6 @@ public interface LoanService {
 	 * 
 	 * @return list of loanDTOs
 	 */
-	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') "
-			+ "OR hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')")
 	@PostFilter("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
 			+ "((hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')) AND "
 			+ "filterObject.customer.username == principal.username)")
@@ -104,8 +101,6 @@ public interface LoanService {
 	 *            - machine of which loans are to be returned
 	 * @return list of the loanDTOs satisfying the parameters
 	 */
-	@PreAuthorize("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') "
-			+ "OR hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')")
 	@PostFilter("hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') OR "
 			+ "((hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')) AND "
 			+ "filterObject.customer.username == principal.username)")

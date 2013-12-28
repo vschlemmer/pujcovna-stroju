@@ -58,9 +58,18 @@ public class UserController {
             @RequestParam(value = "updateStatus", required = false, defaultValue = "") String updateStatus,
             @RequestParam(value = "deleteStatus", required = false, defaultValue = "") String deleteStatus,
             @RequestParam(value = "errorMessage", required = false, defaultValue = "") String errorMessage) {
-        model.addAttribute("users", userService.findAllSystemUsers());
+        
+		UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
+						.getPrincipal();
+		SystemUserDTO user = this.userService.getSystemUserByUsername(userDetails.getUsername());
+		
+		model.addAttribute("users", userService.findAllSystemUsers());
         model.addAttribute("existingUsers", userService.findAllSystemUsers());
-        model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
+        if (user.getType().getTypeLabel().equals("EMPLOYEE")) {
+			model.addAttribute("types", new UserTypeEnum[]
+			{UserTypeEnum.CUSTOMERINDIVIDUAL, UserTypeEnum.CUSTOMERLEGAL});
+		}
+		else model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
         model.addAttribute("list", "list of users");
         model.addAttribute("pageTitle", "lang.listUsersTitle");
         DefaultController.addHeaderFooterInfo(model);
@@ -112,35 +121,68 @@ public class UserController {
 	@RequestMapping(value = "/registrate")
     public ModelAndView registrateUser(@ModelAttribute("userReg") SystemUserDTO userReg,
                     BindingResult result, ModelMap model) {
-        if (userReg.getPassword() != null) {
-			PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-			String hashedPassword = passwordEncoder.encode(userReg.getPassword());
-			userReg.setPassword(hashedPassword);
+        if (userReg.getUsername() != null) {
+			if (userReg.getPassword() != null && userReg.getPassword().length() > 0) {
+				PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+				String hashedPassword = passwordEncoder.encode(userReg.getPassword());
+				userReg.setPassword(hashedPassword);
+			}
+			
 			boolean stored = false;
 			String errorMsg = null;
+			
 			try {
+				if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+					SystemUserDTO oldUser = userService.getSystemUserByUsername(userReg.getUsername());
+					userReg.setId(oldUser.getId());
+					if (userReg.getPassword() == null || userReg.getPassword().length() == 0) {
+						userReg.setPassword(oldUser.getPassword());
+					}
+					stored = userService.update(userReg) != null;
+					
+					model.addAttribute("edit", true);
+					model.addAttribute("userReg", userReg);
+				} else {
 					stored = userService.create(userReg) != null;
+					model.addAttribute("edit", false);
+					model.addAttribute("userReg", new SystemUserDTO());
+				}
 			} catch (DataAccessException e) {
 					stored = false;
 					errorMsg = e.getMessage();
 			}
-			model.addAttribute("userReg", userReg);
+			
 			model.addAttribute("storeStatus", stored);
+			model.addAttribute("pageTitle", "lang.editAccount");
 			if (errorMsg != null) {
 					model.addAttribute("errorMessage", errorMsg);
 			}
 		}
 		else {
-			UserTypeEnum [] types = {UserTypeEnum.CUSTOMERINDIVIDUAL, UserTypeEnum.CUSTOMERLEGAL};
-			model.addAttribute("types", types);
+			if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
+				UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
+						.getPrincipal();
+				userReg = this.userService.getSystemUserByUsername(userDetails.getUsername());
+
+				model.addAttribute("userReg", userReg);
+				model.addAttribute("edit", true);
+				model.addAttribute("pageTitle", "lang.editAccount");
+			}
+			else {
+				
+				model.addAttribute("edit", false);
+				model.addAttribute("pageTitle", "lang.registrate");
+			}
 		}
-		if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-			UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			userReg = this.userService.getSystemUserByUsername(userDetails.getUsername());
-			model.addAttribute("userReg", userReg);
+		UserTypeEnum [] types = null;
+		if (userReg.getType() != null) {
+			if (userReg.getType().getTypeLabel().equals("CUSTOMERINDIVIDUAL")) {
+				types = new UserTypeEnum[]{UserTypeEnum.CUSTOMERLEGAL};
+			}
+			else types = new UserTypeEnum[]{UserTypeEnum.CUSTOMERINDIVIDUAL};
 		}
-		model.addAttribute("pageTitle", "lang.listUsersTitle");
+		else types = new UserTypeEnum[]{UserTypeEnum.CUSTOMERINDIVIDUAL, UserTypeEnum.CUSTOMERLEGAL};
+		model.addAttribute("types", types);
         DefaultController.addHeaderFooterInfo(model);
         return new ModelAndView("registrate", "command", new SystemUserDTO());
     }

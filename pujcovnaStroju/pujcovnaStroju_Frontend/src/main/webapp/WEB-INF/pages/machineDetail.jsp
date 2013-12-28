@@ -2,9 +2,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
+<sec:authentication var="principal" property="principal" />
 
 <jsp:include page="parts/header.jsp"></jsp:include>
 <jsp:include page="parts/left_menu.jsp"></jsp:include>
@@ -61,10 +63,28 @@
 
 				<c:forEach items="${loans}" var="loan">
 					<tr>
-						<td><a href="<c:url value="/loan/detail/${loan.id}"/>">${loan.id}</a></td>
-						<td><a
-							href="<c:url value="/user/detail/${loan.customer.id}"/>">${loan.customer.firstName}
-								${loan.customer.lastName}</a></td>
+						<td>
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == loan.customer.username}">
+								<a href="<c:url value="/loan/detailFull/${loan.id}"/>">
+							</sec:authorize>
+							${loan.id}
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == loan.customer.username}">
+								</a>
+							</sec:authorize>
+						</td>
+						<td>
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == loan.customer.username}">
+								<a href="<c:url value="/user/detail/${loan.customer.id}"/>">
+							</sec:authorize>
+							${loan.customer.firstName} ${loan.customer.lastName}
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == loan.customer.username}">
+								</a>
+							</sec:authorize>
+						</td>
 
 						<td>${loan.loanTime}</td>
 						<td>${loan.returnTime}</td>
@@ -112,11 +132,25 @@
 
 				<c:forEach items="${revisions}" var="revision">
 					<tr>
-						<td><a
-							href="<c:url value="/revision/detail/${revision.revID}"/>">${revision.revID}</a></td>
-						<td><a
-							href="<c:url value="/user/detail/${revision.systemUser.id}"/>">${revision.systemUser.firstName}
-								${revision.systemUser.lastName}</a></td>
+						<td><sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')">
+								<a href="<c:url value="/revision/detail/${revision.revID}"/>">
+							</sec:authorize>
+								${revision.revID}
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('REVISIONER')">
+								</a>
+							</sec:authorize>
+							</td>
+						<td>
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == revision.systemUser.username}">
+								<a href="<c:url value="/user/detail/${revision.systemUser.id}"/>">
+							</sec:authorize>
+								${revision.systemUser.firstName} ${revision.systemUser.lastName}
+							<sec:authorize access="hasRole('ADMINISTRATOR') OR hasRole('EMPLOYEE') 
+										   OR ${principal.username == revision.systemUser.username}">
+								</a>
+							</sec:authorize>
+						</td>
 
 						<td>${revision.revDate}</td>
 						<td>${revision.comment}</td>
