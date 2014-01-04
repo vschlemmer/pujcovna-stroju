@@ -34,8 +34,6 @@
         <a href="<c:url value="/logout"/>"><spring:message
                         code="lang.logout" text="Logout" />
         </a><br />
-	</sec:authorize>
-	<sec:authorize access="hasRole('CUSTOMERLEGAL') OR hasRole('CUSTOMERINDIVIDUAL')">
 		<a href="<c:url value="/user/registrate"/>"><spring:message
                         code="lang.editAccount" text="Edit Account" />
         </a>

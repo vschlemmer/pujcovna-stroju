@@ -34,6 +34,11 @@
             <form-login login-page="/login"
                         authentication-failure-url="/loginfailed" />
             <logout logout-url="/logout" logout-success-url="/" />
+			
+			<session-management session-fixation-protection="migrateSession" session-authentication-error-url="/loginfailed"> 
+				<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/login" session-registry-alias="sessionRegistry"/>
+			</session-management>
+			
 	</http>
 	
 		<global-method-security pre-post-annotations="enabled" />

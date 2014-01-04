@@ -9,9 +9,12 @@ import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +39,10 @@ public class UserController {
 
     private SystemUserService userService;
 
+	@Autowired
+	@Qualifier("sessionRegistry")
+	private SessionRegistry sessionRegistry;
+	
     @Autowired
     public UserController(SystemUserService userService) {
         this.userService = userService;
@@ -219,7 +226,13 @@ public class UserController {
             try {
                     Long userID = Long.valueOf(id);
                     userDTO = userService.read(userID);
-                    userService.delete(userDTO);
+					if (userDTO != null && this.isLoggedIn(userDTO)) {
+						deleted = false;
+						errorMsg = "User is currently logged in and can't be therefore deleted.";
+					}
+					else {
+	                    userService.delete(userDTO);
+					}
                     deleted = true;
             } catch (DataAccessException | NumberFormatException
                             | NullPointerException e) {
@@ -248,21 +261,23 @@ public class UserController {
                             | NullPointerException e) {
                     // TODO log
             }
-            // prevent the actual type of the user to show in the list twice
-            List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
-            for (UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()) {
-                    if (!enum1.toString().equals(user.getType().getTypeLabel())) {
-                            enums.add(enum1);
-                    }
-            }
-            UserTypeEnum[] types = (UserTypeEnum[]) enums
-                            .toArray(new UserTypeEnum[enums.size()]);
+			if (user != null && !this.isLoggedIn(user)) {
+				// prevent the actual type of the user to show in the list twice
+				List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
+				for (UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()) {
+						if (!enum1.toString().equals(user.getType().getTypeLabel())) {
+								enums.add(enum1);
+						}
+				}
+				UserTypeEnum[] types = (UserTypeEnum[]) enums
+								.toArray(new UserTypeEnum[enums.size()]);
 
-            model.addAttribute("types", enums);
-            model.addAttribute("user", user);
-            if (!found) {
-                    model.addAttribute("id", id);
-            }
+				model.addAttribute("types", enums);
+				model.addAttribute("user", user);
+				if (!found) {
+						model.addAttribute("id", id);
+				}
+			}
             return new ModelAndView("updateUser", "command", new SystemUserDTO());
     }
 
@@ -272,7 +287,13 @@ public class UserController {
             boolean updated = false;
             String errorMsg = null;            
             try {
+				if (user != null && this.isLoggedIn(user)) {
+					updated = false;
+					errorMsg = "User is currently logged in and can't be therefore edited.";
+				}
+				else {
                     updated = userService.update(user) != null;
+				}
             } catch (DataAccessException e) {
                     updated = false;
                     errorMsg = e.getMessage();
@@ -313,4 +334,16 @@ public class UserController {
     public String voidFilter(ModelMap model) {
             return "redirect:/user/list";
     }
+	
+	private boolean isLoggedIn(SystemUserDTO userDTO) {
+		List<Object> principals = sessionRegistry.getAllPrincipals();
+
+		for (Object principal: principals) {
+			if (principal instanceof User) {
+				User user = (User)principal;
+				if (userDTO.getUsername().equals(user.getUsername())) return true;
+			}
+		}
+		return false;
+	}
 }
