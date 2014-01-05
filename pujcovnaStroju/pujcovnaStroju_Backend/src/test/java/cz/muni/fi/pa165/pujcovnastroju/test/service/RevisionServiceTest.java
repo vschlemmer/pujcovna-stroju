@@ -176,7 +176,7 @@ public class RevisionServiceTest extends AbstractTest {
     }
     
     @Test
-     public void findRevisionsByParams() {
+    public void testFindRevisionsByParams() {
         List<Revision> revisionList = new ArrayList<>();
 	revisionList.add(new Revision());
 	revisionList.add(new Revision());

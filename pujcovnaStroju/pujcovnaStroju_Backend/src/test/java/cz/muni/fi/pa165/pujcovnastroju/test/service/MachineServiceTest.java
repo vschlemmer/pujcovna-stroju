@@ -23,10 +23,13 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import cz.muni.fi.pa165.pujcovnastroju.converter.MachineTypeDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dao.MachineDAO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Loan;
 import cz.muni.fi.pa165.pujcovnastroju.entity.Machine;
 import cz.muni.fi.pa165.pujcovnastroju.entity.MachineTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.entity.Revision;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.serviceimpl.MachineServiceImpl;
+import java.util.Date;
 import org.hibernate.annotations.common.util.impl.Log_$logger;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -103,6 +106,16 @@ public class MachineServiceTest extends AbstractTest {
 						"Error occured during retrieving machine."))
 				.when(mockMachineDao).read(null);
 
+		Mockito.when(mockMachineDao.getMachinesByParams(Matchers.contains("2"), 
+				Matchers.anyString(), Matchers.any(MachineTypeEnum.class), 
+				Matchers.any(Loan.class), Matchers.any(Revision.class), 
+				Matchers.any(Date.class), Matchers.any(Date.class)))
+				.thenReturn(allMachines);
+		Mockito.when(mockMachineDao.getMachinesByParams(Matchers.contains("null"), 
+				Matchers.anyString(), Matchers.any(MachineTypeEnum.class), 
+				Matchers.any(Loan.class), Matchers.any(Revision.class), 
+				Matchers.any(Date.class), Matchers.any(Date.class)))
+				.thenReturn(null);
 	}
 
 	@Test
@@ -207,6 +220,19 @@ public class MachineServiceTest extends AbstractTest {
 							.entityToDto(MachineTypeEnum.CAN_OPENER));
 			assertNotNull(list);
 			assertEquals(1, list.size());
+		} catch (Exception e) {
+			fail("Unexpected exception was thrown " + e);
+		}
+	}
+	
+	@Test
+	public void getMachineDTOsByParams() {
+		try {
+			List<MachineDTO> machines = service.getMachineDTOsByParams("2", null, null, null, null, null, null);
+			assertEquals(2, machines.size());
+			
+			machines = service.getMachineDTOsByParams("null", null, null, null, null, null, null);
+			assertEquals(null, machines);
 		} catch (Exception e) {
 			fail("Unexpected exception was thrown " + e);
 		}

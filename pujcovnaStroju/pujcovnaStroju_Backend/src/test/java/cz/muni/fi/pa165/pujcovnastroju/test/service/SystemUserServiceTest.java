@@ -83,6 +83,10 @@ public class SystemUserServiceTest extends AbstractTest {
 	Mockito.when(mockUserDao.delete(Matchers.any(SystemUser.class))).thenReturn(new SystemUser());
 	Mockito.when(mockUserDao.delete(null)).thenThrow(
                 new IllegalArgumentException("Error occured during deleting user."));
+	
+	Mockito.when(mockUserDao.getSystemUserByUsername(null)).thenReturn(null);
+	Mockito.when(mockUserDao.getSystemUserByUsername("NotPresent")).thenReturn(null);
+	Mockito.when(mockUserDao.getSystemUserByUsername("Present")).thenReturn(new SystemUser());
     }
     
     @Test
@@ -101,6 +105,14 @@ public class SystemUserServiceTest extends AbstractTest {
 	userDTOProcessed = userService.create(userDTO);
 	assertNotNull(userDTOProcessed);
 	assertEquals(userDTO, userDTOProcessed);
+	
+	userDTO.setUsername("Present");
+	try {
+		userService.create(userDTO);
+		assertNull(userDTO); // created user with duplicit username
+	} catch (DataAccessException e) {
+		assertNotNull(userDTO); 
+	}
     }
     
     @Test
@@ -119,6 +131,15 @@ public class SystemUserServiceTest extends AbstractTest {
 	userDTOProcessed = userService.update(userDTO);
 	assertNotNull(userDTOProcessed);
 	assertEquals(userDTO, userDTOProcessed);
+	
+	userDTO.setUsername("Present");
+	try {
+		userService.update(userDTO);
+		assertNull(userDTO); // created user with duplicit username
+	} catch (DataAccessException e) {
+		assertNotNull(userDTO); 
+	}
+	
     }
     
     @Test
@@ -216,4 +237,16 @@ public class SystemUserServiceTest extends AbstractTest {
         assertEquals(1, users.size());
     }
     
+	@Test
+	public void testGetSystemUserByUsername() {
+		SystemUserDTO userDTO = null;
+		userDTO = userService.getSystemUserByUsername(null);
+		assertNull(userDTO);
+		
+		userDTO = userService.getSystemUserByUsername("NotPresent");
+		assertNull(userDTO);
+		
+		userDTO = userService.getSystemUserByUsername("Present");
+		assertNotNull(userDTO);
+	}
 }
