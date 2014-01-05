@@ -76,7 +76,7 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 		}
 		SystemUser user1 = em.find(SystemUser.class, user.getId());
 		em.remove(user1);
-		return em.find(SystemUser.class, user.getId());
+		return user1;
 	}
 
 	public List<SystemUser> findAllSystemUsers()
@@ -124,9 +124,10 @@ public class SystemUserDAOImpl implements SystemUserDAO {
             cq.select(userRoot);
             if (username != null)
                     cq.where(cb.equal(userRoot.get("username"), username));
+			else return null;
             
             users = em.createQuery(cq).getResultList();
-            if (users.size() == 0){
+            if (users.isEmpty()){
                 return null;
             }
             return users.get(0);

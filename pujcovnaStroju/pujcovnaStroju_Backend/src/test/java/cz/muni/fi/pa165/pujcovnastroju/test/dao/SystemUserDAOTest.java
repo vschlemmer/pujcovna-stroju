@@ -158,10 +158,55 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.delete(user1);
         em.getTransaction().commit();
     }
+	
+	/**
+     * Test deleting a user
+     */
+    @Test
+    public void testDelete(){
+		
+		SystemUser user1 = createSampleUser();
+        user1.setUsername("Anthony");
+        SystemUser user2 = createSampleUser();
+        user2.setUsername("Bilbo");
+        SystemUser user3 = createSampleUser();
+        user3.setUsername("Cyril");
+        em.getTransaction().begin();
+        userDAO.create(user1);
+        userDAO.create(user2);
+        userDAO.create(user3);
+		em.getTransaction().commit();
+		
+		SystemUser userTest = null;
+		try {
+			em.getTransaction().begin();
+			userDAO.delete(null);
+			em.getTransaction().commit();
+			fail(); // fail on not throwing IllegalArgumentException
+		} catch (IllegalArgumentException e) {
+			if (em.getTransaction().isActive()) em.getTransaction().commit();
+			assertNull(userTest);
+		}
+		List<SystemUser> users = userDAO.findAllSystemUsers();
+		assertEquals(3, users.size()); // check the correct setting
+		
+		em.getTransaction().begin();
+		userTest = userDAO.delete(user2);
+		em.getTransaction().commit();
+		assertEquals(user2, userTest); // test the correct return value
+		
+		users = userDAO.findAllSystemUsers();
+		assertEquals(2, users.size()); // test the correct db size
+		
+		for (SystemUser s : users) {
+			if (s.equals(userTest)) fail("Deleted user is still present in DB.");
+		}
+    }
     
     /**
      * Test retrieving all users
      */
+	@Test
     public void testFindAllSystemUsers(){
         SystemUser user1 = createSampleUser();
         SystemUser user2 = createSampleUser();
@@ -183,6 +228,7 @@ public class SystemUserDAOTest extends TestCase {
     /**
      * Test retrieving users by given parameters
      */
+	@Test
     public void testGetSystemUsersByParams(){
         SystemUser user1 = createSampleUser();
         SystemUser user2 = createSampleUser();
@@ -209,6 +255,7 @@ public class SystemUserDAOTest extends TestCase {
     /**
      * Test retrieving users by given types
      */
+	@Test
     public void testGetSystemUsersByTypeList(){
         SystemUser user1 = createSampleUser();
         user1.setLastName("Customerindividual");
@@ -240,4 +287,38 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.delete(user3);
         em.getTransaction().commit();
     }
+	
+	/**
+	 * Test retrieving user by its username
+	 */
+	@Test
+	public void testGetSystemUserByUsername() {
+		
+		SystemUser userTest = userDAO.getSystemUserByUsername("Whatever");
+		assertNull(userTest); //test the empty db
+		
+		userTest = userDAO.getSystemUserByUsername(null);
+		assertNull(userTest); //test null on empty db
+		
+		SystemUser user1 = createSampleUser();
+        user1.setUsername("Anthony");
+        SystemUser user2 = createSampleUser();
+        user2.setUsername("Bilbo");
+        SystemUser user3 = createSampleUser();
+        user3.setUsername("Cyril");
+        em.getTransaction().begin();
+        userDAO.create(user1);
+        userDAO.create(user2);
+        userDAO.create(user3);
+		em.getTransaction().commit();
+		
+		userTest = userDAO.getSystemUserByUsername(null);
+		assertNull(userTest); //test null on prefilled db
+		
+		userTest = userDAO.getSystemUserByUsername(user2.getUsername());
+		assertEquals(user2, userTest); //test correct behaviour on filled existing username
+		
+		userTest = userDAO.getSystemUserByUsername("Whatever");
+		assertNull(userTest); //test correct behaviour on filled non-existing username
+	}
 }
