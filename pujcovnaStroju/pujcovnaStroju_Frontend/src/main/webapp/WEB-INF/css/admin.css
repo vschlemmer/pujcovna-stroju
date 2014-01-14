@@ -11,14 +11,14 @@ div.container {
 div.header,div.footer {
 	padding: 0.5em;
 	color: white;
-	background-color: #993399;
+	background-color: #ACD695;
 	clear: left;
         }
 
 h1.header {
 	padding: 0;
 	margin: 0;
-	color: #65a5d1;
+	color: #ACD695;
         }
 
 div.left {
@@ -36,11 +36,29 @@ div.content {
 
  .pageLabel {
     margin: 20px;
-    color: #993399;
+    color: #ACD695;
  }
  
  .button {
-   border-color: #96d1f8;
+   border-color: #ACD695;
    border-width: 1px;
-   background: #993399;
+   background: #ACD695;
    }
+   
+   #standardTable td,#standardTable th {
+    font-size: 1em;
+    border: 1px solid #ACD695;
+    padding: 3px 7px 2px 7px;
+}
+   #standardTable th {
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #ACD695;
+    color: #ffffff;
+}
+
+h2 {
+	color: #ACD695;
+}

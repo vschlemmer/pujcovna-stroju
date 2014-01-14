@@ -132,6 +132,8 @@ form {
 	margin: 10px;
 }
 .button {
+   margin-top: 10px;
+   color: white;
    border-color: #96d1f8;
    border-width: 1px;
    background: #65a5d1;
@@ -152,3 +154,7 @@ form {
     margin: 20px;
     color: #65a5d1;
  }
+ 
+ h2 {
+    color: #65a5d1;
+}
