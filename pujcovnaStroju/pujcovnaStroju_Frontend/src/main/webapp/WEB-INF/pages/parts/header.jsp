@@ -5,7 +5,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link type="text/css" rel="stylesheet" href="<c:url value="/css/main.css" />" />
+
+
+
+ <link type="text/css" rel="stylesheet" href="<c:url value="/css/main.css" />" />
+    <c:choose>
+        <c:when test="${userType == 'ADMINISTRATOR'}">
+            <link type="text/css" rel="stylesheet" href="<c:url value="/css/admin.css" />" />
+        </c:when>
+    </c:choose>
 <script type="text/javascript" src="<c:url value="/scripts/common.js" />"></script>
 
 <link type="text/css" rel="stylesheet" href="<c:url value="/css/jquery.simple-dtpicker.css" />" />
