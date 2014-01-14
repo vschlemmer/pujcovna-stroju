@@ -78,7 +78,7 @@ public class RevisionController {
 
 		model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("users", userService.getSystemUsersByParams(null, null, 
-                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER)));
+                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER), null));
 
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus", "true");
@@ -272,7 +272,7 @@ public class RevisionController {
                         revisionService.findAllrevisionsBizRevision());
                 model.addAttribute("machines", machineService.getAllMachines());
 		model.addAttribute("users", userService.getSystemUsersByParams(null, null, 
-                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER)));
+                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER),null));
                 model.addAttribute("list", "list of revisions");
 		model.addAttribute("pageTitle", "lang.listRevisionsTitle");
 		DefaultController.addHeaderFooterInfo(model);

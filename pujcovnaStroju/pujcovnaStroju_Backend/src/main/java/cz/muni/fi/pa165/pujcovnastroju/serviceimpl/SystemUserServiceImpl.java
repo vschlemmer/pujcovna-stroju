@@ -101,9 +101,9 @@ public class SystemUserServiceImpl implements SystemUserService {
 
     @Override
     public List<SystemUserDTO> getSystemUsersByParams(String firstName,
-                    String lastName, UserTypeEnumDTO type) {
+                    String lastName, UserTypeEnumDTO type, String userName) {
             List<SystemUser> userList = userDao.getSystemUsersByParams(firstName,
-                            lastName, UserTypeDTOConverter.dtoToEntity(type));
+                            lastName, UserTypeDTOConverter.dtoToEntity(type), userName);
             return SystemUserDTOConverter.listToDTO(userList,false);
     }
 

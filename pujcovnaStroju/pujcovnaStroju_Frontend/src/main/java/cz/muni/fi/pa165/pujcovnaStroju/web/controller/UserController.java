@@ -1,13 +1,9 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
-import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
-import cz.muni.fi.pa165.pujcovnastroju.converter.SystemUserDTOConverter;
-import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
-import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
-import cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsImpl;
-import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -15,7 +11,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
+import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
+import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
+import cz.muni.fi.pa165.pujcovnastroju.security.UserDetailsImpl;
+import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
 
 /**
  * User Controller implementation
@@ -309,11 +310,17 @@ public class UserController {
     public ModelAndView filterUsers(ModelMap model,
                     @RequestParam(required = false) String firstName,
                     @RequestParam(required = false) String lastName,
+                    @RequestParam(required = false) String username,
                     @RequestParam(required = false) String type) {
             DefaultController.addHeaderFooterInfo(model);
             StringToSystemUserTypeEnumDTOConverter converter = new StringToSystemUserTypeEnumDTOConverter();
-            if (type.equals("--no type--")) {
-                    type = "";
+            model.addAttribute("selectedType", type);
+            model.addAttribute("selectedFirstName", firstName);
+            model.addAttribute("selectedLastName", lastName);
+            model.addAttribute("selectedUserName", username);
+            System.out.println(type);
+            if (type == null || type.equals("--no type--")) {
+                    type = null;
             }
             if (firstName.equals("")) {
                     firstName = null;
@@ -321,10 +328,18 @@ public class UserController {
             if (lastName.equals("")) {
                     lastName = null;
             }
+            if (username.equals("")) {
+                username = null;
+            }
+            System.out.println(type);
             model.addAttribute("users", userService.getSystemUsersByParams(
-                            firstName, lastName, converter.convert(type)));
+                            firstName, lastName, converter.convert(type), username ));
+            List<String> types = new ArrayList<>();
+            for (UserTypeEnum enums: UserTypeEnum.class.getEnumConstants()) {
+            	types.add(enums.name());
+            }
             model.addAttribute("existingUsers", userService.findAllSystemUsers());
-            model.addAttribute("types", UserTypeEnum.class.getEnumConstants());
+            model.addAttribute("types", types);
             model.addAttribute("list", "list of users");
             model.addAttribute("pageTitle", "lang.listUsersTitle");
             return new ModelAndView("listUsers", "command", new SystemUserDTO());

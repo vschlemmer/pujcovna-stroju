@@ -87,7 +87,7 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 	}
 
 	public List<SystemUser> getSystemUsersByParams(String firstName,
-			String lastName, UserTypeEnum type) {
+			String lastName, UserTypeEnum type, String userName) {
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 		CriteriaQuery<SystemUser> cq = cb.createQuery(SystemUser.class);
 		Root<SystemUser> userRoot = cq.from(SystemUser.class);
@@ -96,6 +96,8 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 			cq.where(cb.equal(userRoot.get("firstName"), firstName));
 		if (lastName != null)
 			cq.where(cb.equal(userRoot.get("lastName"), lastName));
+		if (userName != null)
+			cq.where(cb.equal(userRoot.get("username"), userName));
 		if (type != null)
 			cq.where(cb.equal(userRoot.get("type"), type));
 		return em.createQuery(cq).getResultList();

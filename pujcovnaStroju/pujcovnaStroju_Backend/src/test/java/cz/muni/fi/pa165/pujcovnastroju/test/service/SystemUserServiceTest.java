@@ -211,12 +211,14 @@ public class SystemUserServiceTest extends AbstractTest {
 	Mockito.when(mockUserDao.getSystemUsersByParams(
                 Matchers.any(String.class), 
                 Matchers.any(String.class), 
-                Matchers.any(UserTypeEnum.class))).thenReturn(null);
+                Matchers.any(UserTypeEnum.class),
+                Matchers.any(String.class))).thenReturn(null);
 	
 	Mockito.when(mockUserDao.getSystemUsersByParams(
                 Matchers.any(String.class), 
                 Matchers.any(String.class), 
-                Matchers.any(UserTypeEnum.class))).thenReturn(userList);
+                Matchers.any(UserTypeEnum.class),
+                Matchers.any(String.class))).thenReturn(userList);
     }
     
     @Test

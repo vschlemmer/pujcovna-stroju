@@ -22,8 +22,9 @@ public class UserTypeDTOConverter {
 	 * @return UserTypeEnum object or null if dto is null
 	 */
         public static UserTypeEnum dtoToEntity(UserTypeEnumDTO dto) {
-		if (dto == null)
+		if (dto == null || dto.getTypeLabel() == null) {
 			return null;
+		}
 		UserTypeEnum type;
 		try {
 			type = UserTypeEnum.valueOf(dto.getTypeLabel());

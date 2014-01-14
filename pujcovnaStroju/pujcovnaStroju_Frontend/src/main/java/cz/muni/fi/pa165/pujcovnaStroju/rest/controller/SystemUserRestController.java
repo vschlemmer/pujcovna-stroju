@@ -40,6 +40,7 @@ public class SystemUserRestController {
                     HttpServletResponse response,
                     @RequestParam(required = false) String firstName,
                     @RequestParam(required = false) String lastName,
+                    @RequestParam(required = false) String userName,
                     @RequestParam(required = false) String type) {
         UserTypeEnumDTO typeDTO = null;
         if (type != null){
@@ -47,7 +48,7 @@ public class SystemUserRestController {
         }
         List<SystemUserDTO> listUsers = null;
         try {
-            listUsers = userService.getSystemUsersByParams(firstName, lastName, typeDTO);
+            listUsers = userService.getSystemUsersByParams(firstName, lastName, typeDTO, userName);
                 if (listUsers == null) {
                     listUsers = new ArrayList<>();
                 }
@@ -75,6 +76,8 @@ public class SystemUserRestController {
                     HttpServletResponse response,
                     @RequestParam(required = false) String firstName,
                     @RequestParam(required = false) String lastName,
+                    @RequestParam(required = false) String userName,
+                    @RequestParam(required = false) String password,
                     @RequestParam(required = false) String type) {
         List<String> errorMessages = new ArrayList<>();
         if (firstName == null || firstName.isEmpty()) {
@@ -92,6 +95,8 @@ public class SystemUserRestController {
         SystemUserDTO user = new SystemUserDTO();
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setUsername(userName);
+        user.setPassword(password);
         user.setType(converter.convert(type.toUpperCase()));
         SystemUserDTO created = null;
         try {

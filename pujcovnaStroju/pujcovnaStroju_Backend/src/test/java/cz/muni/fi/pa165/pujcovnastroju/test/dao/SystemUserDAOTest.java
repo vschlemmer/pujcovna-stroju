@@ -241,7 +241,7 @@ public class SystemUserDAOTest extends TestCase {
         userDAO.create(user3);
         em.getTransaction().commit();
         em.getTransaction().begin();
-        List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMERINDIVIDUAL);
+        List<SystemUser> userList1 = userDAO.getSystemUsersByParams("Tomas", null, UserTypeEnum.CUSTOMERINDIVIDUAL, null);
         em.getTransaction().commit();
         assertEquals(userList1, userDAO.findAllSystemUsers());
         assertEquals(3, userList1.size());
