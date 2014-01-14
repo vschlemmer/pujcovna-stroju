@@ -54,6 +54,8 @@ public class MessageResolver {
 	private static final String USER_FIRSTNAME = "firstName";
 	private static final String USER_TYPE = "type";
 	private static final String USER_LASTNAME = "lastName";
+	private static final String USER_USERNAME = "userName";
+	private static final String USER_PASSWORD = "password";
 
 	private static ErrorHandler handler = new XMLerrorHandler();
 	private List<? extends Object> response;
@@ -246,6 +248,8 @@ public class MessageResolver {
 		type.setTypeLabel(element.getElementsByTagName(USER_TYPE).item(0)
 				.getTextContent());
 		user.setType(type);
+		user.setUsername(element.getElementsByTagName(USER_USERNAME).item(0)
+				.getTextContent());
 		return user;
 	}
 

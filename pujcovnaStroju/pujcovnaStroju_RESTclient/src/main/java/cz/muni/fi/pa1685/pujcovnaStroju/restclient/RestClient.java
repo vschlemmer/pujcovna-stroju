@@ -142,14 +142,19 @@ public class RestClient {
 
 		userListOptions.addOption("f", "firstName", true, "First name of user")
 				.addOption("l", "lastName", true, "last name of user")
-				.addOption("t", "type", true, "Type of user");
+				.addOption("t", "type", true, "Type of user")
+		        .addOption("u", "type", true, "Username");
 		userAddOptions.addOption("f", "firstName", true, "First name of user")
 				.addOption("l", "lastName", true, "last name of user")
-				.addOption("t", "type", true, "Type of user");
+				.addOption("t", "type", true, "Type of user")
+				.addOption("u", "type", true, "Username")
+				.addOption("p", "type", true, "Password");
 		userUpdateOptions.addOption("i", "id", true, "ID of user")
 				.addOption("f", "firstName", true, "First name of user")
 				.addOption("l", "lastName", true, "last name of user")
-				.addOption("t", "type", true, "Type of user");
+				.addOption("t", "type", true, "Type of user")
+				.addOption("u", "type", true, "Username")
+				.addOption("p", "type", true, "Password");
 		userDeleteOptions.addOption("i", "id", true, "ID of user");
 		userDetailOptions.addOption("i", "id", true, "ID of user");
 	}
@@ -472,7 +477,7 @@ public class RestClient {
 			if (arg.length < 2) throw new ParseException("");
 			
 			arg[0] = arg[0].toLowerCase();
-			arg[1] = arg[0].toLowerCase();
+			arg[1] = arg[1].toLowerCase();
 			switch (arg[1]) {
 			case COMMAND_LIST:
 				fixedArgs = Arrays.copyOfRange(arg, 2, arg.length);
@@ -590,6 +595,8 @@ public class RestClient {
 		StringBuilder builder;
 		try {
 			if (arg.length < 2) throw new ParseException("");
+			arg[0] = arg[0].toLowerCase();
+			arg[1] = arg[1].toLowerCase();
 			
 			switch (arg[1]) {
 			case COMMAND_LIST:
@@ -657,7 +664,9 @@ public class RestClient {
 							+ "" + "?firstName="
 							+ URLEncoder.encode(cmd.getOptionValue("f"), "utf-8") + "&lastName="
 							+ URLEncoder.encode(cmd.getOptionValue("l"), "utf-8") + "&type="
-							+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8");
+							+ URLEncoder.encode(cmd.getOptionValue("t"), "utf-8") + "&userName="
+							+ URLEncoder.encode(cmd.getOptionValue("u"), "utf-8") + "&passoword="
+							+ URLEncoder.encode(cmd.getOptionValue("p"), "utf-8");
 				}
 				break;
 
@@ -686,7 +695,7 @@ public class RestClient {
 				}
 				break;
 			}
-			
+			System.out.println(url);
 			if (url == null) {
 				throw new ParseException("");
 			}

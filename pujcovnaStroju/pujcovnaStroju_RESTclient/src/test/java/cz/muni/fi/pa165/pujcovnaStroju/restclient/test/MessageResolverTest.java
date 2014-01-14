@@ -209,25 +209,28 @@ public class MessageResolverTest extends TestCase {
 	
 	@Test
 	public void testUserMarshaling() {
-		String userName = "karel";
+		String userFirstName = "karel";
 		String userSurname = "karel2";
 		String typeName = "revisioner";
+		String userName = "karel";
 		
 		String message = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">"
 				+ "<users numFound=\"1\">"
 				+ "<user>"
 				+ "<id>1</id>"
-				+ "<firstName>"+userName+"</firstName>"
+				+ "<firstName>"+userFirstName+"</firstName>"
 				+ "<lastName>"+userSurname+"</lastName>"
 				+ "<type>"+typeName+"</type>"
+				+ "<userName>"+userName+"</userName>"
 				+ "</user></users></response>";
 
 		try {
 			MessageResolver resolver = new MessageResolver(message);
 			SystemUserDTO user = new SystemUserDTO();
 			user.setId(1L);
-			user.setFirstName(userName);
+			user.setFirstName(userFirstName);
 			user.setLastName(userSurname);
+			user.setUsername(userName);
 			UserTypeEnumDTO type = new UserTypeEnumDTO();
 			type.setTypeLabel(typeName);
 			user.setType(type);
