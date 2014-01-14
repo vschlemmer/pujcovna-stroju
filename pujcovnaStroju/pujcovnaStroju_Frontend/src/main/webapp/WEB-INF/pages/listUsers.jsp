@@ -63,7 +63,7 @@
 						<th><form:input cssClass="inputField" path="firstName" value="${selectedFirstName}"/></th>
 						<th><form:input cssClass="inputField" path="lastName" value="${selectedLastName}"/></th>
 						<th><form:input cssClass="inputField" path="username" value="${selectedUserName}"/></th>
-						<th><form:select path="type" itemValue="ADMINISTRATOR">
+						<th><form:select path="type">
 								<form:option value="--no type--"></form:option>
 								<c:forEach items="${types}" var="type">
 									<c:choose>

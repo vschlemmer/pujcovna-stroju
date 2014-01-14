@@ -31,6 +31,7 @@ import cz.muni.fi.pa165.pujcovnastroju.service.LoanService;
 import cz.muni.fi.pa165.pujcovnastroju.service.MachineService;
 import cz.muni.fi.pa165.pujcovnastroju.service.RevisionService;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -51,7 +52,8 @@ public class MachineController {
 
 	@Autowired
 	public MachineController(MachineService machineService,
-			RevisionService revisionService, LoanService loanService, SystemUserService userService) {
+			RevisionService revisionService, LoanService loanService,
+			SystemUserService userService) {
 		this.machineService = machineService;
 		this.loanService = loanService;
 		this.revisionService = revisionService;
@@ -79,11 +81,11 @@ public class MachineController {
 		List<MachineDTO> list = machineService.getAllMachines();
 		model.addAttribute("machines", list);
 		model.addAttribute("existingMachines", list);
-		
+
 		model.addAttribute("list", "list of machines");
 		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
 		model.addAttribute("pageTitle", "lang.listMachinesTitle");
-        model.addAttribute("userType", DefaultController.getLoggedUserType());
+		model.addAttribute("userType", DefaultController.getLoggedUserType());
 		DefaultController.addHeaderFooterInfo(model);
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus", "true");
@@ -119,7 +121,7 @@ public class MachineController {
 	public ModelAndView listMachinesByParams(ModelMap model,
 			@RequestParam(value = "from", required = false) Date from,
 			@RequestParam(value = "till", required = false) Date till) {
-		
+
 		List<MachineDTO> machinesNew = machineService.getMachineDTOsByParams(
 				null, null, null, null, null, from, till);
 		model.addAttribute("machinesNew", machinesNew);
@@ -167,16 +169,18 @@ public class MachineController {
 			for (LoanDTO loan : machine.getLoans()) {
 				loans.add(loanService.read(loan.getId()));
 			}
-			
+
 			model.addAttribute("loans", loans.size() == 0 ? null : loans);
 			List<RevisionDTO> revisions = new ArrayList<>();
 			if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-				UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication()
-						.getPrincipal();
-				SystemUserDTO user = userService.getSystemUserByUsername(userDetails.getUsername());
+				UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder
+						.getContext().getAuthentication().getPrincipal();
+				SystemUserDTO user = userService
+						.getSystemUserByUsername(userDetails.getUsername());
 				if (user.getType().getId() == UserTypeEnum.REVISIONER.ordinal()) {
 					for (RevisionDTO revision : machine.getRevisions()) {
-						revisions.add(revisionService.readBizRevision(revision.getRevID()));
+						revisions.add(revisionService.readBizRevision(revision
+								.getRevID()));
 					}
 				}
 			}
@@ -266,6 +270,9 @@ public class MachineController {
 			@RequestParam(required = false) String type) {
 		DefaultController.addHeaderFooterInfo(model);
 		StringToMachineTypeEnumDTOConverter converter = new StringToMachineTypeEnumDTOConverter();
+		model.addAttribute("selectedType", type);
+		model.addAttribute("selectedLabel", label);
+		model.addAttribute("selectedDescription", description);
 		if (type.equals("--no type--")) {
 			type = null;
 		}
@@ -275,15 +282,19 @@ public class MachineController {
 		if (description.equals("")) {
 			description = null;
 		}
+		List<String> types = new ArrayList<>();
+		for (MachineTypeEnum enums : MachineTypeEnum.class.getEnumConstants()) {
+			types.add(enums.name());
+		}
 		model.addAttribute("machines", machineService.getMachineDTOsByParams(
 				label, description, converter.convert(type), null, null, null,
 				null));
 		model.addAttribute("existingMachines", machineService.getAllMachines());
-		model.addAttribute("types", MachineTypeEnum.class.getEnumConstants());
+		model.addAttribute("types", types);
 		model.addAttribute("list", "list of machines");
 		return new ModelAndView("listMachines", "command", new MachineDTO());
 	}
-	
+
 	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
 	public String voidFilter(ModelMap model) {
 		return "redirect:/machine/list";
