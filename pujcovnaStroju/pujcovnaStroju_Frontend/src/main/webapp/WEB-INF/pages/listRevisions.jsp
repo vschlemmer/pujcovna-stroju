@@ -2,7 +2,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <jsp:include page="parts/header.jsp"></jsp:include>
@@ -14,66 +15,17 @@
 	<h2>
 		<spring:message code="lang.listRevisions" text="List of Revisions" />
 	</h2>
-        
-    <c:if test="${not empty existingRevisions}">
-        <h3><spring:message code="lang.filters" text="Filters" /></h3>
-        <form:form method="GET" id="filterRevisionForm" name="filterRevisionForm"
-                   action="filter">
-            <table>
-                <tr>
-                    <td><spring:message code="lang.RevDate" text="Revision Date" /> > </td>
-                    <td><form:input cssClass="inputField datePicker" path="revDate" /></td>
-                </tr>
-                <tr>
-                    <td><spring:message code="lang.comment" text="Comment" /></td>
-                    <td><form:input cssClass="inputField" path="comment" /></td>
-                </tr>
-                <tr>
-                    <td><spring:message code="lang.revisionMachineLabel" text="Machine" /></td>
-                    <td><form:select path="machine">
-                            <form:option value="--no machine--" />
-                            <c:forEach items="${machines}" var="machine">
-                                <form:option value="${machine.id}"
-                                            label="${machine.label}"></form:option>
-                            </c:forEach>
-                        </form:select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><spring:message code="lang.customer" text="Customer" /></td>
-                    <td>
-                        <form:select path="systemUser">
-                            <form:option value="--no revisioner--" />
-                            <c:forEach items="${users}" var="currentUser">
-                                <form:option value="${currentUser.id}"
-                                            label="${currentUser.firstName} ${currentUser.lastName}">
-                                </form:option>
-                            </c:forEach>
-                        </form:select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button class="button" type="submit" name="submit"
-                                value="Filter">
-                            <spring:message code="lang.filter" text="Filter" />
-                        </button>
-                    </td>
-                    <td>
-                        <button class="button" type="submit" name="void" 
-                                value="Void filter">
-                            <spring:message code="lang.voidFilter" text="Void filter" />
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </form:form>
-        <br /><br />
-    </c:if>
-        
+
 	<c:if test="${empty revisions}">
 		<spring:message code="lang.noRevisions" text="Actions" />
 		<br />
+	</c:if>
+
+	<c:if test="${not empty existingRevisions && empty revisions}">
+		<a href="<c:url value="/revision/list"/>"><button class="button"
+				type="submit" name="void" value="Void filter">
+				<spring:message code="lang.voidFilter" text="Void filter" />
+			</button></a>
 	</c:if>
 
 	<c:if test="${not empty revisions}">
@@ -92,43 +44,87 @@
 				<c:forEach items="${revisions}" var="revision">
 					<tr>
 						<td>${revision.revID}</td>
-						<td>
-							<a href="<c:url value="/machine/detail/${revision.machine.id}"/>">
-								${revision.machine.label}
-							</a>
-						</td>
+						<td><a
+							href="<c:url value="/machine/detail/${revision.machine.id}"/>">
+								${revision.machine.label} </a></td>
 						<td>${revision.revDate}</td>
 						<td>${revision.comment}</td>
-						<td>
-							<sec:authorize access="${principal.username == revision.systemUser.username}">
-								<a href="<c:url value="/user/detail/${revision.systemUser.id}"/>">
-							</sec:authorize>
-									${revision.systemUser.lastName} ${revision.systemUser.firstName} 
-							<sec:authorize access="${principal.username == revision.systemUser.username}">
+						<td><sec:authorize
+								access="${principal.username == revision.systemUser.username}">
+								<a
+									href="<c:url value="/user/detail/${revision.systemUser.id}"/>">
+							</sec:authorize> ${revision.systemUser.lastName} ${revision.systemUser.firstName}
+							<sec:authorize
+								access="${principal.username == revision.systemUser.username}">
 								</a>
-							</sec:authorize>
-						</td>
-						<td>
-							<a href="<c:url value="/revision/detail/${revision.revID}"/>"> <img
-								alt="detail" src="<c:url value="/images/search.png"/>"></a>
-							<sec:authorize access="${principal.username == revision.systemUser.username}">
-								<a href="<c:url value="/revision/delete/${revision.revID}"/>"> <img
-									alt="delete" src="<c:url value="/images/delete.png" />"></a> <a
-								href="<c:url value="/revision/update/${revision.revID}"/>"> <img
-									alt="update" src="<c:url value="/images/update.png" />"></a>
-							</sec:authorize>
-						</td>
+							</sec:authorize></td>
+						<td><a
+							href="<c:url value="/revision/detail/${revision.revID}"/>"> <img
+								alt="detail" src="<c:url value="/images/search.png"/>"></a> <sec:authorize
+								access="${principal.username == revision.systemUser.username}">
+								<a href="<c:url value="/revision/delete/${revision.revID}"/>">
+									<img alt="delete" src="<c:url value="/images/delete.png" />">
+								</a>
+								<a href="<c:url value="/revision/update/${revision.revID}"/>">
+									<img alt="update" src="<c:url value="/images/update.png" />">
+								</a>
+							</sec:authorize></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th><spring:message code="lang.id" text="RevisionID" /></th>
-					<th><spring:message code="lang.machine" text="Machine" /></th>
-					<th><spring:message code="lang.revDate" text="RevDate" /></th>
-					<th><spring:message code="lang.comment" text="Comment" /></th>
-					<th><spring:message code="lang.systemUser" text="systemUser" /></th>
-					<th><spring:message code="lang.actions" text="Actions" /></th>
+					<form:form method="GET" id="filterRevisionForm"
+						name="filterRevisionForm" action="filter">
+						<th><spring:message code="lang.filters" text="Filters" /></th>
+						<th><form:select path="machine">
+								<form:option value="--no machine--"></form:option>
+								<c:forEach items="${machines}" var="machine">
+									<c:choose>
+										<c:when test="${machine.id == selectedMachine}">
+											<option value="${machine.id}" selected="true">${machine.label}</option>
+										</c:when>
+										<c:otherwise>
+											<option value="${machine.id}">${machine.label }</option>
+										</c:otherwise>
+									</c:choose>
+
+								</c:forEach>
+							</form:select></th>
+
+
+						<th><form:input cssClass="inputField datePicker"
+								path="revDate" value=""/></th>
+						<th><form:input cssClass="inputField" path="comment"
+								value="${selectedComment}" /></th>
+
+						<th><form:select path="machine">
+								<form:option value="--no revisioner--"></form:option>
+								<c:forEach items="${users}" var="user">
+									<c:choose>
+										<c:when test="${user.id == selectedUser}">
+											<option value="${user.id}" selected="true">${user.firstName}
+												${user.lastName}</option>
+										</c:when>
+										<c:otherwise>
+											<option value="${user.id}">${user.firstName}
+												${user.lastName}</option>
+										</c:otherwise>
+									</c:choose>
+
+								</c:forEach>
+							</form:select></th>
+						<th>
+							<button class="button" type="submit" name="submit" value="Filter">
+								<spring:message code="lang.filter" text="Filter" />
+							</button>
+							<button class="button" type="submit" name="void"
+								value="Void filter">
+								<spring:message code="lang.voidFilter" text="Void filter" />
+							</button>
+						</th>
+					</form:form>
+
 				</tr>
 			</tfoot>
 		</table>
@@ -166,7 +162,8 @@
 					</label></td>
 				</tr>
 				<tr>
-				<td><spring:message code="lang.revisionMachineLabel" text="Machine" /></td>
+					<td><spring:message code="lang.revisionMachineLabel"
+							text="Machine" /></td>
 					<td><form:select path="machine">
 							<c:forEach items="${machines}" var="currentMachine">
 								<form:option value="${currentMachine.id}"

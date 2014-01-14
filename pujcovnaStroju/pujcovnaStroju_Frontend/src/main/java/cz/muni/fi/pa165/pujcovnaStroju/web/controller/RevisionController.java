@@ -70,15 +70,17 @@ public class RevisionController {
 
 		model.addAttribute("revisions",
 				revisionService.findAllrevisionsBizRevision());
-                model.addAttribute("existingRevisions", 
-                                revisionService.findAllrevisionsBizRevision());
-                model.addAttribute("list", "list of revisions");
+		model.addAttribute("existingRevisions",
+				revisionService.findAllrevisionsBizRevision());
+		model.addAttribute("list", "list of revisions");
 		model.addAttribute("pageTitle", "lang.listRevisionsTitle");
 		DefaultController.addHeaderFooterInfo(model);
 
 		model.addAttribute("machines", machineService.getAllMachines());
-		model.addAttribute("users", userService.getSystemUsersByParams(null, null, 
-                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER), null));
+		model.addAttribute("users",
+				userService.getSystemUsersByParams(null, null,
+						UserTypeDTOConverter
+								.entityToDto(UserTypeEnum.REVISIONER), null));
 
 		if (storeStatus.equalsIgnoreCase("true")) {
 			model.addAttribute("storeStatus", "true");
@@ -115,15 +117,17 @@ public class RevisionController {
 
 		// empty objects with id only
 		MachineDTO machine = revision.getMachine();
-		SystemUserDTO user = null; //revision.getSystemUser();
+		SystemUserDTO user = null; // revision.getSystemUser();
 
 		try {
 			machine = machineService.read(machine.getId());
 			if (machine == null) {
 				errorMsg = "Machine not found";
 			}
-			UserDetailsImpl userDetails = (UserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			user = userService.getSystemUserByUsername(userDetails.getUsername());
+			UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder
+					.getContext().getAuthentication().getPrincipal();
+			user = userService.getSystemUserByUsername(userDetails
+					.getUsername());
 			if (user == null) {
 				errorMsg = "User not found";
 			}
@@ -241,45 +245,51 @@ public class RevisionController {
 		}
 		return "redirect:/revision/list";
 	}
-        
-        @RequestMapping(value = "/filter", method = RequestMethod.GET, params = "submit")
-	public ModelAndView filterRevisions(ModelMap model,
+
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "submit")
+	public ModelAndView filterRevisions(
+			ModelMap model,
 			@RequestParam(value = "revDate", required = false) Date revDate,
 			@RequestParam(value = "comment", required = false) String comment,
 			@RequestParam(value = "machine", required = false) String machineId,
-                        @RequestParam(value = "systemUser", required = false) String systemUserId) {
+			@RequestParam(value = "systemUser", required = false) String systemUserId) {
 		DefaultController.addHeaderFooterInfo(model);
-                MachineDTO machine = null;
-                if (machineId != null) {
-                    try {
-                        machine = machineService.read(Long.parseLong(machineId));
-                    } catch (NumberFormatException e) {
-                        machine = null;
-                    }
+		 model.addAttribute("selectedRevDate", revDate);
+         model.addAttribute("selectedComment", comment);
+         model.addAttribute("selectedMachine", machineId);
+         model.addAttribute("selectedUser",  systemUserId);
+		MachineDTO machine = null;
+		if (machineId != null) {
+			try {
+				machine = machineService.read(Long.parseLong(machineId));
+			} catch (NumberFormatException e) {
+				machine = null;
+			}
 		}
-                SystemUserDTO user = null;
-                if (systemUserId != null) {
-                    try {
-                        user = userService.read(Long.parseLong(systemUserId));
-                    } catch (NumberFormatException e) {
-                        user = null;
-                    }
+		SystemUserDTO user = null;
+		if (systemUserId != null) {
+			try {
+				user = userService.read(Long.parseLong(systemUserId));
+			} catch (NumberFormatException e) {
+				user = null;
+			}
 		}
-                model.addAttribute("revisions", 
-                        revisionService.findRevisionsByParams(comment, 
-                                revDate, machine, user));
-                model.addAttribute("existingRevisions", 
-                        revisionService.findAllrevisionsBizRevision());
-                model.addAttribute("machines", machineService.getAllMachines());
-		model.addAttribute("users", userService.getSystemUsersByParams(null, null, 
-                        UserTypeDTOConverter.entityToDto(UserTypeEnum.REVISIONER),null));
-                model.addAttribute("list", "list of revisions");
+		model.addAttribute("revisions", revisionService.findRevisionsByParams(
+				comment, revDate, machine, user));
+		model.addAttribute("existingRevisions",
+				revisionService.findAllrevisionsBizRevision());
+		model.addAttribute("machines", machineService.getAllMachines());
+		model.addAttribute("users",
+				userService.getSystemUsersByParams(null, null,
+						UserTypeDTOConverter
+								.entityToDto(UserTypeEnum.REVISIONER), null));
+		model.addAttribute("list", "list of revisions");
 		model.addAttribute("pageTitle", "lang.listRevisionsTitle");
 		DefaultController.addHeaderFooterInfo(model);
-                return new ModelAndView("listRevisions", "command", new RevisionDTO());
+		return new ModelAndView("listRevisions", "command", new RevisionDTO());
 	}
-        
-        @RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
+
+	@RequestMapping(value = "/filter", method = RequestMethod.GET, params = "void")
 	public String voidFilter(ModelMap model) {
 		return "redirect:/revision/list";
 	}
