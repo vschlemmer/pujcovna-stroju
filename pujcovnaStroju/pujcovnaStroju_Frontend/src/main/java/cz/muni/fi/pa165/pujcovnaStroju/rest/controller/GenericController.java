@@ -6,7 +6,10 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.xml.transform.OutputKeys;
@@ -22,6 +25,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,11 +48,11 @@ import cz.muni.fi.pa165.pujcovnastroju.entity.UserTypeEnum;
 @RequestMapping(value = "/rest")
 public class GenericController {
 
-	private static final String HEADER_SUCCESS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-			"<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">";
-	
-	private static final String HEADER_ERROR = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-			"<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">";
+	private static final String HEADER_SUCCESS = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"success\">";
+
+	private static final String HEADER_ERROR = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<response xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"http://localhost:8080/pa165/xmlt/schema.xsd\" status=\"error\">";
 	private @Autowired
 	ServletContext servletContext;
 
@@ -76,34 +84,32 @@ public class GenericController {
 		builder.append("<response staus=\"success\">");
 		builder.append("<text>Schema is hidden at the end of the rainbow stealing "
 				+ "leprechaun's pot of gold. It's quite sad.</text>");
-		
 
 		return returnXML(builder.toString());
 	}
 
-	
 	@RequestMapping("types")
 	public HttpEntity<byte[]> getTypes(ModelMap model) {
 
 		StringBuilder builder = new StringBuilder(HEADER_SUCCESS);
 		builder.append("<availableTypes>");
 		builder.append("<machineTypes>");
-		for (MachineTypeEnum type: MachineTypeEnum.class.getEnumConstants()) {
-			builder.append("<type>" + type.name()+ "</type>");
+		for (MachineTypeEnum type : MachineTypeEnum.class.getEnumConstants()) {
+			builder.append("<type>" + type.name() + "</type>");
 		}
 		builder.append("</machineTypes>");
-		
+
 		builder.append("<userTypes>");
-		for (UserTypeEnum type: UserTypeEnum.class.getEnumConstants()) {
-			builder.append("<type>" + type.name()+ "</type>");
+		for (UserTypeEnum type : UserTypeEnum.class.getEnumConstants()) {
+			builder.append("<type>" + type.name() + "</type>");
 		}
 		builder.append("</userTypes>");
 		builder.append("</availableTypes>");
-		
+
 		builder.append("</response>");
 		return returnXML(builder.toString());
 	}
-	
+
 	/**
 	 * creates {@link HttpEntity} for given xml string
 	 * 
@@ -152,7 +158,7 @@ public class GenericController {
 	 */
 	public static HttpEntity<byte[]> returnSuccessXML(String message) {
 		StringBuilder builder = new StringBuilder(HEADER_SUCCESS);
-		
+
 		builder.append("<message>" + StringEscapeUtils.escapeXml(message)
 				+ "</message>");
 		builder.append("</response>");
@@ -182,5 +188,51 @@ public class GenericController {
 			e.printStackTrace();
 			return input;
 		}
+	}
+
+	/**
+	 * authentication for REST purposes, many kittens were tortured to death because of this.
+	 */
+	static void defaultRestAuth() {
+		SecurityContextHolder.getContext().setAuthentication(
+				new Authentication() {
+
+					@Override
+					public String getName() {
+						return "rest";
+					}
+
+					@Override
+					public void setAuthenticated(boolean arg0)
+							throws IllegalArgumentException {
+					}
+
+					@Override
+					public boolean isAuthenticated() {
+						return true;
+					}
+
+					@Override
+					public Object getDetails() {
+						return null;
+					}
+
+					@Override
+					public Object getCredentials() {
+						return null;
+					}
+
+					@Override
+					public Collection<? extends GrantedAuthority> getAuthorities() {
+						Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
+						authorities.add(new SimpleGrantedAuthority(UserTypeEnum.ADMINISTRATOR.name()));
+						return authorities;
+					}
+
+					@Override
+					public Object getPrincipal() {
+						return null;
+					}
+				});
 	}
 }

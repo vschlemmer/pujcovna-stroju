@@ -1,17 +1,27 @@
 package cz.muni.fi.pa165.pujcovnaStroju.rest.controller;
 
 import cz.muni.fi.pa165.pujcovnaStroju.rest.converter.DTOtoXMLConverter;
+import cz.muni.fi.pa165.pujcovnaStroju.web.controller.DefaultController;
 import cz.muni.fi.pa165.pujcovnaStroju.web.converter.StringToSystemUserTypeEnumDTOConverter;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UnsupportedTypeException;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.service.SystemUserService;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,11 +52,13 @@ public class SystemUserRestController {
                     @RequestParam(required = false) String lastName,
                     @RequestParam(required = false) String userName,
                     @RequestParam(required = false) String type) {
+    	GenericController.defaultRestAuth();
         UserTypeEnumDTO typeDTO = null;
         if (type != null){
             typeDTO = converter.convert(type);
         }
         List<SystemUserDTO> listUsers = null;
+        
         try {
             listUsers = userService.getSystemUsersByParams(firstName, lastName, typeDTO, userName);
                 if (listUsers == null) {
@@ -79,12 +91,19 @@ public class SystemUserRestController {
                     @RequestParam(required = false) String userName,
                     @RequestParam(required = false) String password,
                     @RequestParam(required = false) String type) {
+    	GenericController.defaultRestAuth();
         List<String> errorMessages = new ArrayList<>();
         if (firstName == null || firstName.isEmpty()) {
             errorMessages.add("Missing required argument: firstName");
         }
         if (lastName == null || lastName.isEmpty()) {
             errorMessages.add("Missing required argument: lastName");
+        }
+        if (userName == null || userName.isEmpty()) {
+            errorMessages.add("Missing required argument: userName");
+        }
+        if (password == null || password.isEmpty()) {
+            errorMessages.add("Missing required argument: password");
         }
         if (type == null || type.isEmpty()) {
             errorMessages.add("Missing required argument: type");
@@ -96,7 +115,9 @@ public class SystemUserRestController {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(userName);
-        user.setPassword(password);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
         user.setType(converter.convert(type.toUpperCase()));
         SystemUserDTO created = null;
         try {
@@ -122,6 +143,7 @@ public class SystemUserRestController {
     public HttpEntity<byte[]> detailOfUser(ModelMap map,
                     HttpServletResponse response,
                     @RequestParam(required = false) String id) {
+    	GenericController.defaultRestAuth();
         if (id == null || id.isEmpty()) {
             return GenericController
                         .returnErrorXML("Missing required argument: id");
@@ -156,6 +178,7 @@ public class SystemUserRestController {
     public HttpEntity<byte[]> deleteUser(ModelMap map,
                     HttpServletResponse response,
                     @RequestParam(required = false) String id) {
+    	GenericController.defaultRestAuth();
         if (id == null || id.isEmpty()) {
             return GenericController
                         .returnErrorXML("Missing required argument: id");
@@ -190,6 +213,7 @@ public class SystemUserRestController {
                     @RequestParam(required = false) String firstName,
                     @RequestParam(required = false) String lastName,
                     @RequestParam(required = false) String type) {
+    	GenericController.defaultRestAuth();
         Long lid = null;
         List<String> errorMessages = new ArrayList<>();
         if (id == null || id.isEmpty()) {
@@ -201,8 +225,8 @@ public class SystemUserRestController {
                 errorMessages.add("Wrong format of argument: id");
             }
         }
-        if (firstName == null || firstName.isEmpty() || type == null || type.isEmpty()
-                        || lastName == null || lastName.isEmpty()) {
+        if (((firstName == null || firstName.isEmpty()) && (type == null || type.isEmpty())
+                        && (lastName == null || lastName.isEmpty()))) {
             errorMessages
                 .add("None of arguments (firstName, lastName, type) set, nothing to update");
         }

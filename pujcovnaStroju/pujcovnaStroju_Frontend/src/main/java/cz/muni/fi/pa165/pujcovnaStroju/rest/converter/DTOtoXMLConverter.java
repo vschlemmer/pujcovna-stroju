@@ -32,6 +32,7 @@ public class DTOtoXMLConverter {
 		builder.append("<firstName>" + StringEscapeUtils.escapeXml(user.getFirstName()) + "</firstName>");
 		builder.append("<lastName>" + StringEscapeUtils.escapeXml(user.getLastName()) + "</lastName>");
 		builder.append("<type>" + StringEscapeUtils.escapeXml(user.getType().getTypeLabel()) + "</type>");
+		builder.append("<userName>" + StringEscapeUtils.escapeXml(user.getUsername()) + "</userName>");
 		builder.append("</user>");
 		return builder.toString();
 	}

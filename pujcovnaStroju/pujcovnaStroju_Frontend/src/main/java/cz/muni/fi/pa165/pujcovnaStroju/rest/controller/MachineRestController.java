@@ -47,7 +47,7 @@ public class MachineRestController {
 			@RequestParam(required = false) String type) {
 
 		MachineTypeEnumDTO typeDTO = converter.convert(type);
-
+		GenericController.defaultRestAuth();
 		List<MachineDTO> listMachines = null;
 		try {
 			listMachines = machineService.getMachineDTOsByParams(label, description,
@@ -80,7 +80,8 @@ public class MachineRestController {
 	public HttpEntity<byte[]> detailOfMachine(ModelMap map,
 			HttpServletResponse response,
 			@RequestParam(required = false) String id) {
-
+		
+		GenericController.defaultRestAuth();
 		if (id == null || id.isEmpty()) {
 			return GenericController
 					.returnErrorXML("Missing required argument: id");
@@ -121,7 +122,8 @@ public class MachineRestController {
 			@RequestParam(required = false) String label,
 			@RequestParam(required = false) String description,
 			@RequestParam(required = false) String type) {
-
+		
+		GenericController.defaultRestAuth();
 		List<String> errorMessages = new ArrayList<>();
 		if (label == null || label.isEmpty()) {
 			errorMessages.add("Missing required argument: label");
@@ -168,7 +170,8 @@ public class MachineRestController {
 	public HttpEntity<byte[]> deleteMachine(ModelMap map,
 			HttpServletResponse response,
 			@RequestParam(required = false) String id) {
-
+		
+		GenericController.defaultRestAuth();
 		if (id == null || id.isEmpty()) {
 			return GenericController
 					.returnErrorXML("Missing required argument: id");
@@ -205,7 +208,8 @@ public class MachineRestController {
 			@RequestParam(required = false) String label,
 			@RequestParam(required = false) String description,
 			@RequestParam(required = false) String type) {
-
+		
+		GenericController.defaultRestAuth();
 		Long lid = null;
 		List<String> errorMessages = new ArrayList<>();
 		if (id == null || id.isEmpty()) {
@@ -217,8 +221,8 @@ public class MachineRestController {
 				errorMessages.add("Wrong format of argument: id");
 			}
 		}
-		if (label == null || label.isEmpty() || type == null || type.isEmpty()
-				|| description == null || description.isEmpty()) {
+		if ((label == null || label.isEmpty()) && (type == null || type.isEmpty())
+				|| (description == null) || (description.isEmpty())) {
 			errorMessages
 					.add("None of arguments (label, description, type) set, nothing to update");
 		}
