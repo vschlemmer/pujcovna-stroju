@@ -1,4 +1,4 @@
-package cz.muni.fi.pa1685.pujcovnaStroju.restclient.util;
+package cz.muni.fi.pa165.pujcovnaStroju.restclient.util;
 
 /**
  *

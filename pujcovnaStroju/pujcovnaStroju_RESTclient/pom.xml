@@ -53,7 +53,7 @@
 			<artifactId>exec-maven-plugin</artifactId>
 			<version>1.2.1</version>
 			<configuration>
-				<mainClass>cz.muni.fi.pa1685.pujcovnaStroju.restclient.RestClient</mainClass>
+				<mainClass>cz.muni.fi.pa165.pujcovnaStroju.restclient.RestClient</mainClass>
 			</configuration>
 		</plugin>
 	</plugins>

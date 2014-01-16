@@ -14,7 +14,7 @@ import cz.muni.fi.pa165.pujcovnastroju.dto.MachineDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.MachineTypeEnumDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.SystemUserDTO;
 import cz.muni.fi.pa165.pujcovnastroju.dto.UserTypeEnumDTO;
-import cz.muni.fi.pa1685.pujcovnaStroju.restclient.util.MessageResolver;
+import cz.muni.fi.pa165.pujcovnaStroju.restclient.util.MessageResolver;
 
 public class MessageResolverTest extends TestCase {
 

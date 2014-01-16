@@ -1,4 +1,4 @@
-package cz.muni.fi.pa1685.pujcovnaStroju.restclient.util;
+package cz.muni.fi.pa165.pujcovnaStroju.restclient.util;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -248,7 +248,7 @@ public class MessageResolver {
 		type.setTypeLabel(element.getElementsByTagName(USER_TYPE).item(0)
 				.getTextContent());
 		user.setType(type);
-		user.setUsername(element.getElementsByTagName(USER_USERNAME).item(0)
+        user.setUsername(element.getElementsByTagName(USER_USERNAME).item(0)
 				.getTextContent());
 		return user;
 	}
