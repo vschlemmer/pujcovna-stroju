@@ -14,7 +14,6 @@
 	<h2>
 		<spring:message code="lang.listMachines" text="List of machines" />
 	</h2>
-	
 	<c:if test="${empty machines}">
 		<p>
 			<spring:message code="lang.noMachines" text="Actions" />

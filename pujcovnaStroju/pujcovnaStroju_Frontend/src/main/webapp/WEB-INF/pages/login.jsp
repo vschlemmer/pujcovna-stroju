@@ -28,11 +28,10 @@
             </tr>
             <tr>
                 <td colspan='2'><input name="submit" type="submit"
-                        value="submit" /></td>
+                        value="<spring:message code="lang.login" 
+                            text="Login" />" /></td>
             </tr>
-            <tr>
-                <td colspan='2'><input name="reset" type="reset" /></td>
-            </tr>
+
         </table>
     </form>
 </div>
