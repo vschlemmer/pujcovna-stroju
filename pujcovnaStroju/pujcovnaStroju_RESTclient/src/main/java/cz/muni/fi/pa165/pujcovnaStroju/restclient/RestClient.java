@@ -24,7 +24,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.hamcrest.core.IsEqual;
 import org.xml.sax.SAXException;
 
 import cz.muni.fi.pa165.pujcovnaStroju.restclient.util.ClientErrorEnum;
