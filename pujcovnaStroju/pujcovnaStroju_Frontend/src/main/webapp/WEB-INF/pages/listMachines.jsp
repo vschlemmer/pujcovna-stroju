@@ -125,7 +125,7 @@
 							<spring:message code="lang.machineLabel" text="Label" />
 						</form:label></td>
 					<td><form:input cssClass="inputField" path="label" /></td>
-					<td><label id="machineFormIDWarning"
+					<td><label id="machineFormLabelWarning"
 						class="offscreen warningMessage"><spring:message
 								code="lang.mandatory" text="Mandatory Field" /></label>
 				</tr>
