@@ -49,22 +49,8 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td>
-                        <form:label path="username">
-                            <spring:message code="lang.username" text="Username" />
-                        </form:label>
-                    </td>
-                    <td>
-                        <form:input cssClass="inputField" path="username" value="${user.username}" />
-                        <form:input type="hidden" path="password" value="${user.password}" />
-                    </td>
-                    <td><label id="userFormLastNameWarning"
-                               class="offscreen warningMessage">
-                            <spring:message code="lang.mandatory" text="Mandatory Field" />
-                        </label>
-                    </td>
-                </tr>
+                 <form:hidden path="username" value="${user.username}" />
+                   
 
                 <tr>
                     <td><form:label path="type">

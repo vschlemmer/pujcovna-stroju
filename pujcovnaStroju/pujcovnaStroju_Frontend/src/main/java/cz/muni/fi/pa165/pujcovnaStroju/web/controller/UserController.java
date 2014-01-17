@@ -262,23 +262,22 @@ public class UserController {
                             | NullPointerException e) {
                     // TODO log
             }
-			if (user != null && !this.isLoggedIn(user)) {
-				// prevent the actual type of the user to show in the list twice
-				List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
-				for (UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()) {
-						if (!enum1.toString().equals(user.getType().getTypeLabel())) {
-								enums.add(enum1);
-						}
-				}
-				UserTypeEnum[] types = (UserTypeEnum[]) enums
-								.toArray(new UserTypeEnum[enums.size()]);
 
-				model.addAttribute("types", enums);
-				model.addAttribute("user", user);
-				if (!found) {
-						model.addAttribute("id", id);
-				}
+			List<UserTypeEnum> enums = new LinkedList<UserTypeEnum>();
+			for (UserTypeEnum enum1 : UserTypeEnum.class.getEnumConstants()) {
+					if (!enum1.toString().equals(user.getType().getTypeLabel())) {
+							enums.add(enum1);
+					}
 			}
+			UserTypeEnum[] types = (UserTypeEnum[]) enums
+							.toArray(new UserTypeEnum[enums.size()]);
+
+			model.addAttribute("types", enums);
+			model.addAttribute("user", user);
+			if (!found) {
+					model.addAttribute("id", id);
+			}
+
             return new ModelAndView("updateUser", "command", new SystemUserDTO());
     }
 

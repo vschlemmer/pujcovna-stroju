@@ -69,9 +69,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 			if (userDTO == null) {
 				throw new DataAccessResourceFailureException("Username wasn't filled in");
 			}
-			if (userDao.getSystemUserByUsername(userDTO.getUsername()) != null) {
-				throw new DataAccessResourceFailureException("Duplicit username");
-			}
+			
             try {
                     user = userDao.update(SystemUserDTOConverter.dtoToEntity(userDTO,false));
                     userDTO2 = SystemUserDTOConverter.entityToDTO(user,false);
