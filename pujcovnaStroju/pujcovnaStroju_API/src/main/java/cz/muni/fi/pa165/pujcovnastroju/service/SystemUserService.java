@@ -105,7 +105,7 @@ public interface SystemUserService {
 			+ "(filterObject.username == principal.username)) OR "
 			+ "(hasRole('REVISIONER') AND filterObject.type.typeLabel == 'REVISIONER')")
 	public List<SystemUserDTO> getSystemUsersByParams(String firstName,
-			String lastName, UserTypeEnumDTO type);
+			String lastName, UserTypeEnumDTO type, String userName);
 
 	/**
 	 * Retrieves users of given types
