@@ -39,7 +39,7 @@ import cz.muni.fi.pa165.pujcovnaStroju.restclient.util.MessageResolver;
  */
 public class RestClient {
 
-	private static String BASIC_URL = "http://localhost:8080/frontend/rest/";
+	private static String BASIC_URL = "http://localhost:8080/pa165/rest/";
 
 	private static final String COMMAND_MACHINE = "machine";
 	private static final String COMMAND_USER = "user";
@@ -88,7 +88,7 @@ public class RestClient {
 
 	public static void main(String[] args) {
 
-		System.out.println("Using default \"http://localhost:8080/frontend/rest/\"");
+		System.out.println("Using default \"" + BASIC_URL + "\"");
 
 		initializeOptions();
 
@@ -220,6 +220,8 @@ public class RestClient {
 			builder.append(String.format("%s [time]\t%s\n", COMMAND_TIMEOUT,
 					"set timeout to given [time] in milliseconds; default is "
 							+ DEFAULT_CONNECTION_TIMEOUT));
+			builder.append(String.format("%s\t\t%s\n", COMMAND_SERVER,
+					"set URL of server"));
 			builder.append(String.format("%s\t\t%s\n", COMMAND_TYPES,
 					"display supported types of users and machines"));
 
