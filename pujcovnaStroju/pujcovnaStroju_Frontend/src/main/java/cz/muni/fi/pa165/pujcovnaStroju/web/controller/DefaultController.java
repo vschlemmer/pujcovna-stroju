@@ -53,25 +53,28 @@ public class DefaultController {
 	}
 
 	static ModelMap addLeftMenuSecurity(ModelMap model) {
-		model.addAttribute("userType", getLoggedUserType());
+		SystemUserDTO user = getLoggedUser();
+		String type = "";
+		if (user != null) {
+			type = user.getType().getTypeLabel();
+			model.addAttribute("userID", user.getId());
+		}
+		model.addAttribute("userType", type);
 		return model;
 	}
 
-	static String getLoggedUserType() {
-		String userType = "";
+	static SystemUserDTO getLoggedUser() {
+		SystemUserDTO user = null;
 		if (SecurityContextHolder.getContext().getAuthentication() != null
 				&& SecurityContextHolder.getContext().getAuthentication()
 						.isAuthenticated()) {
 			if (SecurityContextHolder.getContext().getAuthentication() != null) {
 				String authUserString = SecurityContextHolder.getContext()
 						.getAuthentication().getName();
-				SystemUserDTO authUser = userService
+					user = userService
 						.getSystemUserByUsername(authUserString);
-				if (authUser != null) {
-					userType = authUser.getType().getTypeLabel();
-				}
 			}
 		}
-		return userType;
+		return user;
 	}
 }

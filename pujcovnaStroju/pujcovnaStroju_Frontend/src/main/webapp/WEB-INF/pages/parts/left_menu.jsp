@@ -34,7 +34,7 @@
         <a href="<c:url value="/logout"/>"><spring:message
                         code="lang.logout" text="Logout" />
         </a><br />
-		<a href="<c:url value="/user/registrate"/>"><spring:message
+		<a href="<c:url value="/user/update/${userID}"/>"><spring:message
                         code="lang.editAccount" text="Edit Account" />
         </a>
 	</sec:authorize>
