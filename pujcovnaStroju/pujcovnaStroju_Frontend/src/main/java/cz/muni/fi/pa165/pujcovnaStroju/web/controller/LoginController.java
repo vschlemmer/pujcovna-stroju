@@ -1,5 +1,6 @@
 package cz.muni.fi.pa165.pujcovnaStroju.web.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +29,8 @@ public class LoginController {
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logout(ModelMap model) {
+        SecurityContextHolder.clearContext();
         DefaultController.addHeaderFooterInfo(model);
-        model.addAttribute("pageTitle", "lang.listMachinesTitle");
-        return "index";
+        return "redirect:/j_spring_security_logout";
     }
 }

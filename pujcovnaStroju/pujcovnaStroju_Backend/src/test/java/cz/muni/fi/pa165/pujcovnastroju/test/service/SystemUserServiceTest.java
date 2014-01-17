@@ -132,14 +132,6 @@ public class SystemUserServiceTest extends AbstractTest {
 	assertNotNull(userDTOProcessed);
 	assertEquals(userDTO, userDTOProcessed);
 	
-	userDTO.setUsername("Present");
-	try {
-		userService.update(userDTO);
-		assertNull(userDTO); // created user with duplicit username
-	} catch (DataAccessException e) {
-		assertNotNull(userDTO); 
-	}
-	
     }
     
     @Test
