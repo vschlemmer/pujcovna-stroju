@@ -201,19 +201,32 @@ public class MachineController {
 	public String deleteMachine(@PathVariable String id, ModelMap model) {
 		boolean deleted = false;
 		String errorMsg = null;
+                List<LoanDTO> loans = null;
+                List<RevisionDTO> revisions = null;
 		MachineDTO machine = new MachineDTO();
-		try {
-			Long machineID = Long.valueOf(id);
-			machine = machineService.read(machineID);
-			machineService.delete(machine);
-			deleted = true;
-		} catch (DataAccessException | NumberFormatException
-				| NullPointerException e) {
-			// TODO log
-			deleted = false;
-			errorMsg = e.getMessage();
-		}
-
+                Long machineID = Long.valueOf(id);
+                machine = machineService.read(machineID);
+                loans = loanService.getLoansByParams(null, null, null, null, machine);
+                revisions = revisionService.findRevisionsByParams(null, null, machine, null);
+                if (!loans.isEmpty()){
+                    deleted = false;
+                    errorMsg = "Cannot delete machine, because it's part of a loan.";
+                }
+                if (!revisions.isEmpty()){
+                    deleted = false;
+                    errorMsg = "Cannot delete machine, because there are revisions on it.";
+                }
+                if (loans.isEmpty() && revisions.isEmpty()){
+                    try {
+                        machineService.delete(machine);
+                        deleted = true;
+                    } catch (DataAccessException | NumberFormatException
+                                    | NullPointerException e) {
+                        // TODO log
+                        deleted = false;
+                        errorMsg = e.getMessage();
+                    }
+                }
 		model.addAttribute("deleteStatus", deleted);
 		if (errorMsg != null) {
 			model.addAttribute("errorMessage", errorMsg);
