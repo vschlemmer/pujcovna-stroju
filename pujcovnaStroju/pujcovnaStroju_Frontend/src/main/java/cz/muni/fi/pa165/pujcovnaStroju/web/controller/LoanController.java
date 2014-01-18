@@ -113,8 +113,16 @@ public class LoanController {
                     BindingResult result, ModelMap model,
 		    @RequestParam(value = "machineList", required = false, defaultValue = "") List<String> machineList) {
         boolean stored = false;
+        boolean machine = false;
         String errorMsg = null;
         try {
+	   
+	    if (loan.getCustomer() == null) {
+	    	model.addAttribute("storeStatus", false);
+		    model.addAttribute("errorMessage", "lang.loanNoUser");
+		    
+		    return "redirect:/loan/list";
+	    }
 	    SystemUserDTO customer = customerService.read(loan.getCustomer().getId());
 	    loan.setCustomer(customer);
 	    if (machineList != null) {
@@ -124,6 +132,14 @@ public class LoanController {
 		for (String machineStr : machineList) {
 		    currentMachine = machineService.read(Long.parseLong(machineStr));
 		    machines.add(currentMachine);
+		    machine = true;
+		}
+		
+		if (!machine) {
+			model.addAttribute("storeStatus", false);
+		    model.addAttribute("errorMessage", "lang.loanNoMachine");
+		    
+		    return "redirect:/loan/list";
 		}
 		
 		loan.setMachines(machines);

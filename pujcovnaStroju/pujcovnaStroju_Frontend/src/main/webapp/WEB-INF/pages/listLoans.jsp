@@ -141,7 +141,7 @@
 				<spring:message code="lang.loanStoreFailure"
 						text="Error occurred during storing loan" />
 			</p>
-			<p>${errorMessage}</p>
+			<p><spring:message code="${errorMessage}" text="error occured"/></p>
 		</div>
 	</c:if>
 
