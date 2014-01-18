@@ -8,6 +8,11 @@
     <h2>
         <spring:message code="lang.updateLoanTitle" text="Update loan" />
     </h2>
+    
+        <c:forEach var="state" items="${loanStates}">
+            ${state}
+        </c:forEach>
+    
 	<form:form commandName="command" method="post" id="updateLoanForm" name="updateLoanForm" action="update">
 	<c:if test="${not empty loan}"><form:hidden path="id" value="${loan.id}" /></c:if>
 	<table>
@@ -61,11 +66,29 @@
 		<td><form:label path="loanState">
                         <spring:message code="lang.loanState" text="Loan State" />
 		    </form:label></td>
-		<td><form:select path="loanState">
-			<c:forEach var="state" items="${loanStates}">
-				<option value="${state}" <c:if test="${state eq loan.loanState.typeLabel}">selected="selected"</c:if>><c:out value="${state}"/></option>
-			</c:forEach>
-		    </form:select></td>
+		<td>
+                <c:if test="${userType == 'CUSTOMERINDIVIDUAL' ||
+                                userType == 'CUSTOMERLEGAL'}">
+                    <form:select path="loanState">
+                        <c:forEach var="state" items="${bookedState}">
+                            <option value="${state}" <c:if test="${state eq loan.loanState.typeLabel}">selected="selected"</c:if>>
+                                <c:out value="${state}"/>
+                            </option>
+                        </c:forEach>
+                    </form:select>
+                </c:if>
+                <c:if test="${userType == 'ADMINISTRATOR' || 
+                                userType == 'REVISIONER' ||
+                                userType == 'EMPLOYEE'}">
+                    <form:select path="loanState">
+                        <c:forEach var="state" items="${loanStates}">
+                            <option value="${state}" <c:if test="${state eq loan.loanState.typeLabel}">selected="selected"</c:if>>
+                                <c:out value="${state}"/>
+                            </option>
+                        </c:forEach>
+                    </form:select>
+                </c:if>
+                </td>
 		<td><label id="loanFormLoanWarning"
 			   class="offscreen warningMessage">
                         <spring:message code="lang.mandatory" text="Mandatory Field" />

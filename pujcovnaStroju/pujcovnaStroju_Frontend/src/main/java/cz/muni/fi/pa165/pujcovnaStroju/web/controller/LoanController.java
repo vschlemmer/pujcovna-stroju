@@ -66,6 +66,13 @@ public class LoanController {
 	   List<LoanDTO> list = loanService.getAllLoans(); 
         model.addAttribute("loans", list);
 	model.addAttribute("existingLoans", list);
+        SystemUserDTO loggedUser = DefaultController.getLoggedUser();
+        String userType = "";
+        if (loggedUser != null) {
+            userType = loggedUser.getType().getTypeLabel();
+        }
+        model.addAttribute("userType", userType);
+        model.addAttribute("bookedState", new LoanStateEnum[]{LoanStateEnum.BOOKED});
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByTypeList(
                 UserTypeDTOConverter.listToDTO(Arrays.asList(
@@ -87,6 +94,13 @@ public class LoanController {
     
     @RequestMapping(value = "/updateForm")
     public ModelAndView printLoanAddForm(ModelMap model) {
+        SystemUserDTO loggedUser = DefaultController.getLoggedUser();
+        String userType = "";
+        if (loggedUser != null) {
+            userType = loggedUser.getType().getTypeLabel();
+        }
+        model.addAttribute("userType", userType);
+        model.addAttribute("bookedState", new LoanStateEnum[]{LoanStateEnum.BOOKED});
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByTypeList(
                 UserTypeDTOConverter.listToDTO(Arrays.asList(
@@ -97,6 +111,13 @@ public class LoanController {
     
     @RequestMapping(value = "/updateForm/{id}")
     public ModelAndView printLoanUpdateForm(@ModelAttribute("loan") LoanDTO loan, ModelMap model, @PathVariable String id) {
+        SystemUserDTO loggedUser = DefaultController.getLoggedUser();
+        String userType = "";
+        if (loggedUser != null) {
+            userType = loggedUser.getType().getTypeLabel();
+        }
+        model.addAttribute("userType", userType);
+        model.addAttribute("bookedState", new LoanStateEnum[]{LoanStateEnum.BOOKED});
         model.addAttribute("loanStates", LoanStateEnum.class.getEnumConstants());
         model.addAttribute("customers", customerService.getSystemUsersByTypeList(
                 UserTypeDTOConverter.listToDTO(Arrays.asList(
